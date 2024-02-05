@@ -2,12 +2,14 @@
 <section class="section container-fluid mt-n3 pb-3">
   <div class="row justify-content-center">
     <div class="col-lg-12 text-center">
-      <h1>{{ .Title }}</h1>
+{{ with resources.Get "images/rizzy-logo.png" }}
+  <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ .Title }} Logo">
+{{ end }}
     </div>
     <div class="col-lg-9 col-xl-8 text-center">
-      <p class="lead">{{ .Params.lead | safeHTML }}</p>
+      <p class="lead">Seamlessly blend Razor Components with Asp.net MVC and HTMX</p>
       <a class="btn btn-primary btn-cta rounded-pill btn-lg my-3" href="/docs/{{ if site.Params.doks.docsVersioning }}{{ site.Params.doks.docsVersion }}/{{ end }}guides/example-guide/" role="button">{{ i18n "get_started" }}</a>
-      {{ .Content }}
+      {{ .Content }}      
     </div>
   </div>
 </section>
