@@ -60,7 +60,7 @@
 
 [[footer]]
   name = "Privacy Policy"
-  url = "/rizzy.docs/privacy/"
+  url = "/privacy/"
   weight = 10
 
 # [[footer]]
