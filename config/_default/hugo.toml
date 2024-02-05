@@ -1,6 +1,6 @@
 title = "Rizzy Documentation"
 baseurl = "https://jalexsocial.github.io/Rizzy.Docs/"
-canonifyURLs = false
+canonifyURLs = true
 disableAliases = true
 disableHugoGeneratorInject = true
 # disableKinds = ["taxonomy", "term"]
