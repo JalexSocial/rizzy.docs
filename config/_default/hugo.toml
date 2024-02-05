@@ -57,8 +57,8 @@ copyRight = "Copyright (c) 2024 Michael Tanczos"
   tag = "tags"
 
 [permalinks]
-  blog = "/blog/:slug/"
-  docs = "/docs/:sections[1:]/:slug/"
+  blog = "/Rizzy.Docs/blog/:slug/"
+  docs = "/Rizzy.Docs/docs/:sections[1:]/:slug/"
 # docs = "/docs/1.0/:sections[1:]/:slug/"
 
 [minify.tdewolff.html]
