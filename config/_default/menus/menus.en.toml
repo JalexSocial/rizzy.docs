@@ -30,7 +30,7 @@
 
 [[main]]
   name = "Docs"
-  url = "/rizzy.docs/docs/guides/example-guide/"
+  url = "/rizzy.docs/docs/introduction/overview/"
 # url = "/docs/1.0/prologue/introduction/"
   weight = 10
 
