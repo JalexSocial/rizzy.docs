@@ -20,8 +20,26 @@ seo:
 The `HtmxResponse` class enables developers to manage client-side behavior through response headers in applications that leverage HTMX. This includes navigating, refreshing, and updating parts of the web page without a full reload, as well as triggering client-side events.
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
-The HtmxResponse class was constructed based on HTMX usage of Reresponse headers.  You can find more information about HTMX response headers on the official [Htmx documentation site](https://htmx.org/reference/#response_headers).
+The HtmxResponse class was constructed based on HTMX usage of Response headers.  You can find more information about HTMX response headers on the official [Htmx documentation site](https://htmx.org/reference/#response_headers).
 {{< /callout >}}
+
+## Working With HtmxResponse
+
+`HtmxResponse` only has a dependency on HttpContext, so you can use it in any scoped dependency service that has access to HttpContext.  To manually create an HtmxResponse object you need only to create a new instance of the class as follows:
+
+```csharp
+var response = new HtmxResponse(httpContext);
+```
+
+For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available within the `RzViewContext` service. The `RzViewContext` service is injected into any RzController instance and is made available as the ViewContext property.  The ViewContext is also available as both a cascaded parameter to any View rendered from the controller.
+
+The `HtmxResponse` object is accessible from the controller property:
+
+```csharp
+ViewContext.Htmx.Response
+```
+
+All of the proceeding examples will reflect usage of the ViewContext approach.
 
 ## Location
 

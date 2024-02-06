@@ -23,6 +23,25 @@ The `HtmxRequest` class provides properties to determine characteristics of a re
 The HtmxRequest class was constructed based on HTMX usage of Request headers.  You can find more information about HTMX request headers on the official [Htmx documentation site](https://htmx.org/reference/#request_headers).
 {{< /callout >}}
 
+## Working With HtmxRequest
+
+`HtmxRequest` only has a dependency on HttpContext, so you can use it in any scoped dependency service that has access to HttpContext.  To manually create an HtmxRequest object you need only to create a new instance of the class as follows:
+
+```csharp
+var request = new HtmxRequest(httpContext);
+```
+
+For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available within the `RzViewContext` service. The `RzViewContext` service is injected into any RzController instance and is made available as the ViewContext property.  The ViewContext is also available as both a cascaded parameter to any View rendered from the controller.
+
+The `HtmxResponse` object is accessible from the controller property:
+
+```csharp
+ViewContext.Htmx.Response
+```
+
+All of the proceeding examples will reflect usage of the ViewContext approach.
+
+
 ## IsHtmx
 
 Determines if the current request was triggered by HTMX.
