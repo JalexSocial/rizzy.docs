@@ -2,7 +2,11 @@
 
 Welcome to the documentation for Rizzy - Seamlessly blend the power of Razor Components with Asp.net and HTMX.
 
-![Rizzy Logo](https://jalexsocial.github.io/rizzy.docs/images/logo.png)
+<img src="https://jalexsocial.github.io/rizzy.docs/images/rizzy-logo.png" height="160px"/>
+
+## Documentation Site
+
+For detailed documentation and examples, please visit the [Rizzy Documentation Site](https://jalexsocial.github.io/rizzy.docs/).
 
 ## Introduction
 
@@ -21,10 +25,6 @@ Rizzy combines the strengths of Razor Components with the seamless integration o
 - **Simplified Syntax:** Rizzy simplifies the integration process, allowing developers to seamlessly blend Razor components and HTMX features into their existing MVC projects.
 
 - **Efficient Development:** Leverage the benefits of Razor Components for efficient and structured UI development, resulting in more maintainable and scalable applications.
-
-## Documentation Site
-
-For detailed documentation and examples, please visit the [Rizzy Documentation Site](https://jalexsocial.github.io/rizzy.docs/).
 
 ## How to Contribute
 
