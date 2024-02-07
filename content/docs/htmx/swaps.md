@@ -90,6 +90,8 @@ Here, the original content within the `.alert-message` div is replaced with the 
 
 `HtmxSwapService` is a service registered as a scoped dependency implementing `IHtmxSwapService`. It facilitates injecting Razor Components, RenderFragments, and raw HTML content into various parts of your application or services.
 
+This service is useful because it provides an ability to inject content into the page from *anywhere*.  This opens up the door for the creation of services that can create content that is swapped into place that exist outside of your razor component views.
+
 ### Adding Content with HtmxSwapService
 
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
