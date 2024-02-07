@@ -21,33 +21,33 @@ seo:
 Out of band swaps in HTMX allow you to update content in the Document Object Model (DOM) outside the direct target of an operation. This feature enables you to make updates to multiple elements in response to a single event, facilitating more dynamic and interactive web applications by piggybacking updates across different parts of your page.
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
-The RzSwappable component and HtmxSwapService were based on HTMX usage of Out of Band swaps.  You can find more information about HTMX out of band swaps on the official [Htmx documentation site](https://htmx.org/attributes/hx-swap-oob/).
+The HtmxSwappable component and HtmxSwapService were based on HTMX usage of Out of Band swaps.  You can find more information about HTMX out of band swaps on the official [Htmx documentation site](https://htmx.org/attributes/hx-swap-oob/).
 {{< /callout >}}
 
-## Using the RzSwappable Component
+## Using the HtmxSwappable Component
 
-The `RzSwappable` component is designed for seamlessly integrating out of band swaps in your Blazor applications. Htmx allows for this component to be used anywhere on the page that you like. Please note that when using this component it does not publish itself to the `HtmxSwapService`, but will still work as expected.
+The `HtmxSwappable` component is designed for seamlessly integrating out of band swaps in your Blazor applications. Htmx allows for this component to be used anywhere on the page that you like. Please note that when using this component it does not publish itself to the `HtmxSwapService`, but will still work as expected.
 
 Parameters:
 - `TargetId`: Specifies the HTML ID of the element to be swapped. This should be an element already present on the page.
 - `SwapStyle`: (optional) Defines the method used for swapping in the new content. It defaults to `SwapStyle.OuterHTML`. For further documentation on `SwapStyle`, visit [SwapStyle Options](/rizzy.docs/docs/htmx/response/#swapstyle-options).
 - `Selector`: (optional) A valid CSS selector targeting the element(s) within `TargetId` where the swap should occur.
 
-Here's a simple example that demonstrates how to use `RzSwappable` to display a Bootstrap alert message.
+Here's a simple example that demonstrates how to use `HtmxSwappable` to display a Bootstrap alert message.
 
 ```html
-<RzSwappable TargetId="alert-container" SwapStyle="SwapStyle.InnerHTML" Selector=".alert-message">
+<HtmxSwappable TargetId="alert-container" SwapStyle="SwapStyle.InnerHTML" Selector=".alert-message">
     <div class="alert alert-info" role="alert">
         This is an important message!
     </div>
-</RzSwappable>
+</HtmxSwappable>
 ```
 
-The example provided uses the `RzSwappable` component to perform an out of band swap into an existing HTML structure. Let's break down what the original HTML might look like before the swap occurs and the role of the `.alert-message` CSS selector within this process.
+The example provided uses the `HtmxSwappable` component to perform an out of band swap into an existing HTML structure. Let's break down what the original HTML might look like before the swap occurs and the role of the `.alert-message` CSS selector within this process.
 
 ### Original HTML Structure
 
-Before the swap, the HTML structure should contain an element with an ID matching the `TargetId` specified in the `RzSwappable` component. This element serves as the container where the new content will be swapped in. Additionally, within this container, there might be an existing element identified by the `.alert-message` CSS selector that the swap operation targets.
+Before the swap, the HTML structure should contain an element with an ID matching the `TargetId` specified in the `HtmxSwappable` component. This element serves as the container where the new content will be swapped in. Additionally, within this container, there might be an existing element identified by the `.alert-message` CSS selector that the swap operation targets.
 
 Here's an example of what the original HTML structure might look like that you can place in your Layout page:
 
@@ -61,13 +61,13 @@ Here's an example of what the original HTML structure might look like that you c
 ```
 
 In this structure:
-- The `div` with the ID `alert-container` is the container targeted by `RzSwappable` for content swapping.
-- Inside this container, there's a `div` with the class `.alert-message`, which is the specific target for the content defined within the `RzSwappable` component, based on the `Selector` property.
+- The `div` with the ID `alert-container` is the container targeted by `HtmxSwappable` for content swapping.
+- Inside this container, there's a `div` with the class `.alert-message`, which is the specific target for the content defined within the `HtmxSwappable` component, based on the `Selector` property.
 
 ### Role of `.alert-message`
 
 The `.alert-message` CSS selector plays a crucial role in precisely targeting where within the `alert-container` the new content should be inserted or replaced. When the swap occurs:
-- If the `SwapStyle` is set to `SwapStyle.InnerHTML`, the inner HTML of the `.alert-message` element is replaced with the new content defined within the `RzSwappable` component.
+- If the `SwapStyle` is set to `SwapStyle.InnerHTML`, the inner HTML of the `.alert-message` element is replaced with the new content defined within the `HtmxSwappable` component.
 - The presence of the `.alert-message` selector allows for more granular control over which part of the `alert-container` gets updated, enabling scenarios where you might want to update only a specific message within a larger container without affecting other content.
 
 ### After the Swap
@@ -84,7 +84,7 @@ After the swap operation completes, the HTML might look like this:
 </div>
 ```
 
-Here, the original content within the `.alert-message` div is replaced with the new alert message defined in the `RzSwappable` component. This demonstrates how out of band swaps enable updating specific portions of the page in response to certain events, enhancing interactivity of web applications without requiring a full page reload or direct interaction with the targeted container element.
+Here, the original content within the `.alert-message` div is replaced with the new alert message defined in the `HtmxSwappable` component. This demonstrates how out of band swaps enable updating specific portions of the page in response to certain events, enhancing interactivity of web applications without requiring a full page reload or direct interaction with the targeted container element.
 
 ## Using the HtmxSwapService
 
@@ -119,10 +119,10 @@ By default, swapped content is rendered after all other page-level rendering has
 
 If you decide to return a Razor component manually or map endpoints the swapped content will not appear.
 
-To render the content managed by `HtmxSwapService`, include a `RzSwapContent` component where you want the dynamic content to appear:
+To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
 
 ```html
-<RzSwapContent/>
+<HtmxSwapContent/>
 ```
 
 Typically you would add this to the very end of your template just before the closing body tag.
