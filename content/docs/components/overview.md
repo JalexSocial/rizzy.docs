@@ -22,9 +22,6 @@ Rizzy is designed to seamlessly integrate with Htmx, offering dynamic interactio
 
 Below is a list of Blazor built-in components alongside their Rizzy equivalents. Each Rizzy component is designed to work in a manner that is nearly identical to it's Blazor counterpart while embracing Htmx's dynamic loading and partial updates.
 
-Based on the complete list of components you've provided, I've created an updated markdown table including all the specified components and their Rizzy equivalents. Each Blazor component is linked to the Microsoft documentation page for your convenience.
-
-```markdown
 | Blazor | Rizzy Equivalent |
 | ------------ | ------------------ |
 | [AntiforgeryToken](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/?view=aspnetcore-8.0#antiforgery-support) | AntiforgeryToken |
@@ -34,7 +31,7 @@ Based on the complete list of components you've provided, I've created an update
 | [DynamicComponent](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dynamiccomponent) | DynamicComponent |
 | Editor<T> | Editor<T> |
 | [EditForm](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#editform) | RzEditForm |
-| [ErrorBoundary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#errorboundary) | RzErrorBoundary |
+| [ErrorBoundary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#errorboundary) | ErrorBoundary |
 | [FocusOnNavigate](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#focusonnavigate) | N/A |
 | [HeadContent](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#headcontent) | RzHeadContent |
 | [HeadOutlet](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#headoutlet) | RzHeadOutlet |
@@ -48,16 +45,16 @@ Based on the complete list of components you've provided, I've created an update
 | [InputText](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtext) | RzInputText |
 | [InputTextArea](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtextarea) | RzInputTextArea |
 | [LayoutView](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#layoutview) | RzLayoutView |
-| NavigationLock | RzNavigationLock |
+| NavigationLock | N/A |
 | [NavLink](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#navlink) | RzNavLink |
 | [PageTitle](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#pagetitle) | RzPageTitle |
-| QuickGrid | RzQuickGrid |
+| QuickGrid | QuickGrid |
 | [Router](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#router) | N/A |
 | [RouteView](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#routeview) | N/A |
 | SectionContent | RzSectionContent |
 | SectionOutlet | RzSectionOutlet |
 | [ValidationSummary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#validationsummary) | RzValidationSummary |
 | [Virtualize](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#virtualize) | N/A |
-```
+
 
 For detailed documentation on each Blazor component, refer to the original [Blazor Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components?view=aspnetcore-8.0).
