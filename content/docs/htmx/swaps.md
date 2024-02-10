@@ -92,6 +92,13 @@ Here, the original content within the `.alert-message` div is replaced with the 
 
 This service is useful because it provides an ability to inject content into the page from *anywhere*.  This opens up the door for the creation of services that can create content that is swapped into place that exist outside of your razor component views.
 
+## Features
+
+- **Dynamic Content Swapping:** Easily swap content in your application with Razor components, RenderFragments, or raw HTML during HTMX requests.
+- **Customizable Swap Styles:** Offers various content swap styles to choose from, allowing for flexible content rendering based on your needs.
+- **Selector Support:** Utilize CSS selectors to precisely define where the content swap should occur within the DOM.
+- **Support for Raw HTML:** Directly inject raw HTML into your application
+
 ### Adding Content with HtmxSwapService
 
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
@@ -103,15 +110,57 @@ Here's how you can use `HtmxSwapService` in your components to perform dynamic c
     protected override void OnInitialized()
     {
         HtmxSwapService.AddRawContent("<p>Hello, world!</p>");
-        HtmxSwapService.AddSwappableComponent<AlertComponent>("alert-container", SwapStyle.InnerHTML, ".alert-message", new Dictionary<string, object>
+        HtmxSwapService.AddSwappableComponent<AlertComponent>("alert-container", new Dictionary<string, object>
         {
             {"Message", "This is an important message!"}
-        });
+        }), SwapStyle.InnerHTML, ".alert-message", ;
     }
 }
 ```
 
 In this example, `AddRawContent` is used to add simple HTML content to the SectionOutlet, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named "Message".
+
+#### Adding a Swappable Razor Component
+
+```csharp
+@inject IHtmxSwapService HtmxSwapService
+
+HtmxSwapService.AddSwappableComponent<MyComponent>(
+    targetId: "targetElementId",
+    parameters: new Dictionary<string, object> { { "ParameterName", "Value" } },
+    swapStyle: SwapStyle.OuterHTML,
+    selector: ".css-selector"
+);
+```
+
+#### Adding a RenderFragment
+
+```csharp
+HtmxSwapService.AddSwappableFragment(
+    targetId: "targetElementId",
+    renderFragment: builder => builder.AddContent(0, "Dynamic content here"),
+    swapStyle: SwapStyle.OuterHTML,
+    selector: ".css-selector"
+);
+```
+
+#### Adding Raw HTML Content
+
+```csharp
+HtmxSwapService.AddRawContent(
+    "<div>Raw HTML content</div>"
+);
+```
+
+#### Rendering Added Content
+
+To render all added content, simply invoke the `RenderToFragment` method:
+
+```csharp
+RenderFragment contentFragment = HtmxSwapService.RenderToFragment();
+```
+
+This is typically handled automatically by the Rizzy page renderer, so unless you are using your own endpoints you will not need to do this.
 
 ## Rendering Swapped Content Manually
 
