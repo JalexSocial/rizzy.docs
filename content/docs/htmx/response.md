@@ -127,6 +127,12 @@ Specifies how the response will be swapped into the target element. This allows 
 ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML);
 ```
 
+*Example with Modifiers*
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML, "show:window:top transition:true" );
+```
+
 ### SwapStyle Options
 
 Here are the `SwapStyle` options that define how the response is swapped into the target element on the page:
@@ -141,7 +147,6 @@ Here are the `SwapStyle` options that define how the response is swapped into th
 - `None`: Does not append content from the response (though out-of-band items will still be processed).
 
 Refer to these options when using the `Reswap` method to specify how content is swapped on the page. 
-
 
 ## Retarget
 
