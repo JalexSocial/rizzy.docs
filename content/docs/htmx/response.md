@@ -39,7 +39,7 @@ The `HtmxResponse` object is accessible from the controller property:
 ViewContext.Htmx.Response
 ```
 
-All of the proceeding examples will reflect usage of the ViewContext approach.
+All of the preceding examples will reflect usage of the ViewContext approach.
 
 ## Location
 
@@ -133,6 +133,12 @@ ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML);
 ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML, "show:window:top transition:true" );
 ```
 
+*Example with Fluent Modifiers (see below)*
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
+// Reswap output: "beforebegin show:window:top"
+```
+
 ### SwapStyle Options
 
 Here are the `SwapStyle` options that define how the response is swapped into the target element on the page:
@@ -147,6 +153,71 @@ Here are the `SwapStyle` options that define how the response is swapped into th
 - `None`: Does not append content from the response (though out-of-band items will still be processed).
 
 Refer to these options when using the `Reswap` method to specify how content is swapped on the page. 
+
+### Applying Fluent Modifiers
+
+Modifiers enhance swap styles with additional behaviors, such as delays, scrolling, and dynamic targeting.
+
+#### Applying a Single Modifier
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
+// Reswap output: "beforebegin show:window:top"
+```
+
+#### Delaying the Swap
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.After(TimeSpan.FromSeconds(1)));
+// Reswap output: "innerHTML swap:1s"
+```
+
+#### Specifying Scroll Behavior
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.Scroll(ScrollDirection.Bottom));
+// Reswap output: "afterend scroll:bottom"
+```
+
+#### Ignoring the Document Title
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.IgnoreTitle(true));
+// Reswap output: "afterend ignoreTitle:true"
+```
+
+#### Enabling Transition Effects
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.Transition(true));
+// Reswap output: "innerHTML transition:true"
+```
+
+#### Focusing and Scrolling to Content
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.FocusScroll(true));
+// Reswap output: "afterend focus-scroll:true"
+```
+
+#### Dynamic Element Targeting
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.ShowOn("#another-div", ScrollDirection.Top));
+// Reswap output: "innerHTML show:#another-div:top"
+```
+
+### Chaining Modifiers
+
+Combine multiple behaviors for complex swap configurations:
+
+```csharp
+ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML
+    .ShowOn("#dynamic-area", ScrollDirection.Top)
+    .After(TimeSpan.FromMilliseconds(500)));
+// Reswap output: "innerHTML show:#dynamic-area:top swap:500ms"
+```
+
 
 ## Retarget
 
