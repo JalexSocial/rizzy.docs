@@ -20,6 +20,10 @@ seo:
 
 The `RzViewContext` class plays a pivotal role in the Rizzy library, providing a rich context for views within an application. It offers access to HTTP contexts, URL helpers, component configurations, and form contexts, enhancing the capability to render Razor Components and manage form interactions seamlessly. This context acts as a bridge between frameworks like MVC and Razor Components.
 
+## Usage
+
+The `RzViewContext` is automatically available as the `ViewContext` property inside any `RzController` and can be easily injected into any Razor Component or other scoped services. It is also provided as a Cascaded parameter when using a Razor Component View or PartialView. This design promotes a cohesive and streamlined approach to handling views, components, and forms within the ASP.NET MVC application.
+
 ## Properties
 
 - **Htmx**: Gets the HTMX context for the current request, enabling HTMX specific operations and interactions within the application. See [HTMX Request](/docs/htmx/request/) and [HTMX Response](/docs/htmx/response/) documentation for more information.
@@ -91,10 +95,6 @@ The `RzViewContext` class plays a pivotal role in the Rizzy library, providing a
     }
 }
 ```
-
-## Usage
-
-The `RzViewContext` is automatically available as the `ViewContext` property inside any `RzController` and can be easily injected into any Razor Component or other scoped services. It is also provided as a Cascaded parameter when using a Razor Component View or PartialView. This design promotes a cohesive and streamlined approach to handling views, components, and forms within the ASP.NET MVC application.
 
 ### Generating Action URLs
 
