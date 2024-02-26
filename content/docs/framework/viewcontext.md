@@ -38,7 +38,7 @@ The `RzViewContext` class plays a pivotal role in the Rizzy library, providing a
     - **AddFormContext(string formName, string formAction, object model, bool useDataAnnotations = true)**: Adds a form context with a form name, action, and model, allowing for a concise form setup.
 - **TryGetFormContext(string formName, out RzFormContext context)**: Attempts to retrieve a form context by name. Returns true if found; otherwise, false. This method is essential for accessing specific form contexts for further operations or validations.
 
-```csharp
+```csharp {title="HomeController.cs"}
     public IResult Information()
     {
         ViewContext.AddFormContext("myForm", CurrentActionUrl, new Person());
@@ -54,6 +54,42 @@ The `RzViewContext` class plays a pivotal role in the Rizzy library, providing a
 
         return View<Information>();
     }
+```
+
+```csharp {title="Information.razor"}
+<div id="information">
+
+	<h3>Information</h3>
+
+	<RzEditForm FormContext="_formContext" hx-post="@_formContext?.FormUrl" hx-target="#information">
+		<RzValidationSummary/>
+
+		<div class="form-group">
+			<label for="name">Name:</label>
+			<RzInputText id="name" class="form-control" @bind-Value="Person.Name"/>
+			<RzValidationMessage For="@(() => Person.Name)"/>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</RzEditForm>
+
+</div>
+
+@code {
+    private RzFormContext? _formContext;
+
+    [Inject] public RzViewContext ViewContext { get; set; } = default!;
+
+    public Person Person { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        if (ViewContext.TryGetFormContext("myForm", out _formContext))
+        {
+            Person = _formContext.Model<Person>();
+        }
+    }
+}
 ```
 
 ## Usage
