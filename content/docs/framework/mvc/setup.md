@@ -26,7 +26,7 @@ Rizzy enhances ASP.NET MVC applications by integrating Razor Components, offerin
 
 Alter your MVC controllers to inherit from `RzController` for basic functionality:
 
-```csharp
+```csharp {title="HomeController.cs"}
 public class HomeController : RzController
 {
     // Controller actions here
@@ -35,7 +35,7 @@ public class HomeController : RzController
 
 For applications that require returning MVC Views alongside Razor Components, use `RzControllerWithViews`:
 
-```csharp
+```csharp {title="HomeController.cs"}
 public class HomeController : RzControllerWithViews
 {
     // Controller actions here, with the ability to return MVC Views
