@@ -19,7 +19,7 @@ seo:
 ---
 
 
-The primary objective of our project is to enhance the MVC framework by supplementing the View portion with Razor Components, while leveraging HTMX for dynamic content loading. Our goal is to introduce a lightweight library that complements rather than replaces the existing MVC framework. Below are the detailed goals structured to guide our development process:
+The primary objective of our project is to enhance the MVC framework by supplementing the View portion with Razor Components while leveraging HTMX for dynamic content loading. Our goal is to introduce a lightweight library that complements rather than replaces the existing MVC framework. Below are the detailed goals structured to guide our development process:
 
 ## 1. Lightweight Library Extension
 - **Objective**: Create a library that extends the MVC framework without the need for completely replacing existing infrastructure. MVC is a very mature and stable platform with a massive amount of third-party tools, integrations, and support and this needs to be recognized.

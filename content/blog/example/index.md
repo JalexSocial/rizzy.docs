@@ -20,6 +20,8 @@ seo:
 
 This project was started based off of my early experiences using Htmx with Razor Views and more specifically Razor View Components. Razor View Components are kind of like mini controllers and can be embedded inside of Razor Views using tag helpers. The syntax is fairly clumsy and there isn't any support for nested child content. That was a bit rough to work with as HTML itself as a markup language utilizes nesting to great effect. 
 
+<img src="/images/network.webp" style="width: 100%; margin-top: 2em; margin-bottom: 2em;">
+
 ## So how did we get here?
 
 Most of the thanks for this whole project should go to the Blazor team who revamped Blazor SSR in a way that makes all of this possible.
