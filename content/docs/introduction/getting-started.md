@@ -85,4 +85,4 @@ This middleware integrates Rizzy's capabilities into your application, enabling 
 
 ## Conclusion
 
-Rizzy offers a powerful and flexible way to enhance your ASP.NET applications with advanced HTMX integration and configuration options. By following the setup instructions outlined above, you can leverage Rizzy to create dynamic, interactive web applications using the latest .NET technologies.
+Rizzy offers a powerful and flexible way to enhance your ASP.NET applications with advanced HTMX integration and configuration options.
