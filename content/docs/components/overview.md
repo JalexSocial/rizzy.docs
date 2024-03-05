@@ -18,7 +18,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-Rizzy is designed to seamlessly integrate with Htmx, offering dynamic interactions using Razor Components. To accommodate the unique aspects of working with Htmx, Rizzy introduces equivalent components for the built-in Blazor components, ensuring a smooth development experience. These Rizzy components sometimes need to implement subtle differences in behavior behind the scenes to utilize HTMX correctly.
+Rizzy is designed to seamlessly integrate with Htmx. It achieves this by introducing equivalent components for the built-in Blazor components. These Rizzy components sometimes need to implement subtle differences in behavior behind the scenes to utilize HTMX correctly.
 
 Below is a list of Blazor built-in components alongside their Rizzy equivalents. Each Rizzy component is designed to work in a manner that is nearly identical to it's Blazor counterpart while embracing Htmx's dynamic loading and partial updates.
 
