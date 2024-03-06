@@ -27,7 +27,7 @@ Below is a list of Blazor built-in components alongside their Rizzy equivalents.
 | [AntiforgeryToken](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/?view=aspnetcore-8.0#antiforgery-support) | AntiforgeryToken |
 | [AuthorizeView](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#authorizeview) | AuthorizeView |
 | [CascadingValue](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#cascadingvalue-and-cascadingparameter) | CascadingValue |
-| [DataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dataannotationsvalidator) | RzDataAnnotationsValidator |
+| [DataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dataannotationsvalidator) | DataAnnotationsValidator |
 | [DynamicComponent](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dynamiccomponent) | DynamicComponent |
 | Editor<T> | Editor<T> |
 | [EditForm](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#editform) | RzEditForm |

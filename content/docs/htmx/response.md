@@ -33,11 +33,7 @@ var response = new HtmxResponse(httpContext);
 
 For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available within the `RzViewContext` service. The `RzViewContext` service is injected into any RzController instance and is made available as the ViewContext property.  The ViewContext is also available as both a cascaded parameter to any View rendered from the controller.
 
-The `HtmxResponse` object is accessible from the controller property:
-
-```csharp
-ViewContext.Htmx.Response
-```
+The `HtmxResponse` object is accessible from the controller property `ViewContext.Htmx.Response` or `Htmx.Response`
 
 All of the preceding examples will reflect usage of the ViewContext approach.
 
@@ -48,7 +44,7 @@ Performs a client-side redirect to the specified path without a full page reload
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Location("/new-path");
+Htmx.Response.Location("/new-path");
 ```
 This method is particularly useful for implementing SPA-like behavior in traditional server-rendered applications, allowing for partial updates and navigation without losing the state of the application.
 
@@ -59,7 +55,7 @@ Pushes a new URL onto the browser's history stack. This method leverages HTMX's 
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.PushUrl("/another-path");
+Htmx.Response.PushUrl("/another-path");
 ```
 Use this method to dynamically update the URL in response to partial content updates, ensuring that users can use the browser's back and forward buttons as expected.
 
@@ -70,7 +66,7 @@ Ensures that the browser's history is not updated following an AJAX request, ove
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.PreventBrowserHistoryUpdate();
+Htmx.Response.PreventBrowserHistoryUpdate();
 ```
 
 ## PreventBrowserCurrentUrlUpdate
@@ -80,7 +76,7 @@ Stops the browser’s current URL from being updated.
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.PreventBrowserCurrentUrlUpdate();
+Htmx.Response.PreventBrowserCurrentUrlUpdate();
 ```
 
 ## Redirect
@@ -90,7 +86,7 @@ Facilitates a client-side redirection, akin to a traditional HTTP redirect but e
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Redirect("/redirect-path");
+Htmx.Response.Redirect("/redirect-path");
 ```
 
 This method is useful for redirecting the user after actions that do not require a full page reload, such as form submissions or after performing AJAX-based operations.
@@ -102,7 +98,7 @@ Triggers a full page refresh from the server-side. This can be particularly bene
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Refresh();
+Htmx.Response.Refresh();
 ```
 
 In HTMX, a full page refresh might be necessary in scenarios where client-side state needs to be completely reset, or when significant changes have been made that require a fresh page load.
@@ -114,7 +110,7 @@ Updates the current URL in the browser's location bar.
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.ReplaceUrl("/new-url");
+Htmx.Response.ReplaceUrl("/new-url");
 ```
 
 ## Reswap
@@ -124,18 +120,18 @@ Specifies how the response will be swapped into the target element. This allows 
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML);
+Htmx.Response.Reswap(SwapStyle.InnerHTML);
 ```
 
 *Example with Modifiers*
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML, "show:window:top transition:true" );
+Htmx.Response.Reswap(SwapStyle.InnerHTML, "show:window:top transition:true" );
 ```
 
 *Example with Fluent Modifiers (see below)*
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
+Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
 // Reswap output: "beforebegin show:window:top"
 ```
 
@@ -161,49 +157,49 @@ Modifiers enhance swap styles with additional behaviors, such as delays, scrolli
 #### Applying a Single Modifier
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
+Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
 // Reswap output: "beforebegin show:window:top"
 ```
 
 #### Delaying the Swap
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.After(TimeSpan.FromSeconds(1)));
+Htmx.Response.Reswap(SwapStyle.InnerHTML.After(TimeSpan.FromSeconds(1)));
 // Reswap output: "innerHTML swap:1s"
 ```
 
 #### Specifying Scroll Behavior
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.Scroll(ScrollDirection.Bottom));
+Htmx.Response.Reswap(SwapStyle.AfterEnd.Scroll(ScrollDirection.Bottom));
 // Reswap output: "afterend scroll:bottom"
 ```
 
 #### Ignoring the Document Title
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.IgnoreTitle(true));
+Htmx.Response.Reswap(SwapStyle.AfterEnd.IgnoreTitle(true));
 // Reswap output: "afterend ignoreTitle:true"
 ```
 
 #### Enabling Transition Effects
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.Transition(true));
+Htmx.Response.Reswap(SwapStyle.InnerHTML.Transition(true));
 // Reswap output: "innerHTML transition:true"
 ```
 
 #### Focusing and Scrolling to Content
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.AfterEnd.FocusScroll(true));
+Htmx.Response.Reswap(SwapStyle.AfterEnd.FocusScroll(true));
 // Reswap output: "afterend focus-scroll:true"
 ```
 
 #### Dynamic Element Targeting
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.ShowOn("#another-div", ScrollDirection.Top));
+Htmx.Response.Reswap(SwapStyle.InnerHTML.ShowOn("#another-div", ScrollDirection.Top));
 // Reswap output: "innerHTML show:#another-div:top"
 ```
 
@@ -212,7 +208,7 @@ ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML.ShowOn("#another-div", Scro
 Combine multiple behaviors for complex swap configurations:
 
 ```csharp
-ViewContext.Htmx.Response.Reswap(SwapStyle.InnerHTML
+Htmx.Response.Reswap(SwapStyle.InnerHTML
     .ShowOn("#dynamic-area", ScrollDirection.Top)
     .After(TimeSpan.FromMilliseconds(500)));
 // Reswap output: "innerHTML show:#dynamic-area:top swap:500ms"
@@ -226,7 +222,7 @@ Changes the target element for the response update using a CSS selector.
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Retarget("#new-target");
+Htmx.Response.Retarget("#new-target");
 ```
 
 ## Reselect
@@ -236,7 +232,7 @@ Determines which part of the response is swapped in, using a CSS selector.
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Reselect(".content-part");
+Htmx.Response.Reselect(".content-part");
 ```
 
 ## Trigger
@@ -246,7 +242,7 @@ Initiates custom events on the client side, which can be used to trigger JavaScr
 *Example*
 
 ```csharp
-ViewContext.Htmx.Response.Trigger("customEvent", new { key = "value" }, TriggerTiming.AfterSwap);
+Htmx.Response.Trigger("customEvent", new { key = "value" }, TriggerTiming.AfterSwap);
 ```
 
 This functionality is particularly useful for integrating server-side logic with client-side behaviors, allowing developers to create rich, interactive web applications that respond dynamically to server-side changes.

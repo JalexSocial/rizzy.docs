@@ -17,3 +17,12 @@ seo:
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
+
+Form components are discussed in detail in it's own section.
+
+{{< link-card
+  title="Form Components"
+  description="Please see \"Forms\" for full details"
+  href="/docs/forms/overview/"
+  target="_blank"
+>}}
