@@ -18,7 +18,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-The `RzViewContext` class plays a key role in the Rizzy library, providing a rich context for views within an application. It offers access to HTTP contexts, URL helpers, component configurations, and form contexts, enhancing the capability to render Razor Components and manage form interactions seamlessly. This context acts as a bridge between frameworks like MVC and Razor Components.
+The `RzViewContext` provides a context for views within an application. It offers access to HTTP contexts, URL helpers, component configurations, and form contexts, enhancing the capability to render Razor Components and manage form interactions seamlessly. This context acts as a bridge between frameworks like MVC and Razor Components.
 
 ## Usage
 
