@@ -101,6 +101,16 @@ This service is useful because it provides an ability to inject content into the
 
 ### Adding Content with HtmxSwapService
 
+{{< callout context="caution" title="Caution" icon="alert-triangle" >}}
+
+To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
+
+```html
+<HtmxSwapContent/>
+```
+
+{{< /callout >}}
+
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
 
 ```csharp
@@ -154,28 +164,13 @@ HtmxSwapService.AddRawContent(
 
 #### Rendering Added Content
 
-To render all added content, simply invoke the `RenderToFragment` method:
+As an alternate way to render all added content, you can also simply invoke the `RenderToFragment` method:
 
 ```csharp
 RenderFragment contentFragment = HtmxSwapService.RenderToFragment();
 ```
 
-This is typically handled automatically by the Rizzy page renderer, so unless you are using your own endpoints you will not need to do this.
-
-## Rendering Swapped Content Manually
-
-{{< callout context="caution" title="Caution" icon="alert-triangle" >}}
-By default, swapped content is rendered after all other page-level rendering has completed using the `RzController` method `View<TComponent>` or `PartialView<TComponent>`. This typically will mean that your content will be rendered after the closing html tag. 
-{{< /callout >}}
-
-If you decide to return a Razor component manually or map endpoints the swapped content will not appear.
-
-To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
-
-```html
-<HtmxSwapContent/>
-```
 
 Typically you would add this to the very end of your template just before the closing body tag.
 
-This approach allows for a flexible and powerful way to manage and update your application's UI dynamically, leveraging the capabilities of HTMX out of band swaps in a Blazor context.
+This approach allows for a flexible way to manage and update your application's UI dynamically.
