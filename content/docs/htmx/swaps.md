@@ -102,14 +102,14 @@ This service is useful because it provides an ability to inject content into the
 ### Adding Content with HtmxSwapService
 
 {{< callout context="caution" title="Caution" icon="alert-triangle" >}}
+You must include the `HtmxSwapContent` component somewhere in your template for swappable content to render correctly.
+{{< /callout >}}
 
 To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
 
 ```html
 <HtmxSwapContent/>
 ```
-
-{{< /callout >}}
 
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
 
