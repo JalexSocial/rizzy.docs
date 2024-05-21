@@ -115,23 +115,29 @@ Htmx.Response.ReplaceUrl("/new-url");
 
 ## Reswap
 
-Specifies how the response will be swapped into the target element. This allows for fine-grained control over how parts of the page are updated with server responses.  
+{{< callout context="note" title="Note" icon="info-circle" >}}
+Reswap uses SwapStyle and SwapStyle modifiers. For complete information on SwapStyle see [SwapStyle Documentation](/docs/htmx/swapstyle).
+{{< /callout >}}
+
+Specifies how the response will be swapped into the target element. This allows for fine-grained control over how parts of the page are updated with server responses.
 
 *Example*
 
 ```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML);
+Htmx.Response.Reswap(SwapStyle.innerHTML);
 ```
 
 *Example with Modifiers*
 
 ```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML, "show:window:top transition:true" );
+Htmx.Response.Reswap(SwapStyle.innerHTML.ShowWindow(ScrollDirection.top).Transition(true));
+// Reswap output: "innerHTML show:window:top transition:true"
 ```
 
-*Example with Fluent Modifiers (see below)*
+*Example with Fluent Modifiers*
+
 ```csharp
-Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
+Htmx.Response.Reswap(SwapStyle.beforebegin.ShowWindow(ScrollDirection.top));
 // Reswap output: "beforebegin show:window:top"
 ```
 
@@ -139,80 +145,15 @@ Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
 
 Here are the `SwapStyle` options that define how the response is swapped into the target element on the page:
 
-- `InnerHTML`: Replace the inner HTML of the target element.
-- `OuterHTML`: Replace the entire target element with the response.
-- `BeforeBegin`: Insert the response before the target element.
-- `AfterBegin`: Insert the response inside the target element, before its first child.
-- `BeforeEnd`: Insert the response inside the target element, after its last child.
-- `AfterEnd`: Insert the response after the target element.
-- `Delete`: Deletes the target element, regardless of the response.
-- `None`: Does not append content from the response (though out-of-band items will still be processed).
-
-Refer to these options when using the `Reswap` method to specify how content is swapped on the page. 
-
-### Applying Fluent Modifiers
-
-Modifiers enhance swap styles with additional behaviors, such as delays, scrolling, and dynamic targeting.
-
-#### Applying a Single Modifier
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.BeforeBegin.ShowWindow(ScrollDirection.Top));
-// Reswap output: "beforebegin show:window:top"
-```
-
-#### Delaying the Swap
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML.After(TimeSpan.FromSeconds(1)));
-// Reswap output: "innerHTML swap:1s"
-```
-
-#### Specifying Scroll Behavior
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.AfterEnd.Scroll(ScrollDirection.Bottom));
-// Reswap output: "afterend scroll:bottom"
-```
-
-#### Ignoring the Document Title
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.AfterEnd.IgnoreTitle(true));
-// Reswap output: "afterend ignoreTitle:true"
-```
-
-#### Enabling Transition Effects
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML.Transition(true));
-// Reswap output: "innerHTML transition:true"
-```
-
-#### Focusing and Scrolling to Content
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.AfterEnd.FocusScroll(true));
-// Reswap output: "afterend focus-scroll:true"
-```
-
-#### Dynamic Element Targeting
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML.ShowOn("#another-div", ScrollDirection.Top));
-// Reswap output: "innerHTML show:#another-div:top"
-```
-
-### Chaining Modifiers
-
-Combine multiple behaviors for complex swap configurations:
-
-```csharp
-Htmx.Response.Reswap(SwapStyle.InnerHTML
-    .ShowOn("#dynamic-area", ScrollDirection.Top)
-    .After(TimeSpan.FromMilliseconds(500)));
-// Reswap output: "innerHTML show:#dynamic-area:top swap:500ms"
-```
+- `Default`: Uses the application's default swap style or htmx's default.
+- `innerHTML`: Replace the inner HTML of the target element.
+- `outerHTML`: Replace the entire target element with the response.
+- `beforebegin`: Insert the response before the target element.
+- `afterbegin`: Insert the response inside the target element, before its first child.
+- `beforeend`: Insert the response inside the target element, after its last child.
+- `afterend`: Insert the response after the target element.
+- `delete`: Deletes the target element, regardless of the response.
+- `none`: Does not append content from the response (though out-of-band items will still be processed).
 
 
 ## Retarget
