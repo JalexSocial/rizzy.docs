@@ -9,7 +9,7 @@ menu:
   docs:
     parent: ""
     identifier: "swapstyle-62ebe8c1dcbe3a08e7cf1a03c3fff9ab"
-weight: 300
+weight: 301
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -39,7 +39,7 @@ Here are the `SwapStyle` options that define how the response is swapped into th
 Modifiers enhance swap styles with additional behaviors, such as delays, scrolling, and dynamic targeting. The `SwapStyleBuilder` extension methods provide a fluent API to specify these behaviors. The resulting strings can be used directly within markup as well!
 
 ```html
-<div hx-swap=SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(2))>
+<div hx-swap=@SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(2))>
 // hx-swap value: "innerHTML swap:2s"    
 ```
 
