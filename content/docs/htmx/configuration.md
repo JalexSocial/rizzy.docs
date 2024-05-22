@@ -60,20 +60,6 @@ Named configurations can also be specified as a parameter:
 <HtmxConfigHeadOutlet Configuration="articles"/>
 ```
 
-### Updating Configuration in ViewContext
-
-{{< callout context="caution" title="Caution" icon="alert-triangle" >}}
-Setting the configuration has no effect for partial page responses. This behavior is likely to change at a later date to include configuration changes with any htmx request.
-{{< /callout >}}
-
-Configuration can also be set within the `ViewContext` object. The current configuration is accessible as `ViewContext.Htmx.Configuration` within any `Controller` that has been extended using `RzController`. Use `ViewContext.Htmx.SetConfiguration()` to update the configuration. 
-
-For example:
-
-```csharp
-ViewContext.Htmx.SetConfiguration("articles");
-```
-
 ## HTMX Configuration Properties
 
 Here is a description of the HTMX configuration properties that can be customized for your application:

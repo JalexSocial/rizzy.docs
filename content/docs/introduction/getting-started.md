@@ -73,16 +73,6 @@ Multiple configurations can be defined for different parts of your application, 
 
 For more detailed information on configuring HTMX in Rizzy, refer to the [Htmx Configuration Documentation](https://jalexsocial.github.io/rizzy.docs/docs/htmx/configuration/).
 
-## Middleware
-
-After configuring antiforgery and routing in your application, ensure to add the Rizzy middleware to the pipeline:
-
-```csharp
-app.UseRizzy();
-```
-
-This middleware integrates Rizzy's capabilities into your application, enabling advanced features and configurations specified in your setup.
-
 ## Conclusion
 
 Rizzy offers a powerful and flexible way to enhance your ASP.NET applications with advanced HTMX integration and configuration options.
