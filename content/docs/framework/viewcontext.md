@@ -28,11 +28,9 @@ The `RzViewContext` is automatically available as the `ViewContext` property ins
 
 - **Htmx**: Gets the HTMX context for the current request, enabling HTMX specific operations and interactions within the application. See [HTMX Request](/docs/htmx/request/) and [HTMX Response](/docs/htmx/response/) documentation for more information.
 - **HttpContext**: Provides access to the `Microsoft.AspNetCore.Http.HttpContext` for the current request, useful for accessing request and response information.
-- **Url**: Offers access to the MVC `IUrlHelper` which contains methods to build URLs for ASP.NET MVC within an application, facilitating navigation and URL generation.
 - **RouteData**: Gets the `AspNetCore.Routing.RouteData` for the current request, useful for retrieving route information.
 - **ComponentType**: The type of the Razor component being rendered. This property is set when configuring the view and is used internally to identify the component.
 - **ComponentParameters**: A dictionary containing all the parameters that are set on the component view, allowing dynamic parameter passing to Razor Components.
-- **ActionContext**: The ActionContext in MVC controllers is a core component of the ASP.NET Core MVC framework that encapsulates information about the current HTTP request cycle's context as it pertains to an action method's execution. This is only set if there is a currently executing action method.
 
 ## Methods
 
