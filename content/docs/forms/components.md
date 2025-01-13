@@ -14,22 +14,10 @@ seo:
   noindex: false # false (default) or true
 ---
 
-## RzEditForm
+## Realtime Input Validation
 
-`RzEditForm` is the core component for handling forms in Blazor using SSR rendering. It leverages `RzFormContext` for managing form submission and validation state. This approach enhances form handling by integrating the form's context directly.
-
-```html
-@code {
-    private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
-}
-
-<RzEditForm FormContext="@rzFormContext">
-    <DataAnnotationsValidator />
-    <RzInputText @bind-Value="model.Property" />
-    <button type="submit">Submit</button>
-</RzEditForm>
-```
+Rizzy provides a number of replacement components for standard Blazor input components that generate markup that is identical to the Asp.net form helper tags to facilitate realtime input validation. As long
+as your models have Data Annotation attributes to mark them up you can take advantage of this feature.
 
 ## RzInputCheckbox
 
@@ -38,12 +26,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputCheckbox @bind-Value="model.AcceptTerms" />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputDate
@@ -55,12 +42,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputDate @bind-Value="model.BirthDate" />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputFile
@@ -74,12 +60,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputFile />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputNumber
@@ -93,12 +78,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputNumber @bind-Value="model.Quantity" />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputRadio and RzInputRadioGroup
@@ -112,15 +96,14 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputRadioGroup @bind-Value="model.SelectedOption">
         <RzInputRadio Value="Option1" /> Option 1
         <RzInputRadio Value="Option2" /> Option 2
     </RzInputRadioGroup>
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputSelect
@@ -134,15 +117,14 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputSelect @bind-Value="model.SelectedOption">
         <option value="Option1">Option 1</option>
         <option value="Option2">Option 2</option>
     </RzInputSelect>
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputText
@@ -156,12 +138,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputText @bind-Value="model.TextProperty" />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzInputTextArea
@@ -175,12 +156,11 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <RzInputTextArea @bind-Value="model.MultilineText" />
-</RzEditForm>
+</EditForm>
 ```
 
 ## RzValidationSummary
@@ -194,10 +174,9 @@ seo:
 ```html
 @code {
     private ExampleModel model = new ExampleModel();
-    private RzFormContext rzFormContext = new RzFormContext("exampleForm", model);
 }
 
-<RzEditForm FormContext="@rzFormContext">
+<EditForm Model="model">
     <DataAnnotationsValidator>
     <RzValidationSummary />
 
@@ -209,6 +188,6 @@ seo:
 
         <button type="submit" class="btn btn-primary">Submit</button>
 
-</RzEditForm>
+</EditForm>
 
 ```

@@ -22,7 +22,7 @@ Rizzy has reimplemented many of the built-in default Blazor components for Forms
 
 ## Rizzy Form Components
 
-Rizzy provides built-in input components to receive and validate user input. The built-in input components in the following table are supported in an RzEditForm with an RzFormContext.
+Rizzy provides built-in input components to receive and validate user input. The built-in input components in the following table are supported in an EditForm.
 
 The components in the table are also supported outside of a form in Razor component markup. Inputs are validated when they're changed and when a form is submitted.
 
@@ -57,7 +57,8 @@ Input components provide default behavior for validating when a field is changed
 
 	<h3>Information</h3>
 
-	<RzEditForm FormContext="_formContext" hx-post="@_formContext?.FormUrl" hx-target="#information">
+	<EditForm EditContext="_editContext" hx-post="/information/update" hx-target="#information">
+		<DataAnnotationsValidator>
 		<RzValidationSummary/>
 
 		<div class="form-group">
@@ -67,23 +68,14 @@ Input components provide default behavior for validating when a field is changed
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>
-	</RzEditForm>
+	</EditForm>
 
 </div>
 
 @code {
-    private RzFormContext? _formContext;
 
-    [Inject] public RzViewContext ViewContext { get; set; } = default!;
-
+    [SupplyParameterFromForm]
     public Person Person { get; set; } = new();
 
-    protected override void OnInitialized()
-    {
-        if (ViewContext.TryGetFormContext("myForm", out _formContext))
-        {
-            Person = _formContext.Model<Person>();
-        }
-    }
 }
 ```
