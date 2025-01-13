@@ -56,7 +56,7 @@ Input components provide default behavior for validating when a field is changed
 
 	<h3>Information</h3>
 
-	<EditForm EditContext="_editContext" hx-post="/information/update" hx-target="#information">
+	<EditForm Model="Person" hx-post="/information/update" hx-target="#information">
 		<DataAnnotationsValidator>
 		<RzValidationSummary/>
 

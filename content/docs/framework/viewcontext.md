@@ -18,7 +18,9 @@ seo:
   noindex: false # false (default) or true
 ---
 
-The `RzViewContext` provides a context for views within an application. It offers access to HTTP contexts, URL helpers, component configurations, and form contexts, enhancing the capability to render Razor Components and manage form interactions seamlessly. This context acts as a bridge between frameworks like MVC and Razor Components.
+The `RzViewContext` provides a context for views within an application. It offers access to HTTP contexts, URL helpers, component configurations, and, optionally, field mappings for form components. This context acts as a bridge between frameworks like MVC and Razor Components.
+
+**Note:** In previous versions, it was necessary to wrap forms in a dedicated `RzEditForm` with an associated `RzFormContext`. With the update, you can now simply use the standard Blazor `EditForm` rendered server-side. Instead of managing a form context manually, just add an `hx-post="/information/update"` attribute along with the necessary `hx-target` attribute on the `EditForm`. When posting back data, decorate your form-bound properties with the `[SupplyParameterFromForm]` attribute.
 
 ## Usage
 
@@ -26,33 +28,25 @@ The `RzViewContext` is automatically available as the `ViewContext` property ins
 
 ## Properties
 
-- **Htmx**: Gets the HTMX context for the current request, enabling HTMX specific operations and interactions within the application. See [HTMX Request](/docs/htmx/request/) and [HTMX Response](/docs/htmx/response/) documentation for more information.
+- **Htmx**: Gets the HTMX context for the current request, enabling HTMX specific operations and interactions. See [HTMX Request](/docs/htmx/request/) and [HTMX Response](/docs/htmx/response/) documentation for more information.
 - **HttpContext**: Provides access to the `Microsoft.AspNetCore.Http.HttpContext` for the current request, useful for accessing request and response information.
 - **RouteData**: Gets the `AspNetCore.Routing.RouteData` for the current request, useful for retrieving route information.
 - **ComponentType**: The type of the Razor component being rendered. This property is set when configuring the view and is used internally to identify the component.
 - **ComponentParameters**: A dictionary containing all the parameters that are set on the component view, allowing dynamic parameter passing to Razor Components.
-
-## Methods
-
-- **AddFormContext**: Overloaded methods to add a form context with specified names, actions, models, and optional use of data annotations for validation. These methods facilitate form handling, validation, and context management within Razor Components or MVC views.
-    - **AddFormContext(string id, string formName, string formAction, object model, bool useDataAnnotations = true)**: Adds a form context with a unique HTML ID, name, action, and model. Uses data annotations for validation by default.
-    - **AddFormContext(string formName, object model, bool useDataAnnotations = true)**: Simplified method to add a form context without specifying an HTML ID or form action.
-    - **AddFormContext(string formName, string formAction, object model, bool useDataAnnotations = true)**: Adds a form context with a form name, action, and model, allowing for a concise form setup.
-- **TryGetFormContext(string formName, out RzFormContext context)**: Attempts to retrieve a form context by name. Returns true if found; otherwise, false. This method is essential for accessing specific form contexts for further operations or validations.
+- **Field Mappings**: Provides methods to get or add field mappings for a given `EditContext`. Field mappings are used to store and manage form field configurations.
+  - `GetOrAddFieldMapping(EditContext editContext)`: Retrieves the existing field mapping for an `EditContext` or creates one if it does not exist.
+  - `RemoveFieldMapping(EditContext editContext)`: Removes the field mapping for the specified `EditContext` if it is no longer required.
 
 ```csharp {title="HomeController.cs"}
     public IResult Information()
     {
-        ViewContext.AddFormContext("myForm", CurrentActionUrl, new Person());
-
         return View<Information>();
     }
 
     [HttpPost, ValidateAntiForgeryToken]
     public IResult Information([FromForm] Person person)
     {
-        var ctx = ViewContext.AddFormContext("myForm", CurrentActionUrl, person);
-        ctx.EditContext.Validate();
+	// Do whatever you want with person
 
         return View<Information>();
     }
@@ -61,37 +55,27 @@ The `RzViewContext` is automatically available as the `ViewContext` property ins
 ```csharp {title="Information.razor"}
 <div id="information">
 
-	<h3>Information</h3>
+    <h3>Information</h3>
 
-	<RzEditForm FormContext="_formContext" hx-post="@_formContext?.FormUrl" hx-target="#information">
-		<RzValidationSummary/>
+    <EditForm Model="Person" hx-post="/home/information" hx-target="#information">
+        <ValidationSummary />
 
-		<div class="form-group">
-			<label for="name">Name:</label>
-			<RzInputText id="name" class="form-control" @bind-Value="Person.Name"/>
-			<RzValidationMessage For="@(() => Person.Name)"/>
-		</div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="Person.Name" />
+            <ValidationMessage For="@(() => Person.Name)" />
+        </div>
 
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</RzEditForm>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
 
 </div>
 
 @code {
-    private RzFormContext? _formContext;
-
-    [Inject] public RzViewContext ViewContext { get; set; } = default!;
-
+    [SupplyParameterFromForm]
     public Person Person { get; set; } = new();
-
-    protected override void OnInitialized()
-    {
-        if (ViewContext.TryGetFormContext("myForm", out _formContext))
-        {
-            Person = _formContext.Model<Person>();
-        }
-    }
 }
+
 ```
 
 
