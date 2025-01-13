@@ -32,7 +32,6 @@ The components in the table are also supported outside of a form in Razor compon
 | ------------ | ------------------ |
 | [AntiforgeryToken](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/?view=aspnetcore-8.0#antiforgery-support) | AntiforgeryToken |
 | [DataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dataannotationsvalidator) | DataAnnotationsValidator |
-| [EditForm](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#editform) | RzEditForm |
 | [InputCheckbox](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputcheckbox) | RzInputCheckbox |
 | [InputDate](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputdate) | RzInputDate |
 | [InputFile](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputfile) | RzInputFile |
@@ -44,7 +43,7 @@ The components in the table are also supported outside of a form in Razor compon
 | [InputTextArea](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtextarea) | RzInputTextArea |
 | [ValidationSummary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#validationsummary) | RzValidationSummary |
 
-All of the input components, including RzEditForm, support arbitrary attributes. Any attribute that doesn't match a component parameter is added to the rendered HTML element.
+All of the input components support arbitrary attributes. Any attribute that doesn't match a component parameter is added to the rendered HTML element.
 
 Input components provide default behavior for validating when a field is changed:
 
