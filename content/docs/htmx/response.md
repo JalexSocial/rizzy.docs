@@ -1,5 +1,3 @@
-Below is the documentation with all the C# examples reformatted for proper indentation:
-
 ---
 
 title: "Response"  
@@ -19,7 +17,6 @@ seo:
   description: "" # custom description (recommended)  
   canonical: "" # custom canonical URL (optional)  
   noindex: false # false (default) or true  
-
 ---
 
 The `HtmxResponse` class enables developers to manage client-side behavior through response headers in applications that leverage HTMX. This includes navigating, refreshing, and updating parts of the web page without a full reload, as well as triggering client-side events.
