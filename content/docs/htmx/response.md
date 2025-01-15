@@ -1,22 +1,27 @@
+Below is the documentation with all the C# examples reformatted for proper indentation:
+
 ---
-title: "Response"
-description: ""
-summary: ""
-date: 2024-02-05T12:10:35-05:00
-lastmod: 2024-02-05T12:10:35-05:00
-draft: false
-menu:
-  docs:
-    parent: ""
-    identifier: "response-62ebe8c1dcbe3a08e7cf1a03c3fff9ab"
-weight: 300
-toc: true
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
+
+title: "Response"  
+description: ""  
+summary: ""  
+date: 2024-02-05T12:10:35-05:00  
+lastmod: 2024-02-05T12:10:35-05:00  
+draft: false  
+menu:  
+  docs:  
+    parent: ""  
+    identifier: "response-62ebe8c1dcbe3a08e7cf1a03c3fff9ab"  
+weight: 300  
+toc: true  
+seo:  
+  title: "" # custom title (optional)  
+  description: "" # custom description (recommended)  
+  canonical: "" # custom canonical URL (optional)  
+  noindex: false # false (default) or true  
+
 ---
+
 The `HtmxResponse` class enables developers to manage client-side behavior through response headers in applications that leverage HTMX. This includes navigating, refreshing, and updating parts of the web page without a full reload, as well as triggering client-side events.
 
 | Member Signature | Return Type | Description |
@@ -44,12 +49,12 @@ The `HtmxResponse` class enables developers to manage client-side behavior throu
 | `Trigger<TEventDetail>(string eventName, TEventDetail detail, TriggerTiming timing = TriggerTiming.Default, JsonSerializerOptions? jsonSerializerOptions = null)` | `HtmxResponse` | Triggers a client-side event with a given `eventName`, including serialized event detail data, optional timing, and optional JSON serializer options. |
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
-The HtmxResponse class was constructed based on HTMX usage of Response headers.  You can find more information about HTMX response headers on the official [Htmx documentation site](https://htmx.org/reference/#response_headers).
+The HtmxResponse class was constructed based on HTMX usage of Response headers. You can find more information about HTMX response headers on the official [Htmx documentation site](https://htmx.org/reference/#response_headers).
 {{< /callout >}}
 
 ## Working With HtmxResponse
 
-`HtmxResponse` only has a dependency on HttpContext, so you can use it in any scoped dependency service that has access to HttpContext.  To manually create an HtmxResponse object you need only to create a new instance of the class as follows:
+`HtmxResponse` only has a dependency on HttpContext, so you can use it in any scoped dependency service that has access to HttpContext. To manually create an HtmxResponse object you need only to create a new instance of the class as follows:
 
 ```csharp
 var response = new HtmxResponse(httpContext);
@@ -64,8 +69,12 @@ Performs a client-side redirect to the specified path without a full page reload
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Location("/new-path"); });
+Response.Htmx(h =>
+{
+    h.Location("/new-path");
+});
 ```
+
 This method is particularly useful for implementing SPA-like behavior in traditional server-rendered applications, allowing for partial updates and navigation without losing the state of the application.
 
 ## PushUrl
@@ -75,8 +84,12 @@ Pushes a new URL onto the browser's history stack. This method leverages HTMX's 
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.PushUrl("/another-path"); });
+Response.Htmx(h =>
+{
+    h.PushUrl("/another-path");
+});
 ```
+
 Use this method to dynamically update the URL in response to partial content updates, ensuring that users can use the browser's back and forward buttons as expected.
 
 ## PreventBrowserHistoryUpdate
@@ -86,7 +99,10 @@ Ensures that the browser's history is not updated following an AJAX request, ove
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.PreventBrowserHistoryUpdate(); });
+Response.Htmx(h =>
+{
+    h.PreventBrowserHistoryUpdate();
+});
 ```
 
 ## PreventBrowserCurrentUrlUpdate
@@ -96,7 +112,10 @@ Stops the browser’s current URL from being updated.
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.PreventBrowserCurrentUrlUpdate(); });
+Response.Htmx(h =>
+{
+    h.PreventBrowserCurrentUrlUpdate();
+});
 ```
 
 ## Redirect
@@ -106,7 +125,10 @@ Facilitates a client-side redirection, akin to a traditional HTTP redirect but e
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Redirect("/redirect-path"); });
+Response.Htmx(h =>
+{
+    h.Redirect("/redirect-path");
+});
 ```
 
 This method is useful for redirecting the user after actions that do not require a full page reload, such as form submissions or after performing AJAX-based operations.
@@ -118,7 +140,10 @@ Triggers a full page refresh from the server-side. This can be particularly bene
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Refresh(); });
+Response.Htmx(h =>
+{
+    h.Refresh();
+});
 ```
 
 In HTMX, a full page refresh might be necessary in scenarios where client-side state needs to be completely reset, or when significant changes have been made that require a fresh page load.
@@ -130,7 +155,10 @@ Updates the current URL in the browser's location bar.
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.ReplaceUrl("/new-url"); });
+Response.Htmx(h =>
+{
+    h.ReplaceUrl("/new-url");
+});
 ```
 
 ## Reswap
@@ -144,20 +172,29 @@ Specifies how the response will be swapped into the target element. This allows 
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Reswap(SwapStyle.innerHTML); });
+Response.Htmx(h =>
+{
+    h.Reswap(SwapStyle.innerHTML);
+});
 ```
 
 *Example with Modifiers*
 
 ```csharp
-Response.Htmx(h => { h.Reswap(SwapStyle.innerHTML.ShowWindow(ScrollDirection.top).Transition(true)); });
+Response.Htmx(h =>
+{
+    h.Reswap(SwapStyle.innerHTML.ShowWindow(ScrollDirection.top).Transition(true));
+});
 // Reswap output: "innerHTML show:window:top transition:true"
 ```
 
 *Example with Fluent Modifiers*
 
 ```csharp
-Response.Htmx(h => { h.Reswap(SwapStyle.beforebegin.ShowWindow(ScrollDirection.top)); });
+Response.Htmx(h =>
+{
+    h.Reswap(SwapStyle.beforebegin.ShowWindow(ScrollDirection.top));
+});
 // Reswap output: "beforebegin show:window:top"
 ```
 
@@ -175,7 +212,6 @@ Here are the `SwapStyle` options that define how the response is swapped into th
 - `delete`: Deletes the target element, regardless of the response.
 - `none`: Does not append content from the response (though out-of-band items will still be processed).
 
-
 ## Retarget
 
 Changes the target element for the response update using a CSS selector.
@@ -183,7 +219,10 @@ Changes the target element for the response update using a CSS selector.
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Retarget("#new-target"); });
+Response.Htmx(h =>
+{
+    h.Retarget("#new-target");
+});
 ```
 
 ## Reselect
@@ -193,7 +232,10 @@ Determines which part of the response is swapped in, using a CSS selector.
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Reselect(".content-part"); });
+Response.Htmx(h =>
+{
+    h.Reselect(".content-part");
+});
 ```
 
 ## Trigger
@@ -203,7 +245,10 @@ Initiates custom events on the client side, which can be used to trigger JavaScr
 *Example*
 
 ```csharp
-Response.Htmx(h => { h.Trigger("customEvent", new { key = "value" }, TriggerTiming.AfterSwap); });
+Response.Htmx(h =>
+{
+    h.Trigger("customEvent", new { key = "value" }, TriggerTiming.AfterSwap);
+});
 ```
 
 This functionality is particularly useful for integrating server-side logic with client-side behaviors, allowing developers to create rich, interactive web applications that respond dynamically to server-side changes.
@@ -217,5 +262,3 @@ Understanding the timing for triggering client-side events is also crucial:
 - `AfterSwap`: Trigger events after the swap step, ensuring the DOM has been updated.
 
 These options can be used with the `Trigger` method to control when events are fired in response to HTMX actions.
-
-
