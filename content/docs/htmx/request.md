@@ -19,6 +19,19 @@ seo:
 ---
 The `HtmxRequest` class provides properties to determine characteristics of a request triggered by HTMX within an ASP.NET application. This class helps in identifying whether a request is made via HTMX, if it is boosted, part of a history restore, or contains specific HTMX-related headers such as the current URL, target, trigger name, trigger id, and prompt responses.
 
+| Property         | Type              | Description                                                                                         |
+|------------------|-------------------|-----------------------------------------------------------------------------------------------------|
+| `Method`         | `string`          | Gets the HTTP method of the current request.                                                      |
+| `Path`           | `PathString`      | Gets the request path.                                                                              |
+| `IsHtmx`         | `bool`            | Gets whether or not the current request is an Htmx triggered request.                               |
+| `IsBoosted`      | `bool`            | Gets whether or not the current request is initiated via an element using `hx-boost`.                 |
+| `IsHistoryRestore` | `bool`          | Gets whether or not the current request is an Htmx history restore request.                         |
+| `CurrentURL`     | `Uri?`            | Gets the current URL of the browser.                                                                |
+| `Target`         | `string?`         | Gets the `id` of the target element if it exists.                                                 |
+| `TriggerName`    | `string?`         | Gets the `name` of the triggered element if it exists.                                             |
+| `Trigger`        | `string?`         | Gets the `id` of the triggered element if it exists.                                               |
+| `Prompt`         | `string?`         | Gets the user response to an `hx-prompt`, if any.                                                   |
+
 {{< callout context="note" title="Note" icon="info-circle" >}}
 The HtmxRequest class was constructed based on HTMX usage of Request headers.  You can find more information about HTMX request headers on the official [Htmx documentation site](https://htmx.org/reference/#request_headers).
 {{< /callout >}}
@@ -31,16 +44,15 @@ The HtmxRequest class was constructed based on HTMX usage of Request headers.  Y
 var request = new HtmxRequest(httpContext);
 ```
 
+This table summarizes the public interface of the **HtmxRequest** class as defined in your provided code.
+
 For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available within the `RzViewContext` service. The `RzViewContext` service is injected into any RzController instance and is made available as the ViewContext property.  The ViewContext is also available as both a cascaded parameter to any View rendered from the controller.
 
-The `HtmxResponse` object is accessible from the controller property:
+The `HtmxResponse` object is accessible from the Response controller property:
 
 ```csharp
-ViewContext.Htmx.Response
+var request = Request.Htmx();
 ```
-
-All of the proceeding examples will reflect usage of the ViewContext approach.
-
 
 ## IsHtmx
 
@@ -49,7 +61,7 @@ Determines if the current request was triggered by HTMX.
 **Example**
 
 ```csharp
-bool isHtmxRequest = ViewContext.Htmx.Request.IsHtmx;
+bool isHtmxRequest = Request.IsHtmx();
 ```
 
 ## IsBoosted
@@ -59,7 +71,7 @@ Checks whether the current request was initiated via an element using `hx-boost`
 **Example**
 
 ```csharp
-bool isBoosted = ViewContext.Htmx.Request.IsBoosted;
+bool isBoosted = Request.Htmx().IsBoosted;
 ```
 
 ## IsHistoryRestore
@@ -69,7 +81,7 @@ Identifies if the request is an HTMX history restore request.
 **Example**
 
 ```csharp
-bool isHistoryRestore = ViewContext.Htmx.Request.IsHistoryRestore;
+bool isHistoryRestore = Request.Htmx().IsHistoryRestore;
 ```
 
 ## CurrentURL
@@ -79,7 +91,7 @@ Gets the current URL from the browser as triggered by the HTMX request.
 **Example**
 
 ```csharp
-Uri? currentUrl = ViewContext.Htmx.Request.CurrentURL;
+Uri? currentUrl = Request.Htmx().CurrentURL;
 ```
 
 ## Target
@@ -89,7 +101,7 @@ Retrieves the `id` of the target element from the HTMX request if it exists.
 **Example**
 
 ```csharp
-string? targetId = ViewContext.Htmx.Request.Target;
+string? targetId = Request.Htmx().Target;
 ```
 
 ## TriggerName
@@ -99,7 +111,7 @@ Obtains the `name` of the element that triggered the HTMX request if available.
 **Example**
 
 ```csharp
-string? triggerName = ViewContext.Htmx.Request.TriggerName;
+string? triggerName = Request.Htmx().TriggerName;
 ```
 
 ## Trigger
@@ -109,7 +121,7 @@ Gets the `id` of the element that initiated the HTMX request if present.
 **Example**
 
 ```csharp
-string? triggerId = ViewContext.Htmx.Request.Trigger;
+string? triggerId = Request.Htmx().Trigger;
 ```
 
 ## Prompt
@@ -119,5 +131,5 @@ Retrieves the user response to an `hx-prompt` from the HTMX request, if any.
 **Example**
 
 ```csharp
-string? promptResponse = ViewContext.Htmx.Request.Prompt;
+string? promptResponse = Request.Htmx().Prompt;
 ```

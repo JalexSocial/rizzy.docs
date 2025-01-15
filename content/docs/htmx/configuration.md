@@ -19,7 +19,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-In your application, HTMX configurations can be customized to tailor AJAX behavior and enhance user interactions. This document provides a comprehensive guide on configuring HTMX within your application.
+This document provides a comprehensive guide on configuring HTMX within your application.
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
 The configuration portion or Rizzy was constructed based on HTMX head configuration.  You can find more information about HTMX head configuration on the official [Htmx documentation site](https://htmx.org/docs/#config).
@@ -81,6 +81,9 @@ Here is a description of the HTMX configuration properties that can be customize
 | AllowEval                | Specifies whether to allow eval.                                                                      |
 | AllowScriptTags          | Specifies whether to allow script tags.                                                               |
 | InlineScriptNonce        | Sets the nonce for inline scripts.                                                                    |
+| InlineStyleNonce         | Sets the nonce for inline styles.                                                                    |
+| GenerateScriptNonce      | If true, will utilize an IRizzyNonceProvider instance to generate script nonces for CSP policies.    |
+| GenerateStyleNonce       | If true, will utilize an IRizzyNonceProvider instance to generate style nonces for CSP policies.    |
 | AttributesToSettle       | Specifies attributes to settle during the settling phase.                                             |
 | UseTemplateFragments     | Specifies whether to use HTML template tags for parsing content.                                       |
 | WsReconnectDelay         | Sets the WebSocket reconnect delay.                                                                  |
@@ -100,4 +103,4 @@ Here is a description of the HTMX configuration properties that can be customize
 
 ## Conclusion
 
-By following this documentation, you can effectively configure HTMX in your library, enhancing the user experience and optimizing AJAX behavior according to your application's requirements.
+By following this documentation, you can effectively configure HTMX in your library according to your application's requirements.
