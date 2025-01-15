@@ -44,10 +44,6 @@ The HtmxRequest class was constructed based on HTMX usage of Request headers.  Y
 var request = new HtmxRequest(httpContext);
 ```
 
-This table summarizes the public interface of the **HtmxRequest** class as defined in your provided code.
-
-For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available within the `RzViewContext` service. The `RzViewContext` service is injected into any RzController instance and is made available as the ViewContext property.  The ViewContext is also available as both a cascaded parameter to any View rendered from the controller.
-
 The `HtmxResponse` object is accessible from the Response controller property:
 
 ```csharp
