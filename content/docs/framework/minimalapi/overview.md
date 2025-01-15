@@ -21,7 +21,7 @@ Rizzy works with Minimal APIs by providing the ability to render both views and 
 
 ### Properties
 
-- **ViewContext**: Holds the view context necessary for rendering Razor components, providing configuration and rendering information.
+- **ViewContext**: [Obsolete] Holds the view context necessary for rendering Razor components, providing configuration and rendering information.
 
 ### Methods
 

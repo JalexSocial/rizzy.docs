@@ -33,7 +33,6 @@ are intended to function.
 - Dynamically renders Razor components as full pages.
 - Wraps a component of your choice inside the Rizzy-configured [RootComponent](/docs/introduction/getting-started/#configuration).
 - Supports dynamic layout selection based on attributes or Rizzy application configuration.
-- Utilizes cascading values to pass `RzViewContext` for accessing app-wide context information.
 
 ### Usage
 - Configuration involves specifying `ComponentType`, `ComponentParameters`, and providing a `ViewContext` for the component being rendered.
@@ -48,7 +47,7 @@ Similar to `RzPage`, `RzPartial` is designed for rendering Razor components as p
 - Suitable for dynamic content loading and updating within existing pages.
 
 ### Usage
-- Like `RzPage`, `RzPartial` is rendered through services or controllers, specifying `ComponentType`, `ComponentParameters`, and `ViewContext`.
+- Like `RzPage`, `RzPartial` is rendered through services or controllers, specifying `ComponentType` and `ComponentParameters`.
 - Primarily used for injecting dynamic content into specific sections of a page, enhancing modularity and reusability of components.
 
 ## Special Notes
