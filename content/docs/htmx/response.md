@@ -60,6 +60,21 @@ The HtmxResponse class was constructed based on HTMX usage of Response headers. 
 var response = new HtmxResponse(httpContext);
 ```
 
+Or as an HttpContext.Response extension:
+
+```csharp
+var response = HttpContext.Response.Htmx();
+```
+
+If you are familiar with Htmx.net, then you can use a similar syntax under the Rizzy library.  Please note that Rizzy uses it's own HTMX server-side implementation so you will need to use the documentation.
+
+```csharp
+HttpContext.Response(h => {
+  h.PushUrl("/new-url")
+   .Trigger("show-special-notification")
+});
+```
+
 For the purposes of the examples in this guide, we will be using an instance of HtmxResponse that is available as an HttpResponse extension.
 
 ## Location
