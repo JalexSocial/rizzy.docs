@@ -15,8 +15,6 @@ seo:
   noindex: false # false (default) or true
 ---
 
-# Content Security Policy (CSP) and Nonces
-
 This document provides a brief overview of CSP, the use of nonces for securing inline scripts, styles, and other content, and how to use the `IRizzyNonceProvider` for nonce management.
 
 ## What is CSP?
