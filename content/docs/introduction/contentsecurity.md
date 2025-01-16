@@ -35,7 +35,7 @@ Nonces (numbers used once) allow inline content to execute when its nonce matche
 
 ## Generating and Validating Nonces with Rizzy
 
-Rizzy provides an interface, `IRizzyNonceProvider`, for generating nonce values. The provider uses a cryptographically secure HMAC key to generate and validate nonce tokens. An HMAC key must be provided during application startup or can be generated automatically.
+Rizzy provides an interface, `IRizzyNonceProvider`, for generating nonce values. The provider uses a cryptographically secure HMAC key to generate and validate nonce tokens. An HMAC key must be provided during application startup or can be generated automatically for you. You do not need to provide a NonceHMACKey configuration value if you want to have the key generated automatically.
 
 ### IRizzyNonceProvider
 
@@ -67,7 +67,7 @@ builder.AddRizzy(config =>
 });
 ```
 
-For distributed environments, ensure that all instances share the same HMAC key. Otherwise, the key can be generated automatically during startup.
+For distributed environments, ensure that all instances share the same HMAC key. Otherwise, the key can be generated automatically during startup. You do not need to provide a NonceHMACKey configuration value if you want to have the key generated automatically by Rizzy.
 
 ### Generating a Secure HMAC Key
 
