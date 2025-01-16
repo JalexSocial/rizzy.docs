@@ -1,10 +1,11 @@
 ---
+
 title: "Content Security Policy"
 description: ""
 summary: ""
 date: 2025-01-16T12:51:13-05:00
 lastmod: 2025-01-16T12:51:13-05:00
-draft: true
+draft: false
 weight: 999
 toc: true
 seo:
