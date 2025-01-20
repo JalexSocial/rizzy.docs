@@ -29,19 +29,20 @@ The configuration portion or Rizzy was constructed based on HTMX head configurat
 
 ### Adding HTMX Configuration in Program.cs
 
-In `Program.cs`, you can add custom HTMX configurations using the `AddRizzy()` method, which constructs a special configuration builder. You can then chain it together with calls to `WithHtmxConfiguration()` to create configurations for your app. Here's an example:
+In `Program.cs`, you can add custom HTMX configurations using the `AddHtmx()` method. You can also add named configurations for your app. Here's an example:
 
 ```csharp
-builder.Services.AddRizzy()
-    .WithHtmxConfiguration(config =>
+builder.Services.AddHtmx(config =>
     {
         config.SelfRequestsOnly = true;
-    })
-    .WithHtmxConfiguration("articles", config =>
-    {
-        config.SelfRequestsOnly = true;
-        config.GlobalViewTransitions = true;
     });
+
+// Add an alternate named configuration
+builder.Services.Configure<HtmxConfig>("articles", config =>
+{
+	config.SelfRequestsOnly = true;
+	config.GlobalViewTransitions = true;
+});    
 ```
 
 The first call creates a default configuration, while the second call creates a named configuration using the configuration name "articles".

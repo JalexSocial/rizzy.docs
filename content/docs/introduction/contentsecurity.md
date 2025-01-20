@@ -129,8 +129,7 @@ Below is a simplified example of using the nonce values in a Blazor component. N
 Configure HTMX to use the IRizzyNonceProvider implementation to correctly configure nonce values in the HTMX configuration.
 
 ```razor
-builder.Services.AddRizzy()
-    .WithHtmxConfiguration(config =>
+builder.Services.AddHtmx(config =>
     {
         config.GenerateScriptNonce = true;
         config.GenerateStyleNonce = true;
