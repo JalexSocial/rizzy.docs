@@ -32,10 +32,12 @@ The configuration portion or Rizzy was constructed based on HTMX head configurat
 In `Program.cs`, you can add custom HTMX configurations using the `AddHtmx()` method. You can also add named configurations for your app. Here's an example:
 
 ```csharp
+using Rizzy.Htmx;
+
 builder.Services.AddHtmx(config =>
-    {
-        config.SelfRequestsOnly = true;
-    });
+{
+  config.SelfRequestsOnly = true;
+});
 
 // Add an alternate named configuration
 builder.Services.Configure<HtmxConfig>("articles", config =>
