@@ -61,7 +61,7 @@ The `NonceType` enumeration defines the supported types of nonce values. These a
 Nonces require an HMAC key for generation and validation. Configure the key on application startup (the key must be a Base64-encoded string at least 256 bits in length):
 
 ```csharp
-builder.AddRizzy(config =>
+builder.Services.AddRizzy(config =>
 {
     config.NonceHMACKey = "Your_Base64_Encoded_HMAC_Key";
 });
@@ -122,6 +122,19 @@ Below is a simplified example of using the nonce values in a Blazor component. N
 @code {
     [Inject] private IRizzyNonceProvider NonceProvider { get; set; } = null!;
 }
+```
+
+## Usage with HTMX to Automatically Generate Nonces
+
+Configure HTMX to use the IRizzyNonceProvider implementation to correctly configure nonce values in the HTMX configuration.
+
+```razor
+builder.Services.AddRizzy()
+    .WithHtmxConfiguration(config =>
+    {
+        config.GenerateScriptNonce = true;
+        config.GenerateStyleNonce = true;
+    })
 ```
 
 ## Summary

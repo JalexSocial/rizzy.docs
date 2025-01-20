@@ -39,7 +39,7 @@ For the latest version and more details, visit the [Rizzy NuGet package page](ht
 After installing Rizzy, you need to configure it in your `Program.cs` or startup configuration file. This setup involves specifying your application's root component, default layout, antiforgery strategy, and HTMX configurations. Here's how to add Rizzy to your application builder:
 
 ```csharp
-builder.AddRizzy(config =>
+builder.Services.AddRizzy(config =>
     {
         config.RootComponent = typeof(HtmxApp<AppLayout>);
         config.DefaultLayout = typeof(HtmxLayout<MainLayout>);
