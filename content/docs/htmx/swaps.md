@@ -170,7 +170,4 @@ As an alternate way to render all added content, you can also simply invoke the 
 RenderFragment contentFragment = HtmxSwapService.RenderToFragment();
 ```
 
-
-Typically you would add this to the very end of your template just before the closing body tag.
-
 This approach allows for a flexible way to manage and update your application's UI dynamically.

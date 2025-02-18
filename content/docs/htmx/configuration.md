@@ -1,5 +1,5 @@
 ---
-title: "Configuration"
+title: "Getting Started"
 description: ""
 summary: ""
 date: 2024-02-05T12:11:27-05:00
@@ -19,13 +19,35 @@ seo:
   noindex: false # false (default) or true
 ---
 
-This document provides a comprehensive guide on configuring HTMX within your application.
+This document provides a comprehensive guide on setting up and configuring HTMX within your application.
+
+To add the `Rizzy.Htmx` NuGet package to your project, follow these steps:
+
+## Installation
+
+### **Install the NuGet Package**
+
+You can add the `Rizzy.Htmx` NuGet package using either Visual Studio or the .NET CLI.
+
+### **Using Visual Studio**
+1. Open your project in Visual Studio.
+2. Right-click on the **Dependencies** node in the Solution Explorer.
+3. Select **Manage NuGet Packages**.
+4. In the **NuGet Package Manager**, search for `Rizzy.Htmx`.
+5. Click **Install**.
+
+### **Using the .NET CLI**
+If you prefer using the command line, navigate to your project directory and run the following command:
+
+```bash
+dotnet add package Rizzy.Htmx
+```
+
+## Customizing HTMX Configuration
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
 The configuration portion or Rizzy was constructed based on HTMX head configuration.  You can find more information about HTMX head configuration on the official [Htmx documentation site](https://htmx.org/docs/#config).
 {{< /callout >}}
-
-## Customizing HTMX Configuration
 
 ### Adding HTMX Configuration in Program.cs
 
