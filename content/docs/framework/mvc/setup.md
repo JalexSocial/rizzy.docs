@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Setup with MVC Controllers"
 description: "Integrate Rizzy with your ASP.NET MVC controllers to render Razor Components, automatically cascade ModelState, and combine multiple render fragments."
