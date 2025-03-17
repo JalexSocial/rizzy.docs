@@ -47,10 +47,10 @@ Rizzy provides a basic service for generating nonce values that can be injected 
 
 ## Usage in a Blazor Application (App.razor)
 
-Below is a simplified example of using the nonce values in a Blazor component. Nonce values are injected into the CSP meta tag and applied to inline script and stylesheet links using the `GetNonceFor(NonceType.X)` methods.
+Below is a simplified example of using the nonce values in a Blazor component. Nonce values are injected into the CSP meta tag and applied to inline script and stylesheet links using the `GetNonce()` method.
 
 ```razor
-@using Rizzy
+@using Rizzy.Htmx
 
 <!DOCTYPE html>
 <html lang="en">
@@ -86,7 +86,7 @@ Below is a simplified example of using the nonce values in a Blazor component. N
 Configure HTMX to use the IRizzyNonceProvider implementation to correctly configure nonce values in the HTMX configuration.  
 
 {{< callout context="caution" title="Warning" icon="utline/alert-triangle" >}}
-These configuration options will set the inlineScriptNonce and inlineStyleNonce settings. These settings cause nonce values to be injected into any received content from an htmx request and will negate the use of Content Security Policies.  Please use with extreme caution.
+These configuration options will set the inlineScriptNonce and inlineStyleNonce settings. inlineScriptNonce will cause nonce values to be injected into any received content from an htmx request and will negate the use of Content Security Policies.  Please use with extreme caution.
 {{< /callout >}}
 
 
@@ -102,4 +102,4 @@ builder.Services.AddHtmx(config =>
 ## Summary
 
 - **CSP:** Enforces permitted sources for content. Nonces ensure that only inline content with the correct one-time value is executed.
-- **Nonce Generation:** Nonces are generated using secure random bytes and available as an extension method via HttpContext
+- **Nonce Generation:** Nonces are generated using secure random bytes and available via the IRizzyNonceProvider scoped service

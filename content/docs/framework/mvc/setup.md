@@ -1,101 +1,192 @@
+```markdown
 ---
 title: "Setup with MVC Controllers"
-description: ""
-summary: ""
+description: "Integrate Rizzy with your ASP.NET MVC controllers to render Razor Components, automatically cascade ModelState, and combine multiple render fragments."
 date: 2024-02-25T18:39:34-05:00
 lastmod: 2024-02-25T18:39:34-05:00
 draft: false
 menu:
   docs:
-    parent: ""
     identifier: "setup-68f0d8c4af328cc4a6370500fcc4986e"
 weight: 50
 toc: true
 seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
+  title: "Setup with MVC Controllers"
+  description: "A detailed guide on integrating Rizzy with MVC controllers, cascading ModelState, and rendering multiple render fragments."
 ---
 
-Rizzy enhances ASP.NET MVC applications by integrating Razor Components, offering a seamless way to incorporate component-based views within your traditional MVC architecture. This guide outlines how to utilize Rizzy to leverage the power of Razor Components in your MVC controllers.
+Rizzy transforms your traditional ASP.NET MVC applications by integrating Razor Components into your controllers. This powerful integration enables you to build modern, interactive UIs while still leveraging the familiar MVC architecture. In this guide, you will learn how to render Razor Component views and partial views, combine multiple render fragments, and handle form data within your components.
 
 ## Getting Started
 
-### Upgrading Your Controller
+To begin, update your MVC controllers so that they inherit from either `RzController` or `RzControllerWithViews`. This allows Rizzy to automatically cascade ModelState and pass any necessary data to your Razor Components.
 
-Alter your MVC controllers to inherit from `RzController` for basic functionality:
+For example, create a controller that renders Razor Component views:
 
-```csharp {title="HomeController.cs"}
+```csharp
+// HomeController.cs - Full Component View
 public class HomeController : RzController
 {
-    // Controller actions here
+    public IResult Index()
+    {
+        // Renders the HomeIndex component as a full view.
+        return View<HomeIndex>();
+    }
 }
 ```
 
-For applications that require returning MVC Views alongside Razor Components, use `RzControllerWithViews`:
+If your application needs to return both Razor Component views and traditional MVC views, use:
 
-```csharp {title="HomeController.cs"}
+```csharp
+// HomeController.cs - Mixed Views
 public class HomeController : RzControllerWithViews
 {
-    // Controller actions here, with the ability to return MVC Views
+    // Controller actions can return both Razor Component views and standard MVC views.
 }
 ```
 
 ## Rendering Views and Partial Views
 
-Rizzy enables your controllers to render Razor Components as full views or partial views, providing a flexible approach to building your UI. This is achieved through the following methods available in `RzController`. Each `TComponent` type must be a Razor Component:
+Rizzy extends your controllers with methods to render Razor Components as full views or partial views. Here are the key methods provided by `RzController`:
 
-- **View&lt;TComponent&gt;(object? data = null)**: Renders the specified Razor Component as a full view. This method allows you to pass parameter data to the component, enriching your UI with interactive and data-driven components.
+- **View&lt;TComponent&gt;(object? data = null)**  
+  Renders the specified Razor Component as a full view. Pass parameters using an anonymous object.
 
-- **View&lt;TComponent&gt;(Dictionary&lt;string, object?&gt; data)**: This overload accepts a dictionary of data, providing a structured way to pass parameters to your Razor Component. It's particularly useful when you have multiple pieces of data to pass to the component.
+- **View&lt;TComponent&gt;(Dictionary&lt;string, object?&gt; data)**  
+  Accepts a dictionary of parameters, which is useful when passing multiple pieces of data.
 
-- **PartialView&lt;TComponent&gt;(object? data = null)**: Renders a specified Razor Component as a partial view. This method is ideal for rendering components that are meant to be part of a larger page, such as widgets or reusable UI segments, without the layout associated with full views.
+- **PartialView&lt;TComponent&gt;(object? data = null)**  
+  Renders the specified Razor Component as a partial view without the outer layout. Ideal for widgets or reusable UI segments.
 
-- **PartialView&lt;TComponent&gt;(Dictionary&lt;string, object?&gt; data)**: Similar to its full view counterpart, this method accepts a dictionary of data for rendering the component. It enables the inclusion of complex components within existing views, enhancing the modularity of your application.
+- **PartialView&lt;TComponent&gt;(Dictionary&lt;string, object?&gt; data)**  
+  Works like the full view overload but accepts a dictionary.
 
-Here's an example from `HomeController` where we return a Razor Component called `HomeIndex`:
+For example, to render a component named `HomeIndex` with parameters:
 
 ```csharp
-    public IResult Index()
-    {
-        return View<HomeIndex>();
-    }
-```
-
-To utilize a familiar MVC-style feel to passing parameters to components you can still opt to call your parameter `Model` as follows:
-
-```csharp {title="HomeController.cs"}
-    public IResult Index()
-    {
-        var myModel = new MyViewModel();
-
-        return View<Message>(new { Model = myModel });
-    }
-```
-
-Then inside your Razor Component you just need to call your parameter `Model`:
-
-```csharp {title="Message.razor"}
-
-@Model.Message
-
-@code {
-  [Parameter]
-  public MyViewModel? Model {get; set;} = default!;
+public IResult Index()
+{
+    var myModel = new MyViewModel { Message = "Hello from MVC!" };
+    return View<HomeIndex>(new { Model = myModel });
 }
 ```
 
-## JSON Serialization
+## Rendering Multiple Render Fragments
 
-Rizzy provides methods for serializing data to JSON, facilitating the development of APIs or dynamic web applications that require JSON responses:
+Rizzy also supports rendering multiple render fragments in a single partial view. This feature is especially useful when you want to compose a page from several independent UI sections without wrapping them in one large component.
 
-- **Json(object? data)**: Serializes the provided data object to JSON. This method simplifies the process of returning JSON responses from your controller actions.
+Use the overload that accepts an array of `RenderFragment` objects:
 
-- **Json(object? data, object? serializerSettings)**: Allows for custom serialization by accepting serializer settings. This method gives you control over the serialization process, enabling you to tailor the JSON response according to your requirements.
+**MultiFragments.razor**
 
-## Leveraging Razor Components
+```razor
+@code {
+    // A simple header fragment defined with inline markup.
+    public static RenderFragment Header => @<header>This is the header section.</header>;
 
-By inheriting from `RzController` or `RzControllerWithViews`, you unlock the ability to seamlessly integrate Razor Components into your MVC applications. This integration bridges the gap between traditional MVC development and modern component-based architectures, offering you the flexibility to build rich, interactive web applications using ASP.NET's robust ecosystem.
+    // A main content fragment that accepts dynamic content as a parameter.
+    public static RenderFragment MainContent(string content) => 
+		@<main>
+			@content
+		</main>;
 
-Rizzy's approach to rendering Razor Components as views or partial views directly within MVC controllers enriches your application's UI capabilities, making it easier to develop complex, data-driven interfaces with the reusable and maintainable codebase that Razor Components provide.
+    // A footer fragment defined with inline markup.
+    public static RenderFragment Footer => @<footer>This is the footer section.</footer>;
+}
+```
+
+**Controller Method**
+```csharp
+public IResult MultiFragmentView()
+{
+    // Render all fragments together as a composite partial view.
+    return PartialView(
+        MultiFragments.Header, 
+        MultiFragments.MainContent("This is the main content area."), 
+        MultiFragments.Footer
+    );
+}
+```
+
+In this example, the header, content, and footer fragments are rendered sequentially to build a complete composite view, making your UI modular and maintainable.
+
+## Handling Form Data
+
+Rizzy simplifies the process of handling form data by automatically cascading the ModelState to your views and partial views. This ensures that any validation errors from your controller are available within your Razor Components.
+
+A key component in this process is `<RzInitialValidator>`. When placed inside an `EditForm`, it checks whether ModelState errors exist. If errors are present, it transfers them to the form. Otherwise, it automatically invokes the form's `Validate` method so that your component begins with accurate validation.
+
+There are two approaches to working with form data in your components:
+
+### 1. Passing the Model as a Parameter
+
+In this approach, the controller passes the model explicitly to the view, and your component declares a property decorated with `[Parameter]`. This method is useful when you want to explicitly control the data being sent to your component.
+
+**Controller Example:**
+
+```csharp
+public IResult SubmitForm(Person person)
+{
+    if (!ModelState.IsValid)
+    {
+        // Pass the model explicitly to the partial view.
+        return PartialView<FormComponent>(new { Model = person });
+    }
+    // Process valid data...
+    return View<SuccessComponent>();
+}
+```
+
+**Razor Component Example:**
+
+```razor
+@* FormComponent.razor *@
+<EditForm Model="@Model">
+    <RzInitialValidator />
+    <!-- Form inputs go here -->
+</EditForm>
+
+@code {
+    [Parameter]
+    public Person? Model { get; set; }
+}
+```
+
+### 2. Binding the Model Directly from the Form
+
+Alternatively, you can allow the form to supply the model data directly to your component by using `[SupplyParameterFromForm]`. In this scenario, you do not need to pass the model from your controller.
+
+**Controller Example:**
+
+```csharp
+public IResult SubmitForm()
+{
+    // No need to pass the model explicitly; it will be bound from the form.
+    return PartialView<FormComponent>();
+}
+```
+
+**Razor Component Example:**
+
+```razor
+@* FormComponent.razor using form binding *@
+<EditForm>
+    <RzInitialValidator />
+    <!-- Form inputs go here -->
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    public Person? Person { get; set; }
+}
+```
+
+Both approaches ensure that your form data is available in your Razor Component, with `<RzInitialValidator>` handling ModelState errors by transferring them to the EditForm if they exist, or by automatically validating the form if no errors are present.
+
+## Conclusion
+
+By upgrading your MVC controllers to inherit from `RzController` or `RzControllerWithViews`, you unlock the ability to integrate Razor Components into your application seamlessly. Rizzy automatically cascades ModelState to your views, supports both full and partial view rendering, and even allows you to combine multiple render fragments into a single composite view.
+
+Whether you choose to pass your model explicitly using `[Parameter]` or bind it directly from the form with `[SupplyParameterFromForm]`, Rizzy adapts to your workflow. With these capabilities at your fingertips, you can build rich, interactive web applications that blend the best of both MVC and modern component-based architectures.
+
+Happy coding!
