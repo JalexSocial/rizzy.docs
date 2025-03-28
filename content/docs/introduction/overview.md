@@ -20,11 +20,13 @@ seo:
 
 Rizzy is a lightweight library that enhances Asp.net MVC applications by seamlessly integrating Razor components for UI development and working with HTMX for progressive enhancement. With Rizzy, you can use composable Razor components to create dynamic and interactive user interfaces while ensuring a smooth user experience through HTMX.
 
+<img src="/images/rizzy-wide-banner.png" class="img-fluid">
+
 Rizzy allows developers to utilize static rendered SSR Blazor components with HTMX, where client-side interactivity is provided through the use of a touch of javascript to power each component. The interactivity comes through the usage of Alpine.js. Alpine.js is a lightweight JavaScript framework designed for adding interactivity to web pages with minimal overhead. It's often described as a "minimalist" alternative to heavier frameworks like Vue.js or React, providing the ability to handle tasks such as event handling, data binding, and DOM manipulation directly within HTML. Alpine.js is particularly useful for enhancing static pages without the need for a complex build setup, making it ideal for projects that need small, reactive components with a low learning curve. It leverages declarative syntax similar to Vue, making it intuitive and easy to integrate into existing projects.
 
 RizzyUI (optional) provides a full starter suite of Tailwind-based UI components, built with Alpine.js but created in a way to work with content security policies. This CSP-first approach requires careful consideration to each component design, as no Rizzy component contains any Alpine.js code that is actually executed inline. The result is much easier to debug.  Also, you as a developer are under no obligation to use Alpine.js CSP builds if you don't want to. Our approach was intended to address potential Alpine.js security considerations early in the process by adopting a standard of development that might exceed your own development requirements, particularly when it comes to CSP.
 
-<img src="/images/developer1.webp" class="img-fluid">
+<img src="/images/rizzy-wide-banner.png" class="img-fluid">
 
 ## Key Features and Benefits
 
