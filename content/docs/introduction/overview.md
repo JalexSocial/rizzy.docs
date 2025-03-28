@@ -26,8 +26,6 @@ Rizzy allows developers to utilize static rendered SSR Blazor components with HT
 
 RizzyUI (optional) provides a full starter suite of Tailwind-based UI components, built with Alpine.js but created in a way to work with content security policies. This CSP-first approach requires careful consideration to each component design, as no Rizzy component contains any Alpine.js code that is actually executed inline. The result is much easier to debug.  Also, you as a developer are under no obligation to use Alpine.js CSP builds if you don't want to. Our approach was intended to address potential Alpine.js security considerations early in the process by adopting a standard of development that might exceed your own development requirements, particularly when it comes to CSP.
 
-<img src="/images/rizzy-wide-banner.png" class="img-fluid">
-
 ## Key Features and Benefits
 
 Rizzy offers several features that make it a valuable tool for developers:
