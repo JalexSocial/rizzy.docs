@@ -40,7 +40,7 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 
 <img src="/images/flowchart.png" class="img-fluid">
 
-### 1. Initial Page Load (Standard Request)
+### Initial Page Load (Standard Request)
 
 1.  **Browser Request:** The user navigates to a URL, sending a standard HTTP GET request.
 2.  **ASP.NET Core Pipeline:** The request goes through routing and standard middleware.
@@ -55,7 +55,7 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 8.  **Full HTML Response:** The renderer generates the complete HTML for the page.
 9.  **Browser Renders:** The browser receives and renders the full HTML page. HTMX attributes (`hx-get`, `hx-post`, etc.) are now present in the DOM, ready for user interaction.
 
-### 2. HTMX Partial Update Request
+### HTMX Partial Update Request
 
 1.  **User Interaction:** The user interacts with an element containing HTMX attributes (e.g., clicks a button with `hx-post`).
 2.  **Browser Request (HTMX):** The browser, via HTMX, sends an AJAX request (GET, POST, etc.) to the specified URL. Crucially, this request includes **HTMX-specific headers** (like `HX-Request: true`, `HX-Target`, `HX-Trigger`).
@@ -85,13 +85,13 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 
 *   **Controllers / Minimal API Endpoints:** Handle incoming HTTP requests, perform business logic, and decide which Blazor component(s) to render.
 *   **`IRizzyService`:** Provides the `View<T>` and `PartialView<T>` methods, abstracting the component rendering logic for controllers/endpoints.
-*   **`RzPage` / `RzPartial`:** Core Rizzy components responsible for setting up the rendering environment for Blazor components, including layout selection.
+    *   **`RzPage` / `RzPartial`:** Core Rizzy components responsible for setting up the rendering environment for Blazor components, including layout selection.
 *   **Blazor SSR (`HtmlRenderer`):** The engine that takes the Blazor component tree and renders it to static HTML on the server.
-*   **`HtmxApp<T>` / `HtmxLayout<T>`:** Manage the application's root layout and intelligently switch between full and minimal rendering based on HTMX request headers.
-*   **`HtmxRequest` / `HtmxResponse`:** Classes and extensions providing strongly-typed access to read HTMX request headers and write HTMX response headers.
+    *   **`HtmxApp<T>` / `HtmxLayout<T>`:** Manage the application's root layout and intelligently switch between full and minimal rendering based on HTMX request headers.
+    *   **`HtmxRequest` / `HtmxResponse`:** Classes and extensions providing strongly-typed access to read HTMX request headers and write HTMX response headers.
 *   **`HtmxSwapService` / `HtmxSwappable`:** Facilitate server-driven Out-of-Band (OOB) swaps.
 *   **Rizzy Form Components (`RzInput*`, etc.):** Extend Blazor inputs to integrate with `EditContext` and potentially generate `data-val-*` attributes.
-*   **`DataAnnotationsProcessor` / `[SupplyParameterFromForm]`:** Bridge MVC validation and model binding concepts with Blazor components (Note: `[SupplyParameterFromForm]` currently relies on internal reflection).
+    *   **`DataAnnotationsProcessor` / `[SupplyParameterFromForm]`:** Bridge MVC validation and model binding concepts with Blazor components (Note: `[SupplyParameterFromForm]` currently relies on internal reflection).
 *   **Rizzy Middleware:** Optional pipeline component for handling cross-cutting concerns like nonce headers.
 
 ## Benefits of this Architecture
@@ -106,7 +106,6 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 
 *   **State Management:** Components rendered via SSR are typically stateless between requests. Managing state across HTMX interactions requires careful consideration.
 *   **Performance:** Blazor component rendering adds overhead compared to returning raw HTML strings. The impact depends on component complexity.
-*   **JavaScript Interop:** Standard Blazor JS Interop might behave differently or require specific initialization patterns when components are loaded via HTMX.
 *   **Internal Reflection:** Be aware that enabling `[SupplyParameterFromForm]` currently relies on reflection into internal framework APIs (see Forms documentation for details).
 
 This overview provides a conceptual model of how Rizzy works. Refer to specific documentation sections for details on configuration, components, and advanced features.
