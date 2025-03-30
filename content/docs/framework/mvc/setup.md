@@ -155,6 +155,12 @@ public IResult SubmitForm(Person person)
 
 Alternatively, you can allow the form to supply the model data directly to your component by using `[SupplyParameterFromForm]`. In this scenario, you do not need to pass the model from your controller.
 
+{{< callout context="note" title="Note on [SupplyParameterFromForm] Integration" icon="info-circle" >}}
+Rizzy aims to make integrating Blazor components into MVC as smooth as possible. To enable the convenient `[SupplyParameterFromForm]` attribute for binding data directly from forms in this context, Rizzy carefully uses **reflection** to connect with certain internal ASP.NET Core services (like `HttpContextFormDataProvider`).
+
+This technique bridges a gap where public APIs are not currently available, avoiding the need to replicate complex framework logic within Rizzy itself. While this integration is designed to be robust, it's important to understand that it interfaces with non-public parts of the .NET framework. As such, significant changes in future .NET versions *could* impact this specific feature, potentially requiring adjustments in Rizzy to maintain compatibility. We are committed to monitoring this and ensuring Rizzy works smoothly across .NET updates.
+{{< /callout >}}
+
 **Controller Example:**
 
 ```csharp
