@@ -22,7 +22,9 @@ seo:
 
 <p> </p>
 
-## Leverage the Best of Both Worlds: Robust MVC/API Structure meets Modern Blazor UI Components
+## Leverage the Best of Both Worlds
+
+**Robust MVC Structure meets Modern Blazor UI Components**
 
 Remember the power and structure of ASP.NET Core (MVC or Minimal APIs)? The clear separation of concerns, the robust routing and model binding, the mature ecosystem for handling business logic, security, and data access? It's a solid foundation many .NET developers know and trust.
 
