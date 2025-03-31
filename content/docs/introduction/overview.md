@@ -18,11 +18,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-Rizzy is a lightweight library that enhances Asp.net MVC applications by seamlessly integrating Razor components for UI development and working with HTMX for progressive enhancement. With Rizzy, you can use composable Razor components to create dynamic and interactive user interfaces while ensuring a smooth user experience through HTMX.
-
 <img src="/images/rizzy-wide-banner.png" class="img-fluid" alt="Rizzy Banner">
-
-RizzyUI (optional) provides a full starter suite of Tailwind-based UI components, built with Alpine.js, that provide client-side interactivity without needing to write the components yourself or implement them in Blazor.
 
 <p> </p>
 
@@ -76,6 +72,8 @@ Rizzy provides a lightweight set of tools and components that bridge these techn
 While Rizzy focuses on server-rendered components enhanced with HTMX, you might still need richer client-side interactivity. For this, combining Rizzy/HTMX with a lightweight JavaScript library like **Alpine.js** is a popular pattern.  For that we have RizzyUI as an off-the-shelf option.
 
 Alpine.js allows you to handle tasks such as complex event handling, local state management within a component fragment, and DOM manipulation directly within your HTML markup, complementing the server-driven updates from HTMX. Rizzy even includes helpers like `SerializeAsAlpineData` to simplify passing server-side model data into Alpine components. (*See Extensions section for more details*).
+
+RizzyUI (optional) provides a full starter suite of Tailwind-based UI components, built with Alpine.js, that provide client-side interactivity without needing to write the components yourself or implement them in Blazor.
 
 ---
 
