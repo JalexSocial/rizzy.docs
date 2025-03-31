@@ -28,7 +28,7 @@ seo:
 
 Remember the power and structure of ASP.NET Core (MVC or Minimal APIs)? The clear separation of concerns, the robust routing and model binding, the mature ecosystem for handling business logic, security, and data access? It's a solid foundation many .NET developers know and trust.
 
-Now, think about building modern UIs. Razor Components (Blazor) offer a productive, component-based approach using C# for everything – logic, markup, composition. Building reusable, encapsulated UI pieces feels natural and leverages your existing .NET skills, often avoiding the context switch to heavy JavaScript frameworks.
+Now, think about building modern UIs. Razor Components (Blazor) offer a productive, component-based approach using C# for everything - logic, markup, composition. Building reusable, encapsulated UI pieces feels natural and leverages your existing .NET skills, often avoiding the context switch to heavy JavaScript frameworks.
 
 **So, why choose between them? Rizzy lets you combine their strengths.**
 
