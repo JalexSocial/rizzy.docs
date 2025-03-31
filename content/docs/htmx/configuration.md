@@ -60,7 +60,7 @@ builder.Services.AddHtmx(config =>
 {
   config.SelfRequestsOnly = true;
 });
-
+```
 
 ### Setting Configuration in HTML
 
