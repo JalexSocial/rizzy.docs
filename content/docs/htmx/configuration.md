@@ -61,15 +61,6 @@ builder.Services.AddHtmx(config =>
   config.SelfRequestsOnly = true;
 });
 
-// Add an alternate named configuration
-builder.Services.Configure<HtmxConfig>("articles", config =>
-{
-	config.SelfRequestsOnly = true;
-	config.GlobalViewTransitions = true;
-});    
-```
-
-The first call creates a default configuration, while the second call creates a named configuration using the configuration name "articles".
 
 ### Setting Configuration in HTML
 
@@ -77,12 +68,6 @@ To include configurations inside the `<head>` tag of your HTML document, use the
 
 ```html
 <HtmxConfigHeadOutlet/>
-```
-
-Named configurations can also be specified as a parameter:
-
-```html
-<HtmxConfigHeadOutlet Configuration="articles"/>
 ```
 
 ## HTMX Configuration Properties
