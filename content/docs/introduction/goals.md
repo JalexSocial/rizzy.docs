@@ -27,19 +27,15 @@ The primary objective of our project is to enhance the MVC framework by suppleme
 ## 2. Razor Component Views Integration
 - **Objective**: Develop a Controller implementation that utilizes Razor Components as views, replacing traditional Razor Views. This aims to leverage the component-based architecture of Razor Components within the MVC pattern.  
 
-## 3. Clear Separation of Concerns
-- **Objective**: Maintain distinct separation between the core parts of the project: MVC, HTMX integration, and HTMX Razor Components.
-- **Goals**: This project will be successful if you can pick and choose which parts of the library you want to integrate.
-
-## 4. HTMX and Razor Components Synergy
+## 3. HTMX and Razor Components Synergy
 - **Objective**: Ensure that Razor Components designed for use within MVC can operate effectively with HTMX, enabling partial page updates and dynamic content loading without full page refreshes.
 
-## 5. Flexible Service Integration for Dynamic Content
+## 4. Flexible Service Integration for Dynamic Content
 - **Objective**: Develop a suite of reusable services designed to facilitate interaction between the application's backend logic and Razor Component Views. This includes the capability for any part of the application to inject new content directly into the current page.
 
-## 6. Enhance Documentation and Examples
+## 5. Enhance Documentation and Examples
 - Provide comprehensive documentation and real-world examples demonstrating how to integrate the new library into existing MVC applications, covering common use cases and best practices.
 
-## 7. Community and Feedback Loop
+## 6. Community and Feedback Loop
 - Establish a community feedback mechanism to continually improve the library based on real-world use cases and developer experiences.
 
