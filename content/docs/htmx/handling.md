@@ -96,7 +96,7 @@ public IResult SubmitForm(MyFormModel model)
     }
     
     // On a successful submission, use the response helpers to instruct the client.
-    HttpContext.Response.Htmx()
+    Response.Htmx()
         .PushUrl("/form/success")
         .Location("/form/success")
         .Refresh();

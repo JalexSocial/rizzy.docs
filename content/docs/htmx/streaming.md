@@ -30,13 +30,13 @@ When a Blazor component uses `[StreamRendering]`, the initial render might conta
 
 If HTMX performs a swap (`hx-swap`) on an element that *contains* a streaming Blazor component *before* the streaming updates have arrived or completed, those updates might target elements that no longer exist or have been replaced, leading to errors or unexpected behavior.
 
-## The Solution: `hx-ext="rizzy-streaming"`
+## The Solution: Rizzy Streaming
 
 The `rizzy-streaming` HTMX extension provides **document-wide coordination** between Blazor's streaming rendering updates and HTMX's swapping mechanism. By including this extension, Rizzy helps ensure that streaming updates are correctly applied even when content is dynamically loaded or replaced via HTMX swaps.
 
 It helps manage the lifecycle and potential conflicts, allowing you to leverage the benefits of both technologies simultaneously.
 
-## How to Enable `rizzy-streaming`
+## How to Enable Rizzy Streaming
 
 To enable the extension, add the `hx-ext="rizzy-streaming"` attribute to the `<body>` tag (or another high-level common ancestor element) in your main application layout file (e.g., `AppLayout.razor` if using the Rizzy templates).
 

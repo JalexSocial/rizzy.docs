@@ -43,9 +43,8 @@ Rizzy provides a basic service for generating nonce values that can be injected 
 |----------------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **GetNonce()** | `string`           | Retrieves (or generates) the nonce value                                                                |
 
-                           |
 
-## Usage in a Blazor Application (App.razor)
+## Usage in a Blazor Application
 
 Below is a simplified example of using the nonce values in a Blazor component. Nonce values are injected into the CSP meta tag and applied to inline script and stylesheet links using the `GetNonce()` method.
 
@@ -86,15 +85,15 @@ Below is a simplified example of using the nonce values in a Blazor component. N
 Configure HTMX to use the IRizzyNonceProvider implementation to correctly configure nonce values in the HTMX configuration.  
 
 {{< callout context="caution" title="Warning" icon="utline/alert-triangle" >}}
-These configuration options will set the inlineScriptNonce and inlineStyleNonce settings. inlineScriptNonce will cause nonce values to be injected into any received content from an htmx request and will negate the use of Content Security Policies.  Please use with extreme caution.
+These configuration options will set the inlineScriptNonce and inlineStyleNonce settings in the HTMX head configuration. inlineScriptNonce will cause nonce values to be injected into any received content from an htmx request and will negate the use of Content Security Policies.  Please use with extreme caution.
 {{< /callout >}}
 
 
 ```razor
 builder.Services.AddHtmx(config =>
     {
-        config.GenerateScriptNonce = true;  
-        config.GenerateStyleNonce = true;
+        config.GenerateScriptNonce = true;  // Allow HTMX inlineScriptNonce to automatically use the current nonce (dangerous)
+        config.GenerateStyleNonce = true;   // Allow HTMX inlineStyleNonce to automatically use the current nonce
     })
 ```
 
