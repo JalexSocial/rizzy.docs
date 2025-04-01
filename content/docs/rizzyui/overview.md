@@ -7,6 +7,10 @@ lastmod: 2025-04-01T08:30:55-04:00
 draft: false
 weight: 5
 toc: true
+menu:
+  docs:
+    parent: "rizzyui" # Assuming a setup sub-section
+    identifier: "rizzyui-setup-overview"
 seo:
   title: "" # custom title (optional)
   description: "" # custom description (recommended)
@@ -75,7 +79,7 @@ Ready to get started or learn more? Here are the main sections:
 {{< link-card
   title="Core Concepts"
   description="Understand styling, theming, interactivity, and accessibility."
-  href="../concepts/styling/"
+  href="../concepts/overview/"
   target="_self"
 >}}
 {{< link-card

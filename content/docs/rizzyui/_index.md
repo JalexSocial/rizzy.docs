@@ -8,7 +8,7 @@ draft: false
 menu:
   docs:
     parent: "docs" # Assuming it's a top-level section under Docs
-    identifier: "rizzyui-root"
+    identifier: "rizzyui"
 weight: 530 # Position it appropriately relative to other main sections
 toc: true
 seo:
