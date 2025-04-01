@@ -38,7 +38,7 @@ This approach allows developers to benefit from Blazor's component model without
 
 Understanding the request lifecycle is key to understanding Rizzy. There are two primary flows: Initial Page Load and HTMX Partial Update.
 
-<img src="/images/flowchart.png" class="img-fluid">
+<img src="/images/rizzy-flowchart.svg" class="img-fluid">
 
 ### Initial Page Load (Standard Request)
 
