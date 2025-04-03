@@ -1,4 +1,14 @@
 // Put your custom SCSS code here
+body {
+    background: url('./images/hero-background.svg') top right / 100% auto no-repeat fixed;
+    min-height: 100vh;
+}
+
+.navbar {
+    opacity: 0.9;
+    backdrop-filter: blur(24px);
+}
+
 .docs-content ul, .docs-content ol {
     margin-top: 2rem;
     margin-bottom: 2rem;
