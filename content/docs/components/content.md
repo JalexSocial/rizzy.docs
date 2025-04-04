@@ -18,7 +18,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-This guide introduces two Razor components specifically designed to integrate with Htmx for dynamic content rendering within ASP.NET applications. These components are `RzPage` and `RzPartial`, facilitating the creation of both full and partial views with dynamic component rendering capabilities.
+This guide introduces two Razor components specifically designed to integrate with Htmx for content rendering within ASP.NET applications. These components are `RzPage` and `RzPartial`. Both are used by Rizzy to render Blazor components as full pages or partial HTML fragments in response to requests, often initiated by HTMX.
 
 {{< callout context="caution" title="Caution" icon="alert-triangle" >}}
 It is not typical that you will need to invoke either of these two components directly. This documentation is provided simply to describe how they
@@ -52,4 +52,4 @@ Similar to `RzPage`, `RzPartial` is designed for rendering Razor components as p
 
 ## Special Notes
 
-Both `RizzyService` and `RzController` act as intermediaries for rendering `RzPage` and `RzPartial` components. They provide a streamlined API for generating full or partial views dynamically, handling component initialization, and passing necessary data and context. These services abstract the complexity of dynamic view rendering, offering methods like `View`, `PartialView`, and utility functions for managing view contexts and action URLs.
+Both `RizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use RzPage or RzPartial to render Blazor components. They handle passing parameters, cascading ModelState (in `RzController`), and setting up the render context. They also provide helpers like `CurrentActionUrl`.

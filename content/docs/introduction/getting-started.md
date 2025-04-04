@@ -47,6 +47,8 @@ For the latest versions and more details, visit the package pages:
 
 ## Configuration (Program.cs)
 
+<img src="/images/getting-started-builder.svg" class="img-fluid" alt="Builder Services">
+
 After installing the packages, you need to configure Rizzy and its HTMX integration in your `Program.cs` file. This involves registering necessary services and setting up configurations.
 
 ```csharp

@@ -14,7 +14,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-When you're building interactive web applications, the way you handle HTTP requests and responses can really shape the user experience. Rizzy.Htmx makes this process much simpler by extending the built-in properties of HttpContext. You can work directly with HttpContext.Request and HttpContext.Response, which come with helpful extension methods to detect HTMX interactions and build dynamic responses—all with less boilerplate and clearer code.
+Rizzy.Htmx provides extension methods for HttpContext.Request and HttpContext.Response to simplify interaction with HTMX-specific headers. These allow you to detect if a request came from HTMX and to construct responses with HTMX-specific instructions.
 
 ---
 
@@ -139,5 +139,3 @@ Here are a few tips to keep things running smoothly:
 Handling HTTP requests and responses with Rizzy.Htmx is a straightforward way to build interactive web applications that respond dynamically to user actions. Rizzy.Htmx allows you to focus on what matters most: writing clear, concise code that updates only the parts of your page that need it.
 
 With these built-in helpers, you can detect HTMX-triggered interactions, construct tailored responses, and create a seamless user experience—all without the extra hassle of managing low-level HTTP headers. As you integrate these techniques into your project, you'll find that building dynamic, responsive UIs becomes a much more streamlined process.
-
-Embrace the power of these simple yet effective tools and watch your web applications come to life with fluid, server-driven interactions.

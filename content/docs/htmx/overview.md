@@ -22,18 +22,18 @@ seo:
 
 <p>&nbsp;</p>
 
-HTMX is a modern JavaScript library designed to enhance web applications by enabling partial HTML updates from the server without requiring full page reloads. When it comes to interactive web applications, user experience is everything. Developers continually seek tools that not only simplify the process of building dynamic interfaces but also maintain robust, secure, and maintainable codebases. Rizzy.Htmx is one such library in the .NET ecosystem. It marries the power of HTMX with Razor Components to enable server-driven UI updates without the overhead of full-page reloads. In this overview, we’ll explore what Rizzy.Htmx is all about, highlight its key features, and walk through some code examples that demonstrate how it can streamline your development process.
+HTMX enables partial page updates by fetching HTML fragments from the server in response to events. Rizzy.Htmx provides helper classes and extensions for ASP.NET Core applications using Rizzy to work with HTMX requests and responses. It simplifies reading HTMX request headers and setting HTMX response headers when rendering Blazor components server-side. 
 
 ## What Is Rizzy.Htmx?
 
-Rizzy.Htmx is a framework extension designed to bring the simplicity and flexibility of HTMX—an innovative approach that uses HTML attributes to trigger AJAX calls, CSS transitions, and more—into the world of Razor Components and ASP.NET Core. By leveraging Rizzy.Htmx, you can create components that update dynamically based on user interactions, all while keeping your server-side logic intact.
+Rizzy.Htmx provides .NET types and extension methods to interact with the headers used by HTMX. This allows server-side code (like MVC controllers or Minimal API endpoints rendering Blazor components) to detect if a request originated from HTMX and to send specific instructions back to HTMX via response headers (e.g., trigger client-side events, redirect, change swap behavior).
 
 In traditional web development, asynchronous updates and partial page refreshes can quickly become tangled, leading to code that’s hard to debug and maintain. Rizzy.Htmx addresses these challenges by encapsulating complex client-server interactions into reusable components and configuration settings. This not only enhances the interactivity of your application but also improves the overall code quality and developer experience.
 
 
 ## Key Features and Benefits
 
-Just as developers use value objects to prevent misusing primitive types in their code, Rizzy.Htmx provides a set of tools that limit and streamline how you handle dynamic updates. Here’s what makes it stand out:
+Key features of Rizzy.Htmx include:
 
 - **Robust Request and Response Handling:**  
   With classes like `HtmxRequest` and `HtmxResponse`, the library automatically detects HTMX-specific headers, parses triggers, and sets response parameters (e.g., push URL, redirect, refresh). This simplifies managing the request lifecycle while ensuring consistency across your application.
@@ -71,6 +71,6 @@ In this example, a simple button initiates an HTMX request. When clicked, the re
 
 ## Wrapping Up
 
-Rizzy.Htmx empowers developers to build highly interactive web applications with less boilerplate and more consistency. By abstracting the intricacies of HTMX integration into well-defined components and configuration settings, it allows you to focus on what matters most: delivering a seamless user experience. Whether you’re just starting out or looking to enhance an existing application, Rizzy.Htmx offers a clear path toward more dynamic and maintainable web development.
+Rizzy.Htmx provides strongly-typed access to HTMX request/response headers and configuration options within an ASP.NET Core/Rizzy application. This avoids manual header parsing/setting and provides helpers for common HTMX interactions like redirects, triggers, and swap modifications when returning server-rendered Blazor component fragments.
 
 In upcoming sections, we’ll dive deeper into configuring these components, understanding the full lifecycle of HTMX requests, and exploring advanced topics such as custom swap strategies and event triggers. For now, this overview should provide you with a solid foundation on the value Rizzy.Htmx brings to modern ASP.NET Core applications.

@@ -22,24 +22,24 @@ seo:
 
 <p> </p>
 
-## Leverage the Best of Both Worlds
+## Combine the Best of Both Worlds
 
 **Robust MVC Structure meets Modern Blazor UI Components**
 
-Remember the power and structure of ASP.NET Core (MVC or Minimal APIs)? The clear separation of concerns, the robust routing and model binding, the mature ecosystem for handling business logic, security, and data access? It's a solid foundation many .NET developers know and trust.
+MVC is a proven and widely used ASP.NET framework for building enterprise-class applications. The clear separation of concerns, the robust routing and model binding, the mature ecosystem for handling business logic, security, and data access should make it an obvious choice for developers to build their next project. It's a solid foundation many .NET developers know and trust.
 
-Now, think about building modern UIs. Razor Components (Blazor) offer a productive, component-based approach using C# for everything - logic, markup, composition. Building reusable, encapsulated UI pieces feels natural and leverages your existing .NET skills, often avoiding the context switch to heavy JavaScript frameworks.
+The original Razor language used by ASP.NET MVC and Razor Pages for views hasn't changed all that much over the past few years. The Razor language was given a major upgrade for use with Blazor but those changes weren't made available to MVC or Razor Pages until .NET 8 (which came in the limited form of being able to return Razor Component results). Razor Components (Blazor) offer a productive, component-based approach using C# for everything - logic, markup, composition. Building reusable, encapsulated UI pieces feels natural and leverages your existing .NET skills, often avoiding the context switch to heavy JavaScript frameworks.
 
 **So, why choose between them? Rizzy lets you combine their strengths.**
 
-Imagine using ASP.NET Core's reliable request pipeline to handle your core application logic, routing, and security, but **rendering your views using the power and reusability of Razor Components.**
+Imagine using ASP.NET Core's reliable request pipeline to handle your core application logic, routing, and security, but **rendering your views using composible Razor Components.**
 
 **But wait, doesn't that mean full page reloads for every interaction?** Not with Rizzy. By integrating HTMX seamlessly behind the scenes, Rizzy allows those server-rendered Razor Components to drive dynamic, partial page updates.
 
 **Here's why this combination is compelling:**
 
 1.  **Productivity Boost:** Write your UI *and* backend logic primarily in C#. Reuse Blazor components across your application, simplifying UI development and maintenance compared to managing separate HTML templates and complex JavaScript.
-2.  **Leverage Existing Skills & Ecosystem:** Continue using the familiar, powerful features of ASP.NET Core for your application's core structure, authentication, validation, and data handling. Benefit from the vast .NET ecosystem.
+2.  **Use Existing Skills & Ecosystem:** Continue using the familiar features of ASP.NET Core for your application's core structure, authentication, validation, and data handling. Benefit from the vast .NET ecosystem.
 3.  **Simplified Interactivity:** Achieve dynamic partial updates (like SPAs) without writing mountains of JavaScript or adopting complex client-side frameworks. Let HTMX (managed by Rizzy) handle the AJAX, while Blazor handles rendering the HTML fragments.
 4.  **Maintainability:** Keep your UI logic closer to your backend logic within the .NET ecosystem. Using strongly-typed components often leads to more maintainable and refactorable code than manipulating HTML strings or managing disparate client-side scripts.
 5.  **Progressive Enhancement:** Start with a solid, server-rendered foundation (great for SEO and initial load) and layer dynamic behavior on top where needed, using the same Blazor components for both initial render and HTMX updates.

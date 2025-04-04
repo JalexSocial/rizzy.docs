@@ -30,7 +30,7 @@ This documentation focuses on two Razor components, `HtmxApp<T>` and `HtmxLayout
 
 ### Usage
 
-This component is designed to wrap the application's layout within an `HtmxLayout` component. It facilitates the dynamic rendering of layouts and content, making it essential for applications that require flexibility in their layout rendering.
+The `HtmxApp<TLayout>` component acts as the root component specified in Rizzy configuration. It wraps the application's actual layout component (e.g., AppLayout) inside an `HtmxLayout<TLayout>` component.
 
 ### Configuration
 
@@ -54,7 +54,7 @@ Here, `AppLayout` represents the root layout component of the application, which
 
 ### Functionality
 
-This component differentiates between full page requests and HTMX requests. For full page requests, it renders the specified layout. For HTMX requests, aimed at loading dynamic content without a full page refresh, it alters the rendering behavior to avoid rendering the entire layout.
+`HtmxLayout<TLayout>` checks if the current request is an HTMX request (by inspecting HX-Request header). If it's a standard request, it renders the specified layout `TLayout`. If it's an HTMX request, it renders an empty layout instead, preventing the full application shell from being included in the partial response.
 
 ### Implementation Details
 

@@ -19,23 +19,19 @@ seo:
 ---
 
 
-The primary objective of our project is to enhance the MVC framework by supplementing the View portion with Razor Components while leveraging HTMX for dynamic content loading. Our goal is to introduce a lightweight library that complements rather than replaces the existing MVC framework. Below are the detailed goals structured to guide our development process:
+The goal of Rizzy is to allow developers to use server-rendered Blazor components as views within ASP.NET Core MVC or Minimal API applications, using HTMX to handle partial page updates. Key objectives include:
 
-## 1. Lightweight Library Extension
-- **Objective**: Create a library that extends the MVC framework without the need for completely replacing existing infrastructure. MVC is a very mature and stable platform with a massive amount of third-party tools, integrations, and support and this needs to be recognized.
+## Integration, Not Replacement
+- Provide tools to use Blazor components for views within existing ASP.NET Core structures (MVC/Minimal API), not requiring a full rewrite.
 
-## 2. Razor Component Views Integration
-- **Objective**: Develop a Controller implementation that utilizes Razor Components as views, replacing traditional Razor Views. This aims to leverage the component-based architecture of Razor Components within the MVC pattern.  
+## Blazor Components as Views
+- Enable returning Blazor components (.razor) as `IResult` from controller actions or Minimal API endpoints, rendered server-side to HTML.
 
-## 3. HTMX and Razor Components Synergy
-- **Objective**: Ensure that Razor Components designed for use within MVC can operate effectively with HTMX, enabling partial page updates and dynamic content loading without full page refreshes.
+## HTMX Compatibility
+- Ensure server-rendered Blazor component responses work correctly when requested and swapped by HTMX. Provide helpers for HTMX request/response headers.
 
-## 4. Flexible Service Integration for Dynamic Content
-- **Objective**: Develop a suite of reusable services designed to facilitate interaction between the application's backend logic and Razor Component Views. This includes the capability for any part of the application to inject new content directly into the current page.
+## Server-Driven Content Swapping
+- Provide mechanisms (like `HtmxSwapService`) allowing server-side logic (potentially outside the main component being rendered) to add extra HTML fragments to the response for HTMX Out-of-Band swaps.
 
-## 5. Enhance Documentation and Examples
+## Enhance Documentation and Examples
 - Provide comprehensive documentation and real-world examples demonstrating how to integrate the new library into existing MVC applications, covering common use cases and best practices.
-
-## 6. Community and Feedback Loop
-- Establish a community feedback mechanism to continually improve the library based on real-world use cases and developer experiences.
-
