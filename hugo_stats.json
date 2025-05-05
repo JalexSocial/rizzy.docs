@@ -286,6 +286,12 @@
       "wrap"
     ],
     "ids": [
+      "-build--maintenance",
+      "-fixes",
+      "-improvements--refactors",
+      "-modal-dialogs-localization-and-accessibility-upgrades",
+      "-new-features",
+      "-rizzyui-v080-alpha--modal-dialogs-localization-and-accessibility-upgrades",
       "1-htmx-requests-not-working-or-not-reaching-the-server",
       "1-passing-the-model-as-a-parameter",
       "2-binding-the-model-directly-from-the-form",
@@ -360,7 +366,6 @@
       "from",
       "full-example",
       "functionality",
-      "further-reading",
       "generating-nonces-with-rizzy",
       "getting-started",
       "handling-form-data",
@@ -404,7 +409,6 @@
       "key-features-and-benefits",
       "key-validation-components",
       "keyboard-navigation-beyond-the-mousekeyboard-navigation-beyond-the-mouse",
-      "leverage-the-best-of-both-worlds",
       "light-and-dark-mode-magiclight-and-dark-mode-magic",
       "limitations-what-alpinejs-doesnt-do-herelimitations-what-alpinejs-doesnt-do-here",
       "load",

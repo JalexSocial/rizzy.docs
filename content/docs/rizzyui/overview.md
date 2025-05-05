@@ -10,7 +10,7 @@ toc: true
 menu:
   docs:
     parent: "rizzyui" # Assuming a setup sub-section
-    identifier: "rizzyui-setup-overview"
+    identifier: "rizzyui-overview"
 seo:
   title: "" # custom title (optional)
   description: "" # custom description (recommended)
