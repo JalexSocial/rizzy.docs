@@ -1,5 +1,5 @@
 ---
-title: "Rizzyui 0.8.0 Alpha"
+title: "RizzyUI 0.8.0 Alpha"
 description: ""
 summary: ""
 date: 2025-05-05T18:48:37-04:00
