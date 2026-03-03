@@ -1,3 +1,4 @@
+
 ---
 title: "Getting Started"
 description: ""
@@ -129,6 +130,19 @@ app.MapControllers(); // If using MVC
 app.Run();
 ```
 
+### Client-Side Integration
+
+To take full advantage of HTMX extensions, anti-forgery tokens, and Alpine.js parsing (if utilizing those extensions), you must include the `rizzy.js` file in your application layout (e.g., `AppLayout.razor` or `_Layout.cshtml`). This should be added along with your HTMX script tag.
+
+```html
+<head>
+    ...
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4"></script>
+    <script src="_content/Rizzy/js/rizzy.js" type="module"></script>
+    ...
+</head>
+```
+
 ### Configuration Details Explained
 
 *   **`AddRizzy(config => ...)`**: Configures the core Rizzy library.
@@ -145,8 +159,7 @@ With Rizzy installed and configured, you can now start building your application
 
 1.  Inherit your MVC controllers from `RzController` or `RzControllerWithViews`.
 2.  Use `View<TComponent>` and `PartialView<TComponent>` methods in your controllers/endpoints.
-3.  Utilize Rizzy's components (like `RzInput*`, `HtmxSwapService`) as needed.
+3.  Utilize Rizzy's components (like `RzInput*Base`, `HtmxSwapService`) as needed.
 4.  Add HTMX attributes directly to your HTML elements within `.razor` files.
 
 Refer to the specific documentation sections for details on Components, Forms, HTMX features, and Framework integration.
-```

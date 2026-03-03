@@ -1,3 +1,4 @@
+
 ---
 title: "Client-Side Interactivity"
 description: "Learn how RizzyUI components handle client-side interactions using Alpine.js without relying on Blazor's interactive runtimes."
@@ -35,7 +36,7 @@ RizzyUI uses Alpine.js because:
 *   **It Plays Well with SSR/HTMX:** Alpine initializes itself on the existing DOM and doesn't fight with HTMX when parts of the page are swapped. It can easily re-initialize on new content processed by HTMX.
 *   **No Build Step Required (Usually):** While RizzyUI bundles it for convenience, Alpine itself can be included via a simple script tag.
 
-### [How RizzyUI Uses Alpine.js: The `rzComponentName` Pattern](#how-rizzyui-uses-alpinejs-the-rzcomponentname-pattern)
+###[How RizzyUI Uses Alpine.js: The `rzComponentName` Pattern](#how-rizzyui-uses-alpinejs-the-rzcomponentname-pattern)
 
 You generally **don't need to write Alpine.js code yourself** when using RizzyUI components. RizzyUI encapsulates the necessary Alpine logic within reusable data components.
 
@@ -57,9 +58,13 @@ Here, `x-data="rzDropdown"` tells Alpine to initialize this `div` with the logic
 
 **What does this mean for you?** Mostly, it just works! You use the RizzyUI Blazor component (`<Dropdown>`, `<Accordion>`, etc.) in your `.razor` files, and the necessary Alpine.js magic is automatically included in the rendered HTML and handled by the RizzyUI JavaScript bundle.
 
-### [Including the RizzyUI JavaScript](#including-the-rizzyui-javascript)
+###[Including the RizzyUI JavaScript](#including-the-rizzyui-javascript)
 
 For the Alpine.js interactivity to function, you **must** include the RizzyUI JavaScript bundle in your main layout file (usually `AppLayout.razor`), typically just before the closing `</body>` tag.
+
+{{< callout context="note" title="rizzy.js vs rizzyui.js" icon="info-circle" >}}
+If you are only using the core `Rizzy` library without `RizzyUI`, you would include `_content/Rizzy/js/rizzy.js`. However, when using the **RizzyUI** component library, you should include the expanded bundle (`rizzyui.js`), which already contains all the base features of `rizzy.js` plus the necessary Alpine.js bindings.
+{{< /callout >}}
 
 You have two options:
 

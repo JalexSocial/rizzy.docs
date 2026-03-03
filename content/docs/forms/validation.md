@@ -1,3 +1,4 @@
+
 ---
 title: "Validation"
 description: "Learn how to implement form validation using Rizzy components, data annotations, and server-side ModelState."
@@ -20,9 +21,9 @@ Rizzy aims to provide a familiar validation experience, similar to traditional A
 
 -   **`EditForm`**: The container for your form inputs. Rizzy often uses this in conjunction with HTMX attributes for submissions (e.g., `hx-post`).
 -   **`DataAnnotationsValidator`**: Attaches validation support based on Data Annotation attributes (`[Required]`, `[StringLength]`, etc.) on your model to the `EditForm`'s `EditContext`.
--   **`RzInput*` Components**: (e.g., `RzInputText`, `RzInputNumber`) These components automatically generate standard HTML input elements along with `data-val-*` attributes based on the Data Annotations found on the bound model property. These attributes are essential for client-side validation libraries.
--   **`RzValidationMessage`**: Displays validation messages for a *specific* field, similar to `asp-validation-for`.
--   **`RzValidationSummary`**: Displays a summary of *all* validation messages for the form, similar to `asp-validation-summary`.
+-   **`RzInput*Base` Components**: (e.g., `RzInputTextBase`, `RzInputNumberBase`) These components automatically generate standard HTML input elements along with `data-val-*` attributes based on the Data Annotations found on the bound model property. These attributes are essential for client-side validation libraries.
+-   **`RzValidationMessageBase`**: Displays validation messages for a *specific* field, similar to `asp-validation-for`.
+-   **`RzValidationSummaryBase`**: Displays a summary of *all* validation messages for the form, similar to `asp-validation-summary`.
 -   **`RzInitialValidator`**: A crucial component within the `EditForm`. On initial render or after a postback (like an HTMX form submission), it checks if the `ModelState` (cascaded from the `RzController`) contains errors.
     *   If `ModelState` has errors, it adds them to the `EditContext`.
     *   If `ModelState` is valid, it triggers the standard `EditContext` validation (based on Data Annotations) to ensure the form reflects the current model's validity state immediately.
@@ -37,35 +38,21 @@ Let's illustrate with a model containing various validation rules and the corres
 using System.ComponentModel.DataAnnotations;
 
 public class SignupViewModel
-{
-    [Required(ErrorMessage = "Username is required.")]
-    [StringLength(20, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 20 characters.")]
+{[Required(ErrorMessage = "Username is required.")][StringLength(20, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 20 characters.")]
     [RegularExpression("^[a-zA-Z0-9_]*$", ErrorMessage = "Username can only contain letters, numbers, and underscores.")]
-    public string? Username { get; set; }
-
-    [Required(ErrorMessage = "Email is required.")]
+    public string? Username { get; set; }[Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
     public string? Email { get; set; }
 
-    [Required(ErrorMessage = "Password is required.")]
-    [DataType(DataType.Password)]
-    [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
-    public string? Password { get; set; }
-
-    [Required(ErrorMessage = "Please confirm your password.")]
-    [DataType(DataType.Password)]
-    [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
-    public string? ConfirmPassword { get; set; }
-
-    [Range(18, 120, ErrorMessage = "You must be between 18 and 120 years old.")]
-    public int? Age { get; set; } // Optional field with Range validation
-
-    [Required(ErrorMessage = "You must agree to the terms.")]
-    [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions.")]
+    [Required(ErrorMessage = "Password is required.")][DataType(DataType.Password)][StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
+    public string? Password { get; set; }[Required(ErrorMessage = "Please confirm your password.")]
+    [DataType(DataType.Password)][Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+    public string? ConfirmPassword { get; set; }[Range(18, 120, ErrorMessage = "You must be between 18 and 120 years old.")]
+    public int? Age { get; set; } // Optional field with Range validation[Required(ErrorMessage = "You must agree to the terms.")][Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions.")]
     public bool AcceptTerms { get; set; }
 
     // Example of a custom validation attribute (implementation not shown here)
-    // [MustBeAwesome(ErrorMessage = "Your profile description needs more awesome!")]
+    //[MustBeAwesome(ErrorMessage = "Your profile description needs more awesome!")]
     // public string ProfileDescription { get; set; }
 }
 ```
@@ -83,42 +70,42 @@ public class SignupViewModel
         <DataAnnotationsValidator />
         <RzInitialValidator />
 
-        <RzValidationSummary class="alert alert-danger" />
+        <RzValidationSummaryBase class="alert alert-danger" />
 
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <RzInputText id="username" @bind-Value="Model.Username" class="form-control" />
-            <RzValidationMessage For="@(() => Model.Username)" class="text-danger" />
+            <RzInputTextBase id="username" @bind-Value="Model.Username" class="form-control" />
+            <RzValidationMessageBase For="@(() => Model.Username)" class="text-danger" />
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <RzInputText id="email" @bind-Value="Model.Email" class="form-control" type="email" />
-            <RzValidationMessage For="@(() => Model.Email)" class="text-danger" />
+            <RzInputTextBase id="email" @bind-Value="Model.Email" class="form-control" type="email" />
+            <RzValidationMessageBase For="@(() => Model.Email)" class="text-danger" />
         </div>
 
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <RzInputText id="password" @bind-Value="Model.Password" class="form-control" type="password" />
-            <RzValidationMessage For="@(() => Model.Password)" class="text-danger" />
+            <RzInputTextBase id="password" @bind-Value="Model.Password" class="form-control" type="password" />
+            <RzValidationMessageBase For="@(() => Model.Password)" class="text-danger" />
         </div>
 
         <div class="mb-3">
             <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <RzInputText id="confirmPassword" @bind-Value="Model.ConfirmPassword" class="form-control" type="password" />
-            <RzValidationMessage For="@(() => Model.ConfirmPassword)" class="text-danger" />
+            <RzInputTextBase id="confirmPassword" @bind-Value="Model.ConfirmPassword" class="form-control" type="password" />
+            <RzValidationMessageBase For="@(() => Model.ConfirmPassword)" class="text-danger" />
         </div>
 
          <div class="mb-3">
             <label for="age" class="form-label">Age (Optional)</label>
-            <RzInputNumber id="age" @bind-Value="Model.Age" class="form-control" />
-            <RzValidationMessage For="@(() => Model.Age)" class="text-danger" />
+            <RzInputNumberBase id="age" @bind-Value="Model.Age" class="form-control" />
+            <RzValidationMessageBase For="@(() => Model.Age)" class="text-danger" />
         </div>
 
         <div class="mb-3 form-check">
-            <RzInputCheckbox id="acceptTerms" @bind-Value="Model.AcceptTerms" class="form-check-input" />
+            <RzInputCheckboxBase id="acceptTerms" @bind-Value="Model.AcceptTerms" class="form-check-input" />
             <label for="acceptTerms" class="form-check-label">I accept the Terms and Conditions</label>
-            <RzValidationMessage For="@(() => Model.AcceptTerms)" class="text-danger d-block" /> 
+            <RzValidationMessageBase For="@(() => Model.AcceptTerms)" class="text-danger d-block" /> 
             @* Use d-block for checkbox message alignment if needed *@
         </div>
 
@@ -149,10 +136,10 @@ public class SignupViewModel
 ## Client-Side Validation Flow
 
 1.  **Annotations:** You define rules on your model using Data Annotations (`[Required]`, `[StringLength]`, `[Compare]`, etc.).
-2.  **Rizzy Component Rendering:** `RzInput*` components read these annotations via the `EditContext` (populated by `DataAnnotationsValidator`).
+2.  **Rizzy Component Rendering:** `RzInput*Base` components read these annotations via the `EditContext` (populated by `DataAnnotationsValidator`).
 3.  **`data-val-*` Attributes:** Rizzy generates the standard `data-val="true"`, `data-val-required="Error message"`, `data-val-length-min="5"`, etc., attributes on the HTML input elements.
-4.  **JavaScript Library:** A client-side JavaScript validation library (like jQuery Unobtrusive Validation, `aspnet-validation.js` included with RizzyUI, or others) is required to *interpret* these `data-val-*` attributes. This library hooks into form events (like input changes or blur) and displays/hides validation messages (`<span>` elements typically generated alongside inputs or targeted by `RzValidationMessage`) *without* a server roundtrip.
-5.  **`RzValidationMessage` / `RzValidationSummary`:** These components render the necessary HTML elements (usually `<span>` or `<div>`) that client-side libraries use to display the error messages defined in your annotations or added dynamically.
+4.  **JavaScript Library:** A client-side JavaScript validation library (like jQuery Unobtrusive Validation, `aspnet-validation.js` included with RizzyUI, or others) is required to *interpret* these `data-val-*` attributes. This library hooks into form events (like input changes or blur) and displays/hides validation messages (`<span>` elements typically generated alongside inputs or targeted by `RzValidationMessageBase`) *without* a server roundtrip.
+5.  **`RzValidationMessageBase` / `RzValidationSummaryBase`:** These components render the necessary HTML elements (usually `<span>` or `<div>`) that client-side libraries use to display the error messages defined in your annotations or added dynamically.
 
 ## Server-Side Validation Flow (HTMX Post)
 
@@ -163,7 +150,7 @@ public class SignupViewModel
     *   The controller returns a Rizzy `PartialView<YourFormComponent>()` (or `View`).
     *   Rizzy cascades the `ModelState` dictionary down to the component.
     *   Inside the `EditForm`, `RzInitialValidator` detects the `ModelState` errors and adds them to the `EditContext`.
-    *   `RzValidationMessage` and `RzValidationSummary` render the errors from the `EditContext`.
+    *   `RzValidationMessageBase` and `RzValidationSummaryBase` render the errors from the `EditContext`.
     *   The rendered partial HTML (including inputs potentially marked with error classes and the visible validation messages) is returned to HTMX to be swapped into the page.
 5.  **Valid `ModelState`:** The controller processes the data and typically returns a different response (e.g., a redirect, a success message partial, etc.).
 

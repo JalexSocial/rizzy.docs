@@ -1,3 +1,4 @@
+
 ---
 title: "Out of Band Swapping"
 description: ""
@@ -30,13 +31,13 @@ The `HtmxSwappable` component is designed for seamlessly integrating out of band
 
 Parameters:
 - `TargetId`: Specifies the HTML ID of the element to be swapped. This should be an element already present on the page.
-- `SwapStyle`: (optional) Defines the method used for swapping in the new content. It defaults to `SwapStyle.OuterHTML`. For further documentation on `SwapStyle`, visit [SwapStyle Options](/rizzy.docs/docs/htmx/response/#swapstyle-options).
+- `SwapStyle`: (optional) Defines the method used for swapping in the new content. It defaults to `SwapStyle.outerHTML`. For further documentation on `SwapStyle`, visit [SwapStyle Options](/rizzy.docs/docs/htmx/response/#swapstyle-options).
 - `Selector`: (optional) A valid CSS selector targeting the element(s) within `TargetId` where the swap should occur.
 
 Here's a simple example that demonstrates how to use `HtmxSwappable` to display a Bootstrap alert message.
 
 ```html
-<HtmxSwappable TargetId="alert-container" SwapStyle="SwapStyle.InnerHTML" Selector=".alert-message">
+<HtmxSwappable TargetId="alert-container" SwapStyle="SwapStyle.innerHTML" Selector=".alert-message">
     <div class="alert alert-info" role="alert">
         This is an important message!
     </div>
@@ -67,7 +68,7 @@ In this structure:
 ### Role of `.alert-message`
 
 The `.alert-message` CSS selector plays a crucial role in precisely targeting where within the `alert-container` the new content should be inserted or replaced. When the swap occurs:
-- If the `SwapStyle` is set to `SwapStyle.InnerHTML`, the inner HTML of the `.alert-message` element is replaced with the new content defined within the `HtmxSwappable` component.
+- If the `SwapStyle` is set to `SwapStyle.innerHTML`, the inner HTML of the `.alert-message` element is replaced with the new content defined within the `HtmxSwappable` component.
 - The presence of the `.alert-message` selector allows for more granular control over which part of the `alert-container` gets updated, enabling scenarios where you might want to update only a specific message within a larger container without affecting other content.
 
 ### After the Swap
@@ -120,15 +121,21 @@ Here's how you can use `HtmxSwapService` in your components to perform dynamic c
     protected override void OnInitialized()
     {
         HtmxSwapService.AddRawContent("<p>Hello, world!</p>");
-        HtmxSwapService.AddSwappableComponent<AlertComponent>("alert-container", new Dictionary<string, object>
-        {
-            {"Message", "This is an important message!"}
-        }), SwapStyle.InnerHTML, ".alert-message", ;
+        
+        HtmxSwapService.AddSwappableComponent<AlertComponent>(
+            targetId: "alert-container", 
+            parameters: new Dictionary<string, object>
+            {
+                {"Message", "This is an important message!"}
+            }, 
+            swapStyle: SwapStyle.innerHTML, 
+            selector: ".alert-message"
+        );
     }
 }
 ```
 
-In this example, `AddRawContent` is used to add simple HTML content to the SectionOutlet, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named "Message".
+In this example, `AddRawContent` is used to add simple HTML content, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named "Message".
 
 #### Adding a Swappable Razor Component
 
@@ -138,7 +145,7 @@ In this example, `AddRawContent` is used to add simple HTML content to the Secti
 HtmxSwapService.AddSwappableComponent<MyComponent>(
     targetId: "targetElementId",
     parameters: new Dictionary<string, object> { { "ParameterName", "Value" } },
-    swapStyle: SwapStyle.OuterHTML,
+    swapStyle: SwapStyle.outerHTML,
     selector: ".css-selector"
 );
 ```
@@ -149,7 +156,7 @@ HtmxSwapService.AddSwappableComponent<MyComponent>(
 HtmxSwapService.AddSwappableFragment(
     targetId: "targetElementId",
     renderFragment: builder => builder.AddContent(0, "Dynamic content here"),
-    swapStyle: SwapStyle.OuterHTML,
+    swapStyle: SwapStyle.outerHTML,
     selector: ".css-selector"
 );
 ```

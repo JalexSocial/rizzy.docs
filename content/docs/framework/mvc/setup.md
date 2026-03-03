@@ -1,3 +1,4 @@
+
 ---
 title: "Setup with MVC Controllers"
 description: "Integrate Rizzy with your ASP.NET MVC controllers to render Razor Components, automatically cascade ModelState, and combine multiple render fragments."
@@ -60,13 +61,42 @@ Rizzy extends your controllers with methods to render Razor Components as full v
 - **PartialView&lt;TComponent&gt;(Dictionary&lt;string, object?&gt; data)**  
   Works like the full view overload but accepts a dictionary.
 
-For example, to render a component named `HomeIndex` with parameters:
+### Passing Parameters
+
+Rizzy provides two robust, type-safe approaches for passing parameters to your views:
+
+#### 1. The Fluent Builder
+
+You can use the `RizzyComponentParameterBuilder` to pass parameters to your component fluently. This method ensures compile-time safety and validates required parameters:
 
 ```csharp
-public IResult Index()
+public IResult WeatherInfo()
 {
-    var myModel = new MyViewModel { Message = "Hello from MVC!" };
-    return View<HomeIndex>(new { Model = myModel });
+    return View<Weather>(parameters => 
+        parameters.Add(weather => weather.ZipCode, 12345));
+}
+```
+
+#### 2. The `.Params()` Source Generator
+
+By decorating your Blazor component with the `[RizzyParameterize]` attribute, a source generator automatically creates a strongly-typed `Params` method for your component. This is the highly recommended approach as it creates an elegant API surface directly tied to your component properties.
+
+```razor
+@* Weather.razor *@
+@attribute [RizzyParameterize]
+
+@code {
+    [Parameter] public int? ZipCode { get; set; } = null;
+}
+```
+
+You can then pass parameters cleanly in your controller:
+
+```csharp
+public IResult WeatherInfo()
+{
+    // Utilizing the auto-generated Params method
+    return View<Weather>(Weather.Params(zipCode: 12345));
 }
 ```
 
@@ -129,7 +159,7 @@ public IResult SubmitForm(Person person)
     if (!ModelState.IsValid)
     {
         // Pass the model explicitly to the partial view.
-        return PartialView<FormComponent>(new { Model = person });
+        return PartialView<FormComponent>(FormComponent.Params(model: person));
     }
     // Process valid data...
     return View<SuccessComponent>();
@@ -140,6 +170,8 @@ public IResult SubmitForm(Person person)
 
 ```razor
 @* FormComponent.razor *@
+@attribute [RizzyParameterize]
+
 <EditForm Model="@Model">
     <RzInitialValidator />
     <!-- Form inputs go here -->

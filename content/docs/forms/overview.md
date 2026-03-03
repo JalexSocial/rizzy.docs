@@ -1,3 +1,4 @@
+
 ---
 title: "Overview"
 description: ""
@@ -31,17 +32,17 @@ The components in the table are also supported outside of a form in Razor compon
 | Blazor | Rizzy Equivalent |
 | ------------ | ------------------ |
 | [AntiforgeryToken](https://learn.microsoft.com/en-us/aspnet/core/blazor/forms/?view=aspnetcore-8.0#antiforgery-support) | AntiforgeryToken |
-| [DataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dataannotationsvalidator) | DataAnnotationsValidator |
-| [InputCheckbox](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputcheckbox) | RzInputCheckbox |
-| [InputDate](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputdate) | RzInputDate |
-| [InputFile](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputfile) | RzInputFile |
-| [InputNumber](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputnumber) | RzInputNumber |
-| [InputRadio](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputradio-and-inputradiogroup) | RzInputRadio |
-| [InputRadioGroup](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputradio-and-inputradiogroup) | RzInputRadioGroup |
-| [InputSelect](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputselect) | RzInputSelect |
-| [InputText](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtext) | RzInputText |
-| [InputTextArea](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtextarea) | RzInputTextArea |
-| [ValidationSummary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#validationsummary) | RzValidationSummary |
+|[DataAnnotationsValidator](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#dataannotationsvalidator) | DataAnnotationsValidator |
+| [InputCheckbox](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputcheckbox) | RzInputCheckboxBase |
+| [InputDate](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputdate) | RzInputDateBase |
+| [InputFile](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputfile) | RzInputFileBase |
+| [InputNumber](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputnumber) | RzInputNumberBase |
+| [InputRadio](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputradio-and-inputradiogroup) | RzInputRadioBase |
+| [InputRadioGroup](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputradio-and-inputradiogroup) | RzInputRadioGroupBase |
+| [InputSelect](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputselect) | RzInputSelectBase |
+| [InputText](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtext) | RzInputTextBase |
+| [InputTextArea](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#inputtextarea) | RzInputTextAreaBase |
+| [ValidationSummary](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/built-in-components#validationsummary) | RzValidationSummaryBase |
 
 All of the input components support arbitrary attributes. Any attribute that doesn't match a component parameter is added to the rendered HTML element.
 
@@ -64,12 +65,12 @@ This technique bridges a gap where public APIs are not currently available, avoi
 
 	<EditForm Model="Person" hx-post="/information/update" hx-target="#information">
 		<DataAnnotationsValidator>
-		<RzValidationSummary/>
+		<RzValidationSummaryBase/>
 
 		<div class="form-group">
 			<label for="name">Name:</label>
-			<RzInputText id="name" class="form-control" @bind-Value="Person.Name"/>
-			<RzValidationMessage For="@(() => Person.Name)"/>
+			<RzInputTextBase id="name" class="form-control" @bind-Value="Person.Name"/>
+			<RzValidationMessageBase For="@(() => Person.Name)"/>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>

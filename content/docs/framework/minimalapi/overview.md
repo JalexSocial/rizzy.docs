@@ -1,3 +1,4 @@
+
 ---
 title: "Overview"
 description: ""
@@ -19,34 +20,30 @@ Rizzy works with Minimal APIs by providing the ability to render both views and 
 
 ## RizzyService
 
-### Properties
-
-- **ViewContext**: [Obsolete] Holds the view context necessary for rendering Razor components, providing configuration and rendering information.
-
 ### Methods
 
 #### View Rendering
 
+- **View\<TComponent\>(Action\<RizzyComponentParameterBuilder\<TComponent\>\> parameterBuilderAction)**: Renders a full view configuring the component parameters using a fluent builder.
 - **View\<TComponent\>(object? data = null)**: Renders a full view using a specified Razor component. Optionally accepts dynamic data to pass to the component.
   - `TComponent`: The type of Razor component to render.
   - `data`: Dynamic data to pass to the component, optional.
-
 - **View\<TComponent\>(Dictionary<string, object?> data)**: Renders a full view using a specified Razor component with explicitly provided data in dictionary form.
   - `TComponent`: The type of Razor component to render.
   - `data`: A dictionary containing the data to pass to the component.
 
 #### Partial View Rendering
 
+- **PartialView\<TComponent\>(Action\<RizzyComponentParameterBuilder\<TComponent\>\> parameterBuilderAction)**: Renders a partial view using a specified Razor component and a fluent parameter builder.
 - **PartialView\<TComponent\>(object? data = null)**: Renders a partial view using a specified Razor component, suitable for inclusion in other views. Optionally accepts dynamic data.
   - `TComponent`: The type of Razor component to render as a partial view.
   - `data`: Dynamic data to pass to the component, optional.
-
 - **PartialView\<TComponent\>(Dictionary<string, object?> data)**: Renders a partial view using a specified Razor component with explicitly provided data in dictionary form. Intended for component inclusion in other views.
   - `TComponent`: The type of Razor component to render as a partial view.
   - `data`: A dictionary containing the data to pass to the component.
 
+*Note: Rizzy also features a source generator (`[RizzyParameterize]`) that adds a `.Params()` method to components, returning a strongly-typed dictionary which you can directly pass into these methods.*
+
 #### Utilities
 
 - **CurrentActionUrl**: A utility property that provides the current action method URL, useful for specifying form action targets within Razor Component views. Automatically derived from the current HTTP request.
-
-

@@ -1,3 +1,4 @@
+
 ---
 title: "Troubleshooting Guide"
 description: "Common issues encountered when using Rizzy and how to resolve them."
@@ -50,7 +51,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 
 *   **Check Response Content:** Examine the 'Response' tab in the Network tools for the successful request. Is the server returning the expected HTML fragment? If it's returning a full HTML page, see Issue #5 below. If it's returning JSON or something else unexpected, ensure your controller action is returning `PartialView<YourComponent>()` or similar Rizzy result.
 *   **Check `hx-target`:** Is the CSS selector in `hx-target` correct and does it uniquely identify an element *already present* in the DOM *before* the swap occurs? Use the browser's element inspector to verify the selector. Common mistakes include typos or targeting an element that doesn't exist yet.
-*   **Check `hx-swap`:** Is the `hx-swap` style appropriate? `innerHTML` (default) replaces the content *inside* the target, while `outerHTML` replaces the target element itself. Other styles (`beforeend`, `afterend`, etc.) insert content relative to the target. Ensure the chosen style matches how your returned HTML fragment is structured. See [SwapStyle docs]({{<ref "/docs/htmx/swapstyle.md">}}).
+*   **Check `hx-swap`:** Is the `hx-swap` style appropriate? `innerHTML` (default) replaces the content *inside* the target, while `outerHTML` replaces the target element itself. Other styles (`beforeend`, `afterend`, etc.) insert content relative to the target. Ensure the chosen style matches how your returned HTML fragment is structured. See[SwapStyle docs]({{<ref "/docs/htmx/swapstyle.md">}}).
 *   **HTMX Errors:** Check the browser console for any specific errors reported by HTMX during the swap process.
 *   **Valid HTML Fragment:** Ensure the HTML returned by the server is valid. Malformed HTML can sometimes cause swapping to fail silently or partially.
 
@@ -66,9 +67,9 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **Middleware Order:** Ensure `app.UseAntiforgery()` is present in `Program.cs` and placed *after* `app.UseRouting()` and any authentication/authorization middleware (`app.UseAuthentication(); app.UseAuthorization();`).
 *   **Token Present in Form/Page:**
     *   For standard form posts, ensure you have `<AntiforgeryToken />` inside your Blazor `EditForm`.
-    *   For general HTMX requests needing protection (often non-GET), ensure the antiforgery token is available to HTMX. The easiest way with Rizzy is often to:
+    *   For general HTMX requests needing protection (often non-GET), ensure the antiforgery token is available to HTMX. The easiest way with Rizzy is to:
         *   Configure `RizzyConfig.AntiforgeryStrategy = AntiforgeryStrategy.GenerateTokensPerPage;` in `Program.cs`.
-        *   Include `<HtmxAntiforgeryScript />` in your main layout (`AppLayout.razor`). This component injects JavaScript that automatically adds the necessary token to HTMX requests based on the configuration in the `htmx-config` meta tag.
+        *   Ensure `<script src="_content/Rizzy/js/rizzy.js" type="module"></script>` is included in your main layout. This JavaScript automatically attaches the token defined in the `htmx-config` meta tag to your requests.
     *   Verify the `htmx-config` meta tag (rendered by `<HtmxConfigHeadOutlet />`) contains the correct `antiforgery` configuration (header name, form field name, cookie name). See [HTMX Configuration]({{<ref "/docs/htmx/configuration.md">}}).
 *   **`[ValidateAntiForgeryToken]` Attribute:** Ensure the controller action or Minimal API endpoint being called has the `[ValidateAntiForgeryToken]` attribute (or uses convention-based filters if configured globally).
 *   **Cookie Present:** Check browser developer tools (Application -> Cookies) to ensure the antiforgery cookie (usually `.AspNetCore.Antiforgery.*`) is present.
@@ -87,13 +88,13 @@ This guide covers common problems developers might encounter when using Rizzy an
     *   Is the form wrapped in an `<EditForm Model="@YourModel">`?
     *   Is `<DataAnnotationsValidator />` placed *inside* the `EditForm`?
     *   Is `<RzInitialValidator />` placed *inside* the `EditForm` (usually right after `DataAnnotationsValidator`)? This component is crucial for transferring `ModelState` errors to the `EditContext`.
-    *   Are you using `<RzValidationMessage For="@(() => YourModel.PropertyName)" />` for field-specific messages?
-    *   Are you using `<RzValidationSummary />` for a summary?
+    *   Are you using `<RzValidationMessageBase For="@(() => YourModel.PropertyName)" />` for field-specific messages?
+    *   Are you using `<RzValidationSummaryBase />` for a summary?
 *   **Check Response:** Inspect the HTML response in the Network tab. Does it contain the expected validation message elements (e.g., `<div class="validation-message field-validation-error" ...>Your error</div>`)?
-*   **`ModelState` Propagation:** Are you using `RzController` or `IRizzyService` methods (`View<T>`, `PartialView<T>`)? These automatically pass `ModelState` down. If you are manually rendering, ensure you pass the `ModelStateDictionary` as a parameter to `RzPage` or `RzPartial`.
+*   **`ModelState` Propagation:** Are you using `RzController` or `IRizzyService` methods (`View<T>`, `PartialView<T>`)? These automatically pass `ModelState` down. If you are manually rendering, ensure you pass the `ModelStateDictionary` as a parameter to the view component.
 *   **Client-Side Validation (Optional):** If you expect *client-side* validation messages *before* submitting, ensure:
     *   You have included a compatible JavaScript validation library (like the `aspnet-validation.js` included with RizzyUI/Rizzy or jQuery Unobtrusive Validation).
-    *   The `RzInput*` components are generating the necessary `data-val-*` attributes (inspect the rendered HTML). This relies on `DataAnnotationsProcessor` and having Data Annotation attributes (`[Required]`, etc.) on your model.
+    *   The `RzInput*Base` components are generating the necessary `data-val-*` attributes (inspect the rendered HTML). This relies on `DataAnnotationsProcessor` and having Data Annotation attributes (`[Required]`, etc.) on your model.
 
 ### 5. Full Layout Renders During HTMX Partial Updates
 
@@ -108,7 +109,7 @@ This guide covers common problems developers might encounter when using Rizzy an
     *   `config.DefaultLayout = typeof(HtmxLayout<YourMainLayout>);`
     (Replace `YourAppLayout` and `YourMainLayout` with your actual layout component types). These wrappers are essential for detecting HTMX requests and suppressing the full layout rendering. See [Getting Started]({{<ref "/docs/introduction/getting-started.md">}}).
 *   **Is it an HTMX Request?** Verify the request includes the `HX-Request: true` header in the Network tab. If not, HTMX isn't making the request correctly, or something is stripping the header.
-*   **Correct Rendering Method?** Are you calling `PartialView<YourComponent>()` from your controller/endpoint for partial updates? While `View<YourComponent>()` *should* also work correctly with the `HtmxLayout` wrapper, `PartialView` is generally preferred for fragments as it explicitly uses an empty layout by default.
+*   **Correct Rendering Method?** Are you calling `PartialView<YourComponent>()` from your controller/endpoint for partial updates? While `View<YourComponent>()` *should* also work correctly with the `HtmxLayout` wrapper, `PartialView` is generally preferred for fragments as it explicitly renders using an empty layout by default.
 
 ### 6. Out-of-Band (OOB) Swaps Not Working
 
@@ -120,7 +121,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 
 *   **Check Response HTML:** Inspect the raw HTML response in the Network tab. Does it contain elements with the `hx-swap-oob="true"` (or other swap styles) attribute? These are the OOB elements.
 *   **Target IDs Exist:** Does the `id` attribute of the OOB element in the response match the `id` of an element *already present* in the main document *before* the swap happens? OOB swaps target existing elements by ID.
-*   **`<HtmxSwapContent />` Present:** Have you included the `<HtmxSwapContent />` component somewhere in your main layout (e.g., `AppLayout.razor`)? This component is responsible for rendering content added via the `IHtmxSwapService`. See [Out of Band Swapping]({{<ref "/docs/htmx/swaps.md">}}).
+*   **`<HtmxSwapContent />` Present:** Have you included the `<HtmxSwapContent />` component somewhere in your main layout (e.g., `AppLayout.razor`)? This component is responsible for rendering content added via the `IHtmxSwapService`. See[Out of Band Swapping]({{<ref "/docs/htmx/swaps.md">}}).
 *   **Server Logic:** Ensure your server-side code (e.g., controller action) is correctly calling `IHtmxSwapService.AddSwappableComponent`, `AddSwappableFragment`, etc., *during* the HTMX request lifecycle.
 
 ### 7. Streaming Rendering (`[StreamRendering]`) Issues with HTMX
