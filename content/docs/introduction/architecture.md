@@ -1,3 +1,4 @@
+
 ---
 title: "Architecture Overview"
 description: "Understand the high-level architecture of Rizzy and how it integrates ASP.NET Core, Blazor rendering, and HTMX."
@@ -46,12 +47,12 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 2.  **ASP.NET Core Pipeline:** The request goes through routing and standard middleware.
 3.  **Controller/Endpoint Execution:** The request reaches an MVC Controller action or a Minimal API endpoint.
 4.  **Rizzy Service Call:** The action/endpoint typically calls `rizzyService.View<TComponent>(...)`.
-5.  **`RzPage` Component:** Rizzy prepares parameters for the `RzPage` component, including the target component (`TComponent`) and any data.
-6.  **Layout Selection:** `RzPage` determines the appropriate layout:
+5.  **`RzView` Component:** Rizzy prepares parameters for the `RzView` component (with `Mode` set to `RzViewMode.Page`), including the target component (`TComponent`) and any data.
+6.  **Layout Selection:** `RzView` determines the appropriate layout:
     *   It checks for a `@layout` directive on `TComponent`.
     *   If none, it uses the `DefaultLayout` configured via `RizzyConfig`.
     *   The layout is likely wrapped in `HtmxApp<TLayout>` and `HtmxLayout<TLayout>`. Since this is *not* an HTMX request, `HtmxLayout` renders the *full* specified layout (`TLayout`).
-7.  **Blazor SSR:** The Blazor `HtmlRenderer` processes the component tree (`RzPage` -> `HtmxApp` -> `HtmxLayout` -> `YourLayout` -> `TComponent`).
+7.  **Blazor SSR:** The Blazor `HtmlRenderer` processes the component tree (`RzView` -> `HtmxApp` -> `HtmxLayout` -> `YourLayout` -> `TComponent`).
 8.  **Full HTML Response:** The renderer generates the complete HTML for the page.
 9.  **Browser Renders:** The browser receives and renders the full HTML page. HTMX attributes (`hx-get`, `hx-post`, etc.) are now present in the DOM, ready for user interaction.
 
@@ -66,9 +67,9 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
     *   `[HtmxRequest]` attribute might guard the action.
     *   `InitializeBlazorFormData` (via `RzController`) might run to enable `[SupplyParameterFromForm]`.
 5.  **Rizzy Service Call:** The action often calls `rizzyService.PartialView<TComponent>(...)` or `rizzyService.View<TComponent>(...)`.
-6.  **Component Rendering (`RzPartial` or `RzPage`):**
-    *   If `PartialView` was called, `RzPartial` is typically used. It renders `TComponent` within an `EmptyLayout`.
-    *   If `View` was called, `RzPage` is used. `HtmxLayout` detects the `HX-Request` header and renders a *minimal* or *empty* layout instead of the full application layout.
+6.  **Component Rendering (`RzView`):**
+    *   If `PartialView` was called, `RzView` is used with `Mode` set to `RzViewMode.Partial`. It renders `TComponent` within an `EmptyLayout`, bypassing the root component wrappers.
+    *   If `View` was called, `RzView` is used with `Mode` set to `RzViewMode.Page`. `HtmxLayout` detects the `HX-Request` header and renders a *minimal* or *empty* layout instead of the full application layout.
 7.  **Blazor SSR:** The `HtmlRenderer` processes the (potentially smaller) component tree.
 8.  **Response Generation:**
     *   The renderer generates the HTML fragment for the requested component (`TComponent`).
@@ -85,12 +86,12 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 
 *   **Controllers / Minimal API Endpoints:** Handle incoming HTTP requests, perform business logic, and decide which Blazor component(s) to render.
 *   **`IRizzyService`:** Provides the `View<T>` and `PartialView<T>` methods, abstracting the component rendering logic for controllers/endpoints.
-    *   **`RzPage` / `RzPartial`:** Core Rizzy components responsible for setting up the rendering environment for Blazor components, including layout selection.
+    *   **`RzView`:** Core Rizzy component responsible for setting up the rendering environment for Blazor components, including layout selection and mode handling.
 *   **Blazor SSR (`HtmlRenderer`):** The engine that takes the Blazor component tree and renders it to static HTML on the server.
     *   **`HtmxApp<T>` / `HtmxLayout<T>`:** Manage the application's root layout and intelligently switch between full and minimal rendering based on HTMX request headers.
     *   **`HtmxRequest` / `HtmxResponse`:** Classes and extensions providing strongly-typed access to read HTMX request headers and write HTMX response headers.
 *   **`HtmxSwapService` / `HtmxSwappable`:** Facilitate server-driven Out-of-Band (OOB) swaps.
-*   **Rizzy Form Components (`RzInput*`, etc.):** Extend Blazor inputs to integrate with `EditContext` and potentially generate `data-val-*` attributes.
+*   **Rizzy Form Components (`RzInput*Base`, etc.):** Extend Blazor inputs to integrate with `EditContext` and potentially generate `data-val-*` attributes.
     *   **`DataAnnotationsProcessor` / `[SupplyParameterFromForm]`:** Bridge MVC validation and model binding concepts with Blazor components (Note: `[SupplyParameterFromForm]` currently relies on internal reflection).
 *   **Rizzy Middleware:** Optional pipeline component for handling cross-cutting concerns like nonce headers.
 

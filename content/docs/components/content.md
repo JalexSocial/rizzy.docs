@@ -1,3 +1,4 @@
+
 ---
 title: "Content"
 description: ""
@@ -18,38 +19,32 @@ seo:
   noindex: false # false (default) or true
 ---
 
-This guide introduces two Razor components specifically designed to integrate with Htmx for content rendering within ASP.NET applications. These components are `RzPage` and `RzPartial`. Both are used by Rizzy to render Blazor components as full pages or partial HTML fragments in response to requests, often initiated by HTMX.
+This guide introduces the `RzView` component, which is specifically designed to integrate with Htmx for content rendering within ASP.NET applications. This component is used internally by Rizzy to render Blazor components as full pages or partial HTML fragments in response to requests, often initiated by HTMX.
 
 {{< callout context="caution" title="Caution" icon="alert-triangle" >}}
-It is not typical that you will need to invoke either of these two components directly. This documentation is provided simply to describe how they
-are intended to function.
+It is not typical that you will need to invoke the `RzView` component directly in your markup. This documentation is provided simply to describe how Rizzy intends to function under the hood when rendering your views.
 {{< /callout >}}
 
-## RzPage
+## RzView
 
-`RzPage` is a Razor component that acts as a page container.  It cascades the `RzViewContext` value across the component tree it encompasses. `RzPage` is typically not used directly and is instead utilized by the RzController View&lt;T&gt; method or the RizzyService View&lt;T&gt; method.
-
-### Key Features
-- Dynamically renders Razor components as full pages.
-- Wraps a component of your choice inside the Rizzy-configured [RootComponent](/docs/introduction/getting-started/#configuration).
-- Supports dynamic layout selection based on attributes or Rizzy application configuration.
-
-### Usage
-- Configuration involves specifying `ComponentType`, `ComponentParameters`, and providing a `ViewContext` for the component being rendered.
-- If the component that is provided by ComponentType has a @layout attribute, that layout will be applied to the page. If it doesn't, then the default layout specified in the Rizzy configuration will be applied. See [Getting Started](/docs/introduction/getting-started/#configuration).
-
-## RzPartial
-
-Similar to `RzPage`, `RzPartial` is designed for rendering Razor components as partial views. It follows the same dynamic rendering principles but defaults to using an `EmptyLayout`, making it ideal for embedding within other views or components without inheriting the parent's layout.
+`RzView` is a Razor component that acts as the primary container for rendering your components. Its behavior is controlled by the `Mode` parameter, which accepts values from the `RzViewMode` enum (`Page` or `Partial`). `RzView` is utilized by the `RzController` methods or the `IRizzyService` to handle the rendering lifecycle.
 
 ### Key Features
-- Renders Razor components as partial views without a layout.
-- Suitable for dynamic content loading and updating within existing pages.
+- Dynamically renders Razor components as full pages or partial fragments.
+- Automatically handles ASP.NET Core `ModelState` cascading to enable form validation.
+- Automatically injects out-of-band (OOB) swap content via the `HtmxSwapContent` component.
 
-### Usage
-- Like `RzPage`, `RzPartial` is rendered through services or controllers, specifying `ComponentType` and `ComponentParameters`.
-- Primarily used for injecting dynamic content into specific sections of a page, enhancing modularity and reusability of components.
+### Page Mode (`RzViewMode.Page`)
+When rendering as a full page, `RzView` applies the configured root component (e.g., your `AppLayout`) and automatically resolves the appropriate inner layout.
+- If the component being rendered has a `@layout` attribute, that layout will be applied to the page. 
+- If it doesn't, then the default layout specified in the Rizzy configuration (`RizzyConfig.DefaultLayout`) will be applied. See [Getting Started](/docs/introduction/getting-started/#configuration).
+- Automatically includes `<HtmxConfigHeadOutlet>` to render the HTMX configuration meta tag into the document head.
+
+### Partial Mode (`RzViewMode.Partial`)
+When rendering as a partial view (often via HTMX AJAX requests), `RzView` bypasses the configured root component entirely.
+- It skips automatic layout resolution and instead renders the component through an `EmptyLayout`.
+- This makes it ideal for embedding dynamic content within other views or returning targeted HTML fragments without inheriting the parent's layout shell.
 
 ## Special Notes
 
-Both `RizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use RzPage or RzPartial to render Blazor components. They handle passing parameters, cascading ModelState (in `RzController`), and setting up the render context. They also provide helpers like `CurrentActionUrl`.
+Both `IRizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use `RzView` with the corresponding mode to render your Blazor components. They handle setting up the render context, evaluating parameters via the fluent builder, and passing the `ModelState`.

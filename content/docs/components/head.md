@@ -1,5 +1,6 @@
+
 ---
-title: "Head"
+title: "Head Components"
 description: ""
 summary: ""
 date: 2024-03-05T09:43:29-05:00
@@ -18,70 +19,69 @@ seo:
   noindex: false # false (default) or true
 ---
 
-This document outlines three components created to improve management of HTML head content in applications that integrate Htmx with Razor components. These components, namely `RzHeadOutlet`, `RzPageTitle`, and `RzHeadContent`, correspond to Blazor's standard components, offering parallel functionality specifically adapted for use in Htmx-enhanced Razor applications.
+This document outlines components created to improve the management of HTML head content and configuration in applications that integrate Htmx with Razor components.
 
-Below is a table mapping each Rz component to its Blazor counterpart:
+## HtmxConfigHeadOutlet
 
-| Rizzy Component | Blazor Component |
-|-----------------|------------------|
-| RzHeadOutlet    | HeadOutlet       |
-| RzPageTitle     | PageTitle        |
-| RzHeadContent   | HeadContent      |
-
-## RzHeadOutlet
-
-The `RzHeadOutlet` component serves as a container for dynamically rendering content within the HTML `<head>` tag. It is designed to work in conjunction with `RzHeadContent` and `RzPageTitle` components to insert or update metadata, such as title tags and other head elements, at runtime.
+The `HtmxConfigHeadOutlet` component is critical for rendering Rizzy's server-side HTMX configurations directly into your HTML document as a `<meta>` tag. This makes the configuration available to the HTMX client library automatically.
 
 ### Usage
 
-1. Include the `RzHeadOutlet` component within the `<head>` tag of your application's main layout file (e.g., `_Layout.cshtml` for MVC or `MainLayout.razor` for Blazor).
+1. Include the `HtmxConfigHeadOutlet` component within the `<head>` tag of your application's main layout file (e.g., `AppLayout.razor`).
+2. It automatically resolves the `HtmxConfig` options from dependency injection and renders them. It also handles rendering anti-forgery tokens (if configured).
 
-2. The `RzHeadOutlet` component does not require any parameters. It automatically renders content provided by `RzHeadContent` and `RzPageTitle` components elsewhere in the application.
-
-```html
+```razor
 <head>
     ...
-    <RzHeadOutlet />
-</head>
-```
+    <HtmxConfigHeadOutlet />
+</head><files>
+  <file path="content/docs/components/content.md">
+---
+title: "Content"
+description: ""
+summary: ""
+date: 2024-03-05T09:42:17-05:00
+lastmod: 2024-03-05T09:42:17-05:00
+draft: false
+menu:
+  docs:
+    parent: ""
+    identifier: "content-4f598ca54b2e54189085d00396d92ebb"
+weight: 100
+toc: true
+seo:
+  title: "" # custom title (optional)
+  description: "" # custom description (recommended)
+  canonical: "" # custom canonical URL (optional)
+  noindex: false # false (default) or true
+---
 
-## RzPageTitle
+This guide introduces the `RzView` component, which is specifically designed to integrate with Htmx for content rendering within ASP.NET applications. This component is used internally by Rizzy to render Blazor components as full pages or partial HTML fragments in response to requests, often initiated by HTMX.
 
-The `RzPageTitle` component enables dynamic updating of the page's title tag (`<title>`) based on the application's routing or state changes. It is designed to work with both traditional and Htmx-driven requests. This component detects if the request is made through Htmx and adjusts its page title rendering to enable Htmx to apply the new title after the request is swapped in place.
+{{< callout context="caution" title="Caution" icon="alert-triangle" >}}
+It is not typical that you will need to invoke the `RzView` component directly in your markup. This documentation is provided simply to describe how Rizzy intends to function under the hood when rendering your views.
+{{< /callout >}}
 
-### Usage
+## RzView
 
-1. Use the `RzPageTitle` component within Razor pages or components to specify the title of the page.
+`RzView` is a Razor component that acts as the primary container for rendering your components. Its behavior is controlled by the `Mode` parameter, which accepts values from the `RzViewMode` enum (`Page` or `Partial`). `RzView` is utilized by the `RzController` methods or the `IRizzyService` to handle the rendering lifecycle.
 
-2. Provide the title content as a child content of the `RzPageTitle` component.
+### Key Features
+- Dynamically renders Razor components as full pages or partial fragments.
+- Automatically handles ASP.NET Core `ModelState` cascading to enable form validation.
+- Automatically injects out-of-band (OOB) swap content via the `HtmxSwapContent` component.
 
-```razor
-<RzPageTitle>
-    Your Page Title Here
-</RzPageTitle>
-```
+### Page Mode (`RzViewMode.Page`)
+When rendering as a full page, `RzView` applies the configured root component (e.g., your `AppLayout`) and automatically resolves the appropriate inner layout.
+- If the component being rendered has a `@layout` attribute, that layout will be applied to the page. 
+- If it doesn't, then the default layout specified in the Rizzy configuration (`RizzyConfig.DefaultLayout`) will be applied. See [Getting Started](/docs/introduction/getting-started/#configuration).
+- Automatically includes `<HtmxConfigHeadOutlet>` to render the HTMX configuration meta tag into the document head.
 
-## RzHeadContent
+### Partial Mode (`RzViewMode.Partial`)
+When rendering as a partial view (often via HTMX AJAX requests), `RzView` bypasses the configured root component entirely.
+- It skips automatic layout resolution and instead renders the component through an `EmptyLayout`.
+- This makes it ideal for embedding dynamic content within other views or returning targeted HTML fragments without inheriting the parent's layout shell.
 
-The `RzHeadContent` component allows for the inclusion of additional content within the `<head>` section of the HTML document dynamically. This is particularly useful for adding or updating metadata, such as meta tags, links (e.g., stylesheets), and scripts, based on the application's context or routing.
+## Special Notes
 
-### Usage
-
-1. Wrap the content intended for the `<head>` section within an `RzHeadContent` component. This can be placed anywhere within your Razor components or pages.
-
-2. The content provided to `RzHeadContent` will be rendered in the location of the `RzHeadOutlet` within your application's layout.
-
-```razor
-<RzHeadContent>
-    <link href="custom-styles.css" rel="stylesheet" />
-    <meta name="description" content="Your page description here" />
-</RzHeadContent>
-```
-
-### Planned Enhancements
-
-Starting with Htmx 2.0, `RzHeadContent` is expected to gain additional capabilities to better support dynamic content rendering in scenarios involving Htmx requests, aligning its functionality more closely with that of `RzPageTitle`.
-
-## Conclusion
-
-The `RzHeadOutlet`, `RzPageTitle`, and `RzHeadContent` components provide a structured and dynamic approach to managing the content of the HTML head section in applications leveraging Htmx with Razor components. By using these components, developers can easily update the page title and other metadata in response to application state changes or routing events, enhancing the flexibility and responsiveness of their applications.
+Both `IRizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use `RzView` with the corresponding mode to render your Blazor components. They handle setting up the render context, evaluating parameters via the fluent builder, and passing the `ModelState`.
