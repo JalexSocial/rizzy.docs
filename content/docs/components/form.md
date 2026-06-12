@@ -18,7 +18,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-Form components are discussed in detail in it's own section.
+Form components are discussed in detail in its own section.
 
 {{< link-card
   title="Form Components"

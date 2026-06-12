@@ -1,4 +1,3 @@
-
 ---
 title: "Swapstyle"
 description: ""
@@ -19,28 +18,35 @@ seo:
   noindex: false # false (default) or true
 ---
 
-Specifies how the response will be swapped into the target element. This allows for fine-grained control over how parts of the page are updated with server responses.
+Specifies how the response will be swapped into the target element. This allows for fine‑grained control over how parts of the page are updated with server responses.
 
 ### SwapStyle Options
 
 Here are the `SwapStyle` options that define how the response is swapped into the target element on the page:
 
-- `Default`: Uses the application's default swap style or htmx's default.
-- `innerHTML`: Replace the inner HTML of the target element.
-- `outerHTML`: Replace the entire target element with the response.
-- `beforebegin`: Insert the response before the target element.
-- `afterbegin`: Insert the response inside the target element, before its first child.
-- `beforeend`: Insert the response inside the target element, after its last child.
-- `afterend`: Insert the response after the target element.
-- `delete`: Deletes the target element, regardless of the response.
-- `none`: Does not append content from the response (though out-of-band items will still be processed).
+- **`Default`** — Uses the application's default swap style or HTMX's default.
+- **`innerHTML`** — Replace the inner HTML of the target element.
+- **`outerHTML`** — Replace the entire target element with the response.
+- **`beforebegin`** — Insert the response before the target element.
+- **`afterbegin`** — Insert the response inside the target element, before its first child.
+- **`beforeend`** — Insert the response inside the target element, after its last child.
+- **`afterend`** — Insert the response after the target element.
+- **`delete`** — Delete the target element, regardless of the response.
+- **`none`** — Do not append content from the response (though out‑of‑band items will still be processed).
+- **`innerMorph`** — Morph the contents of the target element by diffing the existing and new HTML.
+- **`outerMorph`** — Morph the entire target element by diffing the existing and new HTML.
+- **`textContent`** — Replace only the text content inside the target element.
+- **`before`** — Insert the response content immediately before the target node without replacing it.
+- **`after`** — Insert the response content immediately after the target node without replacing it.
+- **`prepend`** — Prepend the response content as the first child of the target element.
+- **`append`** — Append the response content as the last child of the target element.
 
 ### Using the SwapStyleBuilder
 
 Modifiers enhance swap styles with additional behaviors, such as delays, scrolling, and dynamic targeting. The `SwapStyleBuilder` extension methods provide a fluent API to specify these behaviors. The resulting strings can be used directly within markup as well!
 
 ```html
-<div hx-swap=@SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(2))>
+<div hx-swap="@SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(2))">
 // hx-swap value: "innerHTML swap:2s"    
 ```
 
@@ -53,7 +59,7 @@ var result = SwapStyle.beforebegin.ShowWindow(ScrollDirection.top);
 
 #### Delaying the Swap
 
-Modifies the amount of time that htmx will wait after receiving a response to swap the content by including the modifier swap:**time**. The time will be converted to milliseconds if less than 1000, otherwise seconds, meaning the resulting modifier will be swap:500ms for a TimeSpan of 500 milliseconds or swap:2s for a TimeSpan of 2 seconds.
+Modifies the amount of time that HTMX will wait after receiving a response to swap the content by including the modifier `swap:<time>`. The time will be converted to milliseconds if less than 1000, otherwise seconds, meaning the resulting modifier will be `swap:500ms` for a `TimeSpan` of 500 milliseconds or `swap:2s` for a `TimeSpan` of 2 seconds.
 
 ```csharp
 var result = SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(1));
@@ -62,7 +68,7 @@ var result = SwapStyle.innerHTML.AfterSwapDelay(TimeSpan.FromSeconds(1));
 
 #### Delaying the Settle
 
-Modifies the amount of time that htmx will wait between the swap and the settle logic by including the modifier settle:**time**. The time will be converted to milliseconds if less than 1000, otherwise seconds, meaning the resulting modifier will be settle:500ms for a TimeSpan of 500 milliseconds or settle:2s for a TimeSpan of 2 seconds.
+Modifies the amount of time that HTMX will wait between the swap and the settle logic by including the modifier `settle:<time>`. The time will be converted to milliseconds if less than 1000, otherwise seconds, meaning the resulting modifier will be `settle:500ms` for a `TimeSpan` of 500 milliseconds or `settle:2s` for a `TimeSpan` of 2 seconds.
 
 ```csharp
 var result = SwapStyle.innerHTML.AfterSettleDelay(TimeSpan.FromSeconds(1));
@@ -71,7 +77,7 @@ var result = SwapStyle.innerHTML.AfterSettleDelay(TimeSpan.FromSeconds(1));
 
 #### Specifying Scroll Behavior
 
-Sets the scrollbar position after the swap. For instance, using ScrollDirection.bottom will add the modifier scroll:bottom which sets the scrollbar position to the bottom of swap content after the swap. If a CSS selector is present, then the page is scrolled to the direction of the content identified by the CSS selector.
+Sets the scrollbar position after the swap. For instance, using `ScrollDirection.bottom` will add the modifier `scroll:bottom` which sets the scrollbar position to the bottom of swap content after the swap. If a CSS selector is present, then the page is scrolled to the direction of the content identified by the CSS selector.
 
 ```csharp
 var result = SwapStyle.afterend.Scroll(ScrollDirection.bottom);
@@ -80,7 +86,7 @@ var result = SwapStyle.afterend.Scroll(ScrollDirection.bottom);
 
 #### Setting Scroll Position to Top
 
-Sets the content scrollbar position to the top of the swapped content after a swap. This method adds the modifier scroll:top to the swap commands, instructing the page to scroll to the top of the content after content is swapped immediately and without animation. If a CSS selector is present, then the page is scrolled to the top of the content identified by the CSS selector.
+Sets the content scrollbar position to the top of the swapped content after a swap. This method adds the modifier `scroll:top` to the swap commands, instructing the page to scroll to the top of the content after content is swapped immediately and without animation. If a CSS selector is present, then the page is scrolled to the top of the content identified by the CSS selector.
 
 ```csharp
 var result = SwapStyle.afterend.ScrollTop();
@@ -89,7 +95,7 @@ var result = SwapStyle.afterend.ScrollTop();
 
 #### Setting Scroll Position to Bottom
 
-Sets the content scrollbar position to the bottom of the swapped content after a swap. This method adds the modifier scroll:bottom to the swap commands, instructing the page to scroll to the bottom of the content after content is swapped immediately and without animation. If a CSS selector is present, then the page is scrolled to the bottom of the content identified by the CSS selector.
+Sets the content scrollbar position to the bottom of the swapped content after a swap. This method adds the modifier `scroll:bottom` to the swap commands, instructing the page to scroll to the bottom of the content after content is swapped immediately and without animation. If a CSS selector is present, then the page is scrolled to the bottom of the content identified by the CSS selector.
 
 ```csharp
 var result = SwapStyle.afterend.ScrollBottom();
@@ -98,7 +104,7 @@ var result = SwapStyle.afterend.ScrollBottom();
 
 #### Ignoring the Document Title
 
-Determines whether to ignore the document title in the swap response by appending the modifier ignoreTitle:**ignore**. When set to true, the document title in the swap response will be ignored by adding the modifier ignoreTitle:true. This keeps the current title unchanged regardless of the incoming swap content's title tag.
+Determines whether to ignore the document title in the swap response by appending the modifier `ignoreTitle:<ignore>`. When set to `true`, the document title in the swap response will be ignored by adding the modifier `ignoreTitle:true`. This keeps the current title unchanged regardless of the incoming swap content's `<title>` tag.
 
 ```csharp
 var result = SwapStyle.afterend.IgnoreTitle(true);
@@ -107,7 +113,7 @@ var result = SwapStyle.afterend.IgnoreTitle(true);
 
 #### Including the Document Title
 
-Ensures the title of the document is updated according to the swap response by removing any ignoreTitle modifiers, effectively setting ignoreTitle:false.
+Ensures the title of the document is updated according to the swap response by removing any `ignoreTitle` modifiers, effectively setting `ignoreTitle:false`.
 
 ```csharp
 var result = SwapStyle.afterend.IncludeTitle();
@@ -116,7 +122,7 @@ var result = SwapStyle.afterend.IncludeTitle();
 
 #### Enabling Transition Effects
 
-Enables or disables transition effects for the swap by appending the modifier transition:**show**. Controls the display of transition effects during the swap. For example, setting show to true will add the modifier transition:true to enable smooth transitions.
+Enables or disables transition effects for the swap by appending the modifier `transition:<show>`. Controls the display of transition effects during the swap. For example, setting `show` to `true` will add the modifier `transition:true` to enable smooth transitions.
 
 ```csharp
 var result = SwapStyle.innerHTML.Transition(true);
@@ -125,7 +131,7 @@ var result = SwapStyle.innerHTML.Transition(true);
 
 #### Including Transition Effects
 
-Explicitly includes transition effects for the swap by adding the modifier transition:true.
+Explicitly includes transition effects for the swap by adding the modifier `transition:true`.
 
 ```csharp
 var result = SwapStyle.innerHTML.IncludeTransition();
@@ -143,7 +149,7 @@ var result = SwapStyle.innerHTML.IgnoreTransition();
 
 #### Focusing and Scrolling to Content
 
-Allows you to specify that htmx should scroll to the focused element when a request completes. htmx preserves focus between requests for inputs that have a defined id attribute. By default, htmx prevents auto-scrolling to focused inputs between requests which can be unwanted behavior on longer requests when the user has already scrolled away. When true, the modifier will be focus-scroll:true, otherwise focus-scroll:false.
+Allows you to specify that HTMX should scroll to the focused element when a request completes. HTMX preserves focus between requests for inputs that have a defined `id` attribute. By default, HTMX prevents auto‑scrolling to focused inputs between requests which can be unwanted behavior on longer requests when the user has already scrolled away. When `true`, the modifier will be `focus-scroll:true`, otherwise `focus-scroll:false`.
 
 ```csharp
 var result = SwapStyle.afterend.ScrollFocus(true);
@@ -152,7 +158,7 @@ var result = SwapStyle.afterend.ScrollFocus(true);
 
 #### Preserving Focus
 
-Explicitly preserves focus between requests for inputs that have a defined id attribute without scrolling by adding a modifier of `focus-scroll:false`.
+Explicitly preserves focus between requests for inputs that have a defined `id` attribute without scrolling by adding a modifier of `focus-scroll:false`.
 
 ```csharp
 var result = SwapStyle.innerHTML.PreserveFocus();
@@ -161,7 +167,7 @@ var result = SwapStyle.innerHTML.PreserveFocus();
 
 #### Dynamic Element Targeting
 
-Specifies a CSS selector to target for the swap operation with a scroll direction. Adds a show modifier with the specified CSS selector and scroll direction. For example, if the CSS selector is ".item" and the direction is ScrollDirection.top, the modifier show:.item:top is added.
+Specifies a CSS selector to target for the swap operation with a scroll direction. Adds a `show` modifier with the specified CSS selector and scroll direction. For example, if the CSS selector is `.item` and the direction is `ScrollDirection.top`, the modifier `show:.item:top` is added.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOn(ScrollDirection.top, ".item");
@@ -170,7 +176,7 @@ var result = SwapStyle.innerHTML.ShowOn(ScrollDirection.top, ".item");
 
 #### Showing Element at the Top
 
-Specifies that the swap should show the element matching the CSS selector at the top of the window by adding the modifier show:{cssSelector}:top.
+Specifies that the swap should show the element matching the CSS selector at the top of the window by adding the modifier `show:{cssSelector}:top`.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOnTop(".item");
@@ -179,7 +185,7 @@ var result = SwapStyle.innerHTML.ShowOnTop(".item");
 
 #### Showing Element at the Bottom
 
-Specifies that the swap should show the element matching the CSS selector at the bottom of the window by adding the modifier show:{cssSelector}:bottom.
+Specifies that the swap should show the element matching the CSS selector at the bottom of the window by adding the modifier `show:{cssSelector}:bottom`.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOnBottom(".item");
