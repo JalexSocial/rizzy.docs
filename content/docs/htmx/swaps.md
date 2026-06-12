@@ -1,4 +1,3 @@
-
 ---
 title: "Out of Band Swapping"
 description: ""
@@ -10,7 +9,7 @@ menu:
   docs:
     parent: ""
     identifier: "swaps-086a15288eb2dfe181e188ca652740e2"
-weight: 999
+  weight: 999
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -21,13 +20,17 @@ seo:
 
 Out of band swaps in HTMX allow you to update content in the Document Object Model (DOM) outside the direct target of an operation. This feature enables you to make updates to multiple elements in response to a single event, facilitating more dynamic and interactive web applications by piggybacking updates across different parts of your page.
 
+{{< callout context="warning" title="HTMX 4 Changes" icon="alert-circle" >}}
+In HTMX 4 the swap order has changed: the main content swap is applied first, and then any out‑of‑band (`hx‑swap‑oob`) or `<hx-partial>` elements in the response are applied afterwards【381859254872383†L194-L204】. Plan your response HTML accordingly if you rely on out‑of‑band swaps to modify the DOM before the main swap. HTMX 4 also introduces the `<hx-partial>` element as an alternative way to perform multiple targeted swaps in a single response. Each `<hx-partial>` can specify its own `hx-target` and `hx-swap` strategy【381859254872383†L461-L475】.
+{{< /callout >}}
+
 {{< callout context="note" title="Note" icon="info-circle" >}}
-The HtmxSwappable component and HtmxSwapService were based on HTMX usage of Out of Band swaps.  You can find more information about HTMX out of band swaps on the official [Htmx documentation site](https://htmx.org/attributes/hx-swap-oob/).
+The `HtmxSwappable` component and `HtmxSwapService` were based on HTMX usage of out‑of‑band swaps.  You can find more information about HTMX out‑of‑band swaps on the official [HTMX documentation site](https://htmx.org/attributes/hx-swap-oob/).  While HTMX 4 introduces `<hx-partial>` for multi-target updates, Rizzy's swap service currently focuses on the classic `hx‑swap‑oob` mechanism.
 {{< /callout >}}
 
 ## Using the HtmxSwappable Component
 
-The `HtmxSwappable` component is designed for seamlessly integrating out of band swaps in your Blazor applications. Htmx allows for this component to be used anywhere on the page that you like. Please note that when using this component it does not publish itself to the `HtmxSwapService`, but will still work as expected.
+The `HtmxSwappable` component is designed for seamlessly integrating out‑of‑band swaps in your Blazor applications. HTMX allows for this component to be used anywhere on the page that you like. Please note that when using this component it does not publish itself to the `HtmxSwapService`, but will still work as expected.
 
 Parameters:
 - `TargetId`: Specifies the HTML ID of the element to be swapped. This should be an element already present on the page.
@@ -44,13 +47,13 @@ Here's a simple example that demonstrates how to use `HtmxSwappable` to display 
 </HtmxSwappable>
 ```
 
-The example provided uses the `HtmxSwappable` component to perform an out of band swap into an existing HTML structure. Let's break down what the original HTML might look like before the swap occurs and the role of the `.alert-message` CSS selector within this process.
+The example provided uses the `HtmxSwappable` component to perform an out‑of‑band swap into an existing HTML structure. Let's break down what the original HTML might look like before the swap occurs and the role of the `.alert-message` CSS selector within this process.
 
 ### Original HTML Structure
 
 Before the swap, the HTML structure should contain an element with an ID matching the `TargetId` specified in the `HtmxSwappable` component. This element serves as the container where the new content will be swapped in. Additionally, within this container, there might be an existing element identified by the `.alert-message` CSS selector that the swap operation targets.
 
-Here's an example of what the original HTML structure might look like that you can place in your Layout page:
+Here's an example of what the original HTML structure might look like that you can place in your layout page:
 
 ```html
 <div id="alert-container">
@@ -85,20 +88,20 @@ After the swap operation completes, the HTML might look like this:
 </div>
 ```
 
-Here, the original content within the `.alert-message` div is replaced with the new alert message defined in the `HtmxSwappable` component. This demonstrates how out of band swaps enable updating specific portions of the page in response to certain events, enhancing interactivity of web applications without requiring a full page reload or direct interaction with the targeted container element.
+Here, the original content within the `.alert-message` div is replaced with the new alert message defined in the `HtmxSwappable` component. This demonstrates how out‑of‑band swaps enable updating specific portions of the page in response to certain events, enhancing interactivity of web applications without requiring a full page reload or direct interaction with the targeted container element.
 
 ## Using the HtmxSwapService
 
-`HtmxSwapService` is a service registered as a scoped dependency implementing `IHtmxSwapService`. It facilitates injecting Razor Components, RenderFragments, and raw HTML content into various parts of your application or services.
+`HtmxSwapService` is a service registered as a scoped dependency implementing `IHtmxSwapService`. It facilitates injecting Razor components, `RenderFragment`s, and raw HTML content into various parts of your application or services.
 
-This service is useful because it provides an ability to inject content into the page from *anywhere*.  This opens up the door for the creation of services that can create content that is swapped into place that exist outside of your razor component views.
+This service is useful because it provides an ability to inject content into the page from *anywhere*. This opens up the door for the creation of services that can create content that is swapped into place that exist outside of your razor component views.
 
 ## Features
 
-- **Dynamic Content Swapping:** Easily swap content in your application with Razor components, RenderFragments, or raw HTML during HTMX requests.
+- **Dynamic Content Swapping:** Easily swap content in your application with Razor components, `RenderFragment`s, or raw HTML during HTMX requests.
 - **Customizable Swap Styles:** Offers various content swap styles to choose from, allowing for flexible content rendering based on your needs.
 - **Selector Support:** Utilize CSS selectors to precisely define where the content swap should occur within the DOM.
-- **Support for Raw HTML:** Directly inject raw HTML into your application
+- **Support for Raw HTML:** Directly inject raw HTML into your application.
 
 ### Adding Content with HtmxSwapService
 
@@ -109,7 +112,7 @@ You must include the `HtmxSwapContent` component somewhere in your template for 
 To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
 
 ```html
-<HtmxSwapContent/>
+<HtmxSwapContent />
 ```
 
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
@@ -121,21 +124,21 @@ Here's how you can use `HtmxSwapService` in your components to perform dynamic c
     protected override void OnInitialized()
     {
         HtmxSwapService.AddRawContent("<p>Hello, world!</p>");
-        
+
         HtmxSwapService.AddSwappableComponent<AlertComponent>(
-            targetId: "alert-container", 
+            targetId: "alert-container",
             parameters: new Dictionary<string, object>
             {
                 {"Message", "This is an important message!"}
-            }, 
-            swapStyle: SwapStyle.innerHTML, 
+            },
+            swapStyle: SwapStyle.innerHTML,
             selector: ".alert-message"
         );
     }
 }
 ```
 
-In this example, `AddRawContent` is used to add simple HTML content, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named "Message".
+In this example, `AddRawContent` is used to add simple HTML content, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named `Message`.
 
 #### Adding a Swappable Razor Component
 

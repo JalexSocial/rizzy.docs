@@ -9,7 +9,7 @@ menu:
   docs:
     parent: "htmx" # Assuming parent is the HTMX section
     identifier: "streaming-a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2" # Unique identifier
-weight: 450 # Position within the HTMX section
+  weight: 450 # Position within the HTMX section
 toc: true
 seo:
   title: "Using Blazor Streaming Rendering and HTMX with Rizzy"
@@ -18,7 +18,7 @@ seo:
 
 ## Overview
 
-Blazor's **Streaming Rendering** (`[StreamRendering]` attribute) is a powerful feature introduced in .NET 8. It enhances the perceived performance of server-side rendered (SSR) Blazor components by rendering the initial page structure quickly and then streaming updates for parts of the component that rely on long-running asynchronous operations (like fetching data).
+Blazor's **Streaming Rendering** (`[StreamRendering]` attribute) is a powerful feature introduced in .NET 8. It enhances the perceived performance of server‑side rendered (SSR) Blazor components by rendering the initial page structure quickly and then streaming updates for parts of the component that rely on long‑running asynchronous operations (like fetching data).
 
 HTMX excels at fetching and swapping HTML fragments dynamically without full page reloads. Combining these two technologies presents a challenge: how does Blazor's DOM patching via streaming interact correctly when HTMX might swap out the container holding the streaming component?
 
@@ -32,26 +32,43 @@ If HTMX performs a swap (`hx-swap`) on an element that *contains* a streaming Bl
 
 ## The Solution: Rizzy Streaming
 
-The `rizzy-streaming` HTMX extension provides **document-wide coordination** between Blazor's streaming rendering updates and HTMX's swapping mechanism. By including this extension, Rizzy helps ensure that streaming updates are correctly applied even when content is dynamically loaded or replaced via HTMX swaps.
+The `rizzy-streaming` HTMX extension provides **document‑wide coordination** between Blazor's streaming rendering updates and HTMX's swapping mechanism. By including this extension, Rizzy helps ensure that streaming updates are correctly applied even when content is dynamically loaded or replaced via HTMX swaps.
 
 It helps manage the lifecycle and potential conflicts, allowing you to leverage the benefits of both technologies simultaneously.
 
 ## How to Enable Rizzy Streaming
 
-To enable the extension, add the `hx-ext="rizzy-streaming"` attribute to the `<body>` tag (or another high-level common ancestor element) in your main application layout file (e.g., `AppLayout.razor` if using the Rizzy templates).
+In HTMX 4 the `hx-ext` attribute has been **removed**.  Extensions are activated by simply including their script files.  The Rizzy client script registers both the `rizzy-streaming` and `rizzy-nonce` extensions automatically.  Ensure that HTMX is loaded first, then include the Rizzy script in your layout.
 
-```html {title="AppLayout.razor" hl_lines=["2"]}
-<!-- ... other head elements ... -->
-<body hx-ext="rizzy-streaming">
+```html {title="AppLayout.razor"}
+<head>
+    <!-- Load HTMX (version 4) -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/htmx.js"></script>
+    <!-- Load the Rizzy client script (registers rizzy-nonce and rizzy-streaming) -->
+    <script src="/_content/Rizzy/js/rizzy.js" type="module"></script>
+</head>
+<body>
     @Body
 
-    <HtmxSwapContent/>
-    <!-- ... other scripts ... -->
+    <!-- The HtmxSwapContent component renders out‑of‑band swap content -->
+    <HtmxSwapContent />
+
+    <!-- other scripts -->
 </body>
 </html>
 ```
 
-This ensures the extension monitors the entire document for potential interactions between streaming rendering and HTMX swaps.
+When the Rizzy script loads it calls `htmx.registerExtension("rizzy-streaming", …)` internally.  HTMX 4 will automatically recognize the extension and apply it to HTMX requests without the need for `hx-ext`.  If you wish to **restrict** which extensions are permitted to run, you can set the `extensions` field of your `HtmxConfig` (rendered via `<HtmxConfigHeadOutlet />`) to include `"rizzy-streaming"`:
+
+```csharp {title="Program.cs"}
+builder.Services.AddHtmx(config =>
+{
+    // Allow only the rizzy-streaming extension (comma‑separate multiple values)
+    config.Extensions = "rizzy-streaming";
+});
+```
+
+This approach ensures that the streaming extension is available while still allowing you to control which extensions run in your application.
 
 ## Using Streaming Components
 
@@ -86,27 +103,6 @@ else
             }
         </tbody>
     </table>
-}
-
-@code {
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate a long-running async task
-        await Task.Delay(1500); // Simulate network latency or DB query
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
-
-    // WeatherForecast class definition...
 }
 ```
 
@@ -152,14 +148,14 @@ public class DashboardController : RzController
 3.  The `LoadWeatherWidget` action returns the `StreamingWeather` component rendered as a partial view.
 4.  HTMX receives the initial HTML containing the "Loading..." message and swaps it into `#weather-widget-container`.
 5.  The `StreamingWeather` component's `OnInitializedAsync` continues running (`Task.Delay(1500)`).
-6.  Once the delay finishes and `forecasts` is populated, Blazor attempts to send streaming updates.
-7.  The `rizzy-streaming` extension, enabled on the `<body>`, helps coordinate these updates with the DOM, ensuring the weather table correctly replaces the "Loading..." message within the HTMX-managed container.
+6.  Once the delay finishes and `forecasts` is populated, Blazor sends streaming updates to render the final table.
+7.  The `rizzy-streaming` extension coordinates these updates with HTMX, ensuring the weather table correctly replaces the "Loading..." message within the HTMX-managed container.
 
 ## Considerations
 
-*   **Complexity:** While `rizzy-streaming` simplifies the integration, interactions between complex, nested streaming components and frequent HTMX swaps might still require careful testing.
-*   **Performance:** Ensure your async operations within streaming components are efficient. Streaming rendering improves *perceived* load time but doesn't make the underlying operations faster.
+* **Complexity:** While `rizzy-streaming` simplifies the integration, interactions between complex, nested streaming components and frequent HTMX swaps might still require careful testing.
+* **Performance:** Ensure your async operations within streaming components are efficient. Streaming rendering improves *perceived* load time but doesn't make the underlying operations faster.
 
 ## Conclusion
 
-The `rizzy-streaming` HTMX extension provides a crucial link between Blazor's `[StreamRendering]` feature and HTMX's dynamic content swapping. By enabling this extension globally in your layout, you can confidently use streaming rendering in your Blazor components, knowing that Rizzy will help manage their interaction with HTMX-driven updates, leading to faster-feeling, interactive user experiences.
+The `rizzy-streaming` HTMX extension provides a crucial link between Blazor's `[StreamRendering]` feature and HTMX's dynamic content swapping. By including this extension globally in your layout (via the Rizzy client script), you can confidently use streaming rendering in your Blazor components, knowing that Rizzy will help manage their interaction with HTMX‑driven updates, leading to faster‑feeling, interactive user experiences.

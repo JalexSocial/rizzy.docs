@@ -43,6 +43,18 @@ Key features of Rizzy.Htmx include:
 - **Security‑First Approach:**  
   Rizzy.Htmx seamlessly integrates with anti‑forgery mechanisms and nonce generation. By leveraging configuration options such as `HtmxAntiforgeryOptions` and the accompanying nonce provider (`IRizzyNonceProvider`), it helps safeguard your interactive endpoints from common security vulnerabilities.
 
+{{< callout context="warning" title="HTMX 4 Updates" icon="alert-circle" >}}
+HTMX 4 introduced several important changes compared to the 2.x series. Keep the following in mind when building Rizzy applications:
+
+- **Explicit Attribute Inheritance:** Attributes like `hx-target`, `hx-confirm` and others are no longer inherited down the DOM tree by default. Use the `:inherited` suffix (e.g., `hx-target:inherited="#content"`) or `:append` when you want child elements to inherit or append to parent values【381859254872383†L141-L163】.
+- **Error Responses Swap by Default:** HTMX 4 swaps all HTTP responses by default, including 4xx and 5xx codes. Use the `HX-Status` response header or the `hx-status` attribute to control swap behavior for particular status codes【381859254872383†L169-L175】.
+- **`hx-disable` Renamed to `hx-ignore`:** The old `hx-disable` attribute has been replaced by `hx-ignore` to skip HTMX processing on an element. The new `hx-disable` now disables form elements during requests【381859254872383†L240-L247】.
+- **Morphing Swap Styles and Aliases:** HTMX 4 supports morphing diff swap styles (`innerMorph` and `outerMorph`) and provides alias values like `before`, `after`, `prepend`, and `append` for more intuitive swap positioning【989634978019296†L420-L432】.
+- **Loading Extensions Without `hx-ext`:** Do not use `hx-ext` in HTMX 4. Instead, load extension scripts directly after HTMX and configure allowed extensions via the `extensions` key in your `HtmxConfig` or a `<meta name="htmx-config">` tag【381859254872383†L224-L235】.
+
+For a complete list of changes and migration tips, see the official HTMX 4 documentation.
+{{< /callout >}}
+
 ---
 
 ## A Quick Example
