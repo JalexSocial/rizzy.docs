@@ -33,11 +33,11 @@ Below is a list of Blazor built-in components alongside their Rizzy equivalents 
 | `DataAnnotationsValidator` | `DataAnnotationsValidator`                                | Used directly within `EditForm`.                                      |
 | `DynamicComponent`           | `DynamicComponent`                                          | Used directly (e.g., internally by `RzView`).                         |
 | `Editor<T>`                  | `Editor<T>`                                                 | Used directly.                                                        |
-| `EditForm`                   | `EditForm`                                                  | Used directly; often paired with `RzInitialValidator`.                |
+| `EditForm`                   | `EditForm`                                                  | Used directly; add `RzModelStateProvider` to show server-side `ModelState` errors. |
 | `ErrorBoundary`              | `ErrorBoundary`                                             | Used directly.                                                        |
 | `FocusOnNavigate`            | N/A                                                         | HTMX manages focus/scrolling differently post-swap.                   |
 | `HeadContent`                | `HeadContent`                                               | Standard component is used.                                           |
-| `HeadOutlet`                 | `HtmxConfigHeadOutlet` / `HeadOutlet`                       | Use `HtmxConfigHeadOutlet` for HTMX config injection, alongside the standard `HeadOutlet`. |
+| `HeadOutlet`                 | `RzHeadOutlet`                                              | Renders `HeadOutlet` plus the htmx config meta tag; use it instead of `HeadOutlet` in the root layout. |
 | `InputCheckbox`              | `RzInputCheckboxBase`                                       | Adds `data-val-*` attributes, ID handling.                            |
 | `InputDate<TValue>`          | `RzInputDateBase<TValue>`                                   | Adds `data-val-*` attributes, ID handling.                            |
 | `InputFile`                  | `RzInputFileBase`                                           | Standard component, ID handling.                                      |

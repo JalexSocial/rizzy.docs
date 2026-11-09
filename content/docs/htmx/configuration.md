@@ -10,7 +10,7 @@ menu:
     htmx:
       parent: ""
       identifier: "configuration-9be46cbb530cd63819776bc374ed5c77"
-  weight: 100
+    weight: 100
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -21,7 +21,7 @@ seo:
 
 This document provides a comprehensive guide on setting up and configuring HTMX within your application using Rizzy.  HTMX 4 introduces a number of changes to configuration keys and attribute behavior, so this guide focuses on the updated API.
 
-To add the `Rizzy.Htmx` NuGet package to your project, follow these steps:
+`Rizzy.Htmx` is installed with the `Rizzy` package. Install it on its own only if you use the htmx helpers without Rizzy's components:
 
 ## Installation
 
@@ -52,7 +52,7 @@ The configuration portion of Rizzy is based on HTMX 4’s head configuration.  
 
 ### Adding HTMX Configuration in `Program.cs`
 
-In `Program.cs`, you can add custom HTMX configurations using the `AddHtmx()` method.  The example below demonstrates a few of the new configuration properties:
+`AddRizzy()` already registers htmx support with htmx's defaults. To change the configuration, call `AddHtmx()` with a delegate (before or after `AddRizzy()`; repeated calls are safe). The example below demonstrates a few of the configuration properties:
 
 ```csharp {title="Program.cs"}
 using Rizzy.Htmx;
@@ -69,22 +69,26 @@ builder.Services.AddHtmx(config =>
     // Example: restrict cross‑origin requests (similar to SelfRequestsOnly)
     config.Mode = "same-origin";
 
-    // Example: allow only the rizzy‑streaming extension to run
-    config.Extensions = "rizzy-streaming";
+    // Example: restrict which extensions may run. Keep Rizzy's own extensions in the list,
+    // or antiforgery tokens, CSP nonces, streaming and confirm dialogs stop working.
+    config.Extensions = "rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm";
 });
 ```
 
 ### Setting Configuration in HTML
 
-To include configurations inside the `<head>` tag of your HTML document (usually in your main layout file like `AppLayout.razor`), use the `<HtmxConfigHeadOutlet />` component.  This component renders a `<meta name="htmx-config" ...>` tag containing the serialized JSON of your `HtmxConfig` object (either the default one configured in `Program.cs` or a named one if specified).
+The configuration reaches the browser as a `<meta name="htmx-config" ...>` tag rendered by **`<RzHeadOutlet />`**, which you place in the `<head>` of your root layout instead of Blazor's `<HeadOutlet />`. It must come **before** the htmx script, because htmx reads the tag once, when the script loads.
 
 ```html {title="AppLayout.razor"}
 <head>
     ...
-    <HtmxConfigHeadOutlet />
-    ...
+    <RzHeadOutlet />
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
+    <script src="_content/Rizzy/js/rizzy.js"></script>
 </head>
 ```
+
+`RzHeadOutlet` renders `HeadOutlet` followed by `HtmxConfigHeadOutlet`, the component that produces the tag. Besides your settings, the tag carries Rizzy's `antiforgery` settings (header name, form field name and the current request token) and `rizzyVersion`. Rizzy 5 added the tag through `<HeadContent>`, but any page with its own `<HeadContent>` replaced it; `RzHeadOutlet` cannot be overridden that way.
 
 ## HTMX Configuration Properties
 
@@ -99,23 +103,25 @@ The table below lists the key configuration properties available in `HtmxConfig`
 | **IndicatorClass**      | `unset`       | `htmx-indicator` | Sets the class added to elements while a request is active (when using `hx-indicator`). |
 | **RequestClass**        | `unset`       | `htmx-request`   | Sets the class added to the element making the request while the request is active. |
 | **DefaultTimeout**      | `unset`       | `60000ms`        | Sets the number of milliseconds a request can take before automatically being terminated (`0` means no timeout). |
-| **DefaultFocusScroll**  | `unset`       | `false`          | When `true`, the focused element is scrolled into view by default after a swap; can also be controlled via the `focus-scroll` swap modifier. |
+| **DefaultFocusScroll**  | `unset`       | `false`          | When `true`, the focused element is scrolled into view by default after a swap; can also be controlled via the `focusScroll` swap modifier. |
 | **Transitions**         | `unset`       | `false`          | If set to `true`, HTMX will use the View Transition API when swapping content globally. |
 | **Mode**                | `unset`       | `same-origin`    | Controls cross‑origin request mode (`same-origin`, `cors`, or `no-cors`). Replaces the `SelfRequestsOnly` setting from HTMX 2. |
 | **ImplicitInheritance** | `unset`       | `false`          | Enables implicit inheritance of HTMX attributes when `true`.  In HTMX 4 attribute inheritance is explicit by default. |
-| **NoSwap**              | `unset`       | `[]` (swaps all) | Array or range of HTTP status codes that should **not** be swapped (e.g., `[204, 304, '4xx', '5xx']`). |
+| **NoSwap**              | `unset`       | `[204, 304]`     | HTTP status codes (or ranges such as `"4xx"`) that should **not** be swapped. htmx 4 swaps 4xx and 5xx responses by default, which Rizzy's validation support relies on (see [Validation]({{<ref "/docs/forms/validation.md">}})). Set `[204, 304, "4xx", "5xx"]` for htmx 2 behavior. |
 | **MorphIgnore**         | `unset`       | `["data-htmx-powered"]` | Attributes to ignore when morphing during `innerMorph` and `outerMorph` swaps. |
 | **MorphScanLimit**      | `unset`       | `10`             | Sibling scan limit used during morph operations. |
 | **MorphSkip**           | `unset`       | `null`           | CSS selector for elements whose contents should not be morphed. |
 | **MorphSkipChildren**   | `unset`       | `null`           | CSS selector for elements whose children should not be morphed. |
-| **Extensions**          | `unset`       | `null`           | Comma‑separated list of allowed extension names.  Use this to restrict which HTMX extensions may run (e.g., `"rizzy-streaming"`). |
+| **Extensions**          | `unset`       | `null`           | Comma‑separated list of allowed extension names. When set, include Rizzy's extensions: `"rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm"`. |
 | **Prefix**              | `unset`       | `null`           | Custom attribute prefix.  HTMX 4 no longer supports `data-hx-` implicitly; set this to `"data-hx-"` if you wish to continue using the `data-hx-` prefix. |
 | **LogAll**              | `unset`       | `false`          | Enables logging of all HTMX lifecycle events to the browser console. Useful for debugging. |
-| **GenerateScriptNonce** | `false`       | N/A              | Rizzy‑specific: If `true`, uses an `IRizzyNonceProvider` to set `inlineScriptNonce` automatically for CSP compliance. |
-| **GenerateStyleNonce**  | `false`       | N/A              | Rizzy‑specific: If `true`, uses an `IRizzyNonceProvider` to set `inlineStyleNonce` automatically for CSP compliance. |
+| **AllowEmptySwapAfterOOB** | `unset`    | `false`          | When `true`, an empty main response is still swapped after out-of-band content was processed. |
+| **MetaCharacter**       | `unset`       | `:`              | A character htmx uses instead of `:` in attribute and event names (for example `-` to write `hx-on-click`), for templating systems that do not allow colons. |
+| **GenerateScriptNonce** | `false`       | N/A              | Rizzy‑specific: If `true`, sets htmx's `inlineScriptNonce` to the page nonce. htmx then stamps that nonce on **every** script it inserts, including injected ones, which defeats a CSP. Leave it off and let Rizzy's `rizzy-nonce` extension handle scripts (see [Content Security Policy]({{<ref "/docs/introduction/contentsecurity.md">}})). |
+| **RizzyDiagnostics**    | enabled       | N/A              | Rizzy‑specific: set to `false` to silence the console warnings rizzy.js logs for a misconfigured page (missing or invalid meta tag, or a server/client version mismatch). |
 
 Properties that existed in HTMX 2 such as `DefaultSwapDelay`, `IncludeIndicatorStyles`, `HistoryCacheSize`, `SelfRequestsOnly`, `DisableSelector`, and `WithCredentials` have either been renamed or removed in HTMX 4.  For example, you no longer use `hx-disable` to skip HTMX processing—use the `hx-ignore` attribute instead.  Similarly, the `hx-ext` attribute has been removed; extensions are enabled by including their scripts and, if desired, whitelisting them via the `Extensions` property shown above.
 
 ## Conclusion
 
-By following this documentation, you can install Rizzy.Htmx and configure HTMX 4 behavior within your ASP.NET Core application according to your requirements.  Remember to place the `<HtmxConfigHeadOutlet />` in your layout to apply the configuration, and to update any deprecated attributes (for example, replace `hx-disable` with `hx-ignore` and remove any `hx-ext` usage) when migrating existing markup to HTMX 4.
+By following this documentation, you can install Rizzy.Htmx and configure HTMX 4 behavior within your ASP.NET Core application according to your requirements.  Remember to render `<RzHeadOutlet />` in your root layout, before the htmx script, to apply the configuration, and to update any deprecated attributes (for example, replace `hx-disable` with `hx-ignore` and remove any `hx-ext` usage) when migrating existing markup to HTMX 4.

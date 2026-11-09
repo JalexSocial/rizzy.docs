@@ -24,9 +24,8 @@ Rizzy aims to provide a familiar validation experience, similar to traditional A
 -   **`RzInput*Base` Components**: (e.g., `RzInputTextBase`, `RzInputNumberBase`) These components automatically generate standard HTML input elements along with `data-val-*` attributes based on the Data Annotations found on the bound model property. These attributes are essential for client-side validation libraries.
 -   **`RzValidationMessageBase`**: Displays validation messages for a *specific* field, similar to `asp-validation-for`.
 -   **`RzValidationSummaryBase`**: Displays a summary of *all* validation messages for the form, similar to `asp-validation-summary`.
--   **`RzInitialValidator`**: A crucial component within the `EditForm`. On initial render or after a postback (like an HTMX form submission), it checks if the `ModelState` (cascaded from the `RzController`) contains errors.
-    *   If `ModelState` has errors, it adds them to the `EditContext`.
-    *   If `ModelState` is valid, it triggers the standard `EditContext` validation (based on Data Annotations) to ensure the form reflects the current model's validity state immediately.
+-   **`RzModelStateProvider`**: Place it inside the `EditForm` to show **server-side** errors. It copies the errors from the cascaded `ModelStateDictionary` into the `EditContext`, so each error appears next to its field. Keys from MVC model binding (`Person.Name`, `Person.Address.City`) are mapped to the right field. `RzController` passes the controller's `ModelState` automatically; with `IRizzyService` (minimal APIs), pass one to `View`/`PartialView`.
+-   **`RzInitialValidator`**: Optional. Runs the form's Data Annotations validation when the form renders, so the form shows its current validity immediately (for example when re-rendering a posted model).
 
 ## Complex Validation Example
 
@@ -38,17 +37,30 @@ Let's illustrate with a model containing various validation rules and the corres
 using System.ComponentModel.DataAnnotations;
 
 public class SignupViewModel
-{[Required(ErrorMessage = "Username is required.")][StringLength(20, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 20 characters.")]
+{
+    [Required(ErrorMessage = "Username is required.")]
+    [StringLength(20, MinimumLength = 5, ErrorMessage = "Username must be between 5 and 20 characters.")]
     [RegularExpression("^[a-zA-Z0-9_]*$", ErrorMessage = "Username can only contain letters, numbers, and underscores.")]
-    public string? Username { get; set; }[Required(ErrorMessage = "Email is required.")]
+    public string? Username { get; set; }
+
+    [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
     public string? Email { get; set; }
 
-    [Required(ErrorMessage = "Password is required.")][DataType(DataType.Password)][StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
-    public string? Password { get; set; }[Required(ErrorMessage = "Please confirm your password.")]
-    [DataType(DataType.Password)][Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
-    public string? ConfirmPassword { get; set; }[Range(18, 120, ErrorMessage = "You must be between 18 and 120 years old.")]
-    public int? Age { get; set; } // Optional field with Range validation[Required(ErrorMessage = "You must agree to the terms.")][Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions.")]
+    [Required(ErrorMessage = "Password is required.")]
+    [DataType(DataType.Password)]
+    [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
+    public string? Password { get; set; }
+
+    [Required(ErrorMessage = "Please confirm your password.")]
+    [DataType(DataType.Password)]
+    [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+    public string? ConfirmPassword { get; set; }
+
+    [Range(18, 120, ErrorMessage = "You must be between 18 and 120 years old.")]
+    public int? Age { get; set; } // Optional field with Range validation
+
+    [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions.")]
     public bool AcceptTerms { get; set; }
 
     // Example of a custom validation attribute (implementation not shown here)
@@ -68,7 +80,7 @@ public class SignupViewModel
 
     <EditForm Model="Model" FormName="Signup" OnValidSubmit="HandleValidSubmit" hx-post="/signup/submit" hx-target="#signup-form-container" hx-swap="outerHTML">
         <DataAnnotationsValidator />
-        <RzInitialValidator />
+        <RzModelStateProvider />
 
         <RzValidationSummaryBase class="alert alert-danger" />
 
@@ -114,9 +126,11 @@ public class SignupViewModel
 </div>
 
 @code {
-    // Model can be supplied via [Parameter] or [SupplyParameterFromForm]
-    [SupplyParameterFromForm]
-    private SignupViewModel Model { get; set; } = new();
+    // Model can be supplied via [Parameter] or [SupplyParameterFromForm]. Don't give a
+    // [SupplyParameterFromForm] property an initializer (it can be overwritten with null during
+    // posts, warning BL0008); create the model in OnInitialized instead.
+    [SupplyParameterFromForm(FormName = "Signup")]
+    public SignupViewModel? Model { get; set; }
 
     // Example handler for Blazor-based valid submission (optional if using pure HTMX post)
     private void HandleValidSubmit()
@@ -125,11 +139,7 @@ public class SignupViewModel
         // This might not be hit if only hx-post is used for submission
     }
 
-    protected override void OnInitialized()
-    {
-       // Potential initialization logic
-       base.OnInitialized();
-    }
+    protected override void OnInitialized() => Model ??= new();
 }
 ```
 
@@ -138,20 +148,38 @@ public class SignupViewModel
 1.  **Annotations:** You define rules on your model using Data Annotations (`[Required]`, `[StringLength]`, `[Compare]`, etc.).
 2.  **Rizzy Component Rendering:** `RzInput*Base` components read these annotations via the `EditContext` (populated by `DataAnnotationsValidator`).
 3.  **`data-val-*` Attributes:** Rizzy generates the standard `data-val="true"`, `data-val-required="Error message"`, `data-val-length-min="5"`, etc., attributes on the HTML input elements.
-4.  **JavaScript Library:** A client-side JavaScript validation library (like jQuery Unobtrusive Validation, `aspnet-validation.js` included with RizzyUI, or others) is required to *interpret* these `data-val-*` attributes. This library hooks into form events (like input changes or blur) and displays/hides validation messages (`<span>` elements typically generated alongside inputs or targeted by `RzValidationMessageBase`) *without* a server roundtrip.
+4.  **JavaScript Library:** A client-side JavaScript validation library (like jQuery Unobtrusive Validation, the `aspnet-validation` script that RizzyUI includes, or others; the Rizzy client script does not validate) is required to *interpret* these `data-val-*` attributes. This library hooks into form events (like input changes or blur) and displays/hides validation messages (`<span>` elements typically generated alongside inputs or targeted by `RzValidationMessageBase`) *without* a server roundtrip.
 5.  **`RzValidationMessageBase` / `RzValidationSummaryBase`:** These components render the necessary HTML elements (usually `<span>` or `<div>`) that client-side libraries use to display the error messages defined in your annotations or added dynamically.
 
 ## Server-Side Validation Flow (HTMX Post)
 
-1.  **HTMX Submission:** The user submits the form using an element with `hx-post` (or similar).
-2.  **Controller Action:** Your MVC controller action receives the submitted model. ASP.NET Core performs model binding and validates the model against the Data Annotations, populating `ModelState`.
-3.  **`ModelState` Check:** Your controller action checks `ModelState.IsValid`.
-4.  **Invalid `ModelState`:**
-    *   The controller returns a Rizzy `PartialView<YourFormComponent>()` (or `View`).
-    *   Rizzy cascades the `ModelState` dictionary down to the component.
-    *   Inside the `EditForm`, `RzInitialValidator` detects the `ModelState` errors and adds them to the `EditContext`.
-    *   `RzValidationMessageBase` and `RzValidationSummaryBase` render the errors from the `EditContext`.
-    *   The rendered partial HTML (including inputs potentially marked with error classes and the visible validation messages) is returned to HTMX to be swapped into the page.
-5.  **Valid `ModelState`:** The controller processes the data and typically returns a different response (e.g., a redirect, a success message partial, etc.).
+1.  **HTMX submission:** the user submits the form through `hx-post` (or similar). rizzy.js adds the antiforgery token.
+2.  **Model binding:** your controller action receives the model. ASP.NET Core binds and validates it against the Data Annotations and fills `ModelState`. Blazor names the inputs after the bound expression (`Model.Username`), so name the action parameter to match (`model`), or use `[FromForm(Name = "Model")]`. Add your own rules with `ModelState.AddModelError("Model.Username", "That name is taken.")`; keys with the binding prefix are mapped to the field.
+3.  **Invalid:** mark the response as a validation failure and re-render the form:
 
-This combination ensures immediate feedback via client-side validation (if configured with a JS library) and guarantees data integrity through server-side validation, leveraging Rizzy components to bridge the gap.
+    ```csharp {title="SignupController.cs"}
+    public class SignupController : RzController
+    {
+        [HttpPost, ValidateAntiForgeryToken]
+        public IResult Submit([FromForm] SignupViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.Htmx().ValidationFailed();   // status 422
+                return View<SignupForm>();            // ModelState is passed automatically
+            }
+
+            // Save...
+            return PartialView<SignupComplete>();
+        }
+    }
+    ```
+
+    htmx 4 swaps 4xx responses like any other, so the re-rendered form (with its errors) replaces the old one. `<RzModelStateProvider />` shows each error next to its field and in the summary. To send the errors somewhere else, pass a selector (`ValidationFailed("#errors")`) or route it from the page with `hx-status:422="target:#errors"`.
+4.  **Valid:** process the data and return a different response (a success fragment, `Response.Htmx().Redirect(...)`, and so on).
+
+{{< callout context="note" title="MVC antiforgery" icon="info-circle" >}}
+`[ValidateAntiForgeryToken]` needs MVC registered with `AddControllersWithViews()` (or `AddMvcCore().AddViews()`); `AddControllers()` alone does not provide its filter.
+{{< /callout >}}
+
+This combination gives immediate feedback via client-side validation (if you add a JS library) and guarantees data integrity through server-side validation.

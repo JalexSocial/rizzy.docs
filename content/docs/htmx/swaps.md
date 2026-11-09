@@ -9,7 +9,7 @@ menu:
   docs:
     parent: ""
     identifier: "swaps-086a15288eb2dfe181e188ca652740e2"
-  weight: 999
+    weight: 999
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -105,15 +105,9 @@ This service is useful because it provides an ability to inject content into the
 
 ### Adding Content with HtmxSwapService
 
-{{< callout context="caution" title="Caution" icon="alert-triangle" >}}
-You must include the `HtmxSwapContent` component somewhere in your template for swappable content to render correctly.
+{{< callout context="note" title="Rendering" icon="info-circle" >}}
+`View<T>` and `PartialView<T>` render the queued content automatically, at the end of the response, through the `HtmxSwapContent` component. Don't add `<HtmxSwapContent />` to your layout as well, or the content is rendered twice. Add it yourself only when you render components without `View`/`PartialView`.
 {{< /callout >}}
-
-To render the content managed by `HtmxSwapService`, include an `HtmxSwapContent` component where you want the dynamic content to appear:
-
-```html
-<HtmxSwapContent />
-```
 
 Here's how you can use `HtmxSwapService` in your components to perform dynamic content swaps:
 
@@ -123,7 +117,8 @@ Here's how you can use `HtmxSwapService` in your components to perform dynamic c
 @code {
     protected override void OnInitialized()
     {
-        HtmxSwapService.AddRawContent("<p>Hello, world!</p>");
+        // Text is HTML-encoded:
+        HtmxSwapService.AddSwappableText("greeting", "Hello, <world>!");
 
         HtmxSwapService.AddSwappableComponent<AlertComponent>(
             targetId: "alert-container",
@@ -138,7 +133,7 @@ Here's how you can use `HtmxSwapService` in your components to perform dynamic c
 }
 ```
 
-In this example, `AddRawContent` is used to add simple HTML content, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named `Message`.
+In this example, `AddSwappableText` replaces the contents of `#greeting` with encoded text, while `AddSwappableComponent` dynamically adds a Razor component (`AlertComponent`) that could represent a Bootstrap alert message. The `AlertComponent` is expected to accept a parameter named `Message`.
 
 #### Adding a Swappable Razor Component
 
@@ -164,13 +159,30 @@ HtmxSwapService.AddSwappableFragment(
 );
 ```
 
-#### Adding Raw HTML Content
+#### Adding text
+
+`AddSwappableText` HTML-encodes the text, so it is safe for user input:
 
 ```csharp
-HtmxSwapService.AddRawContent(
-    "<div>Raw HTML content</div>"
+HtmxSwapService.AddSwappableText(
+    targetId: "status",
+    text: userSuppliedMessage,
+    swapStyle: SwapStyle.innerHTML
 );
 ```
+
+#### Adding raw HTML
+
+The raw-markup methods take a `MarkupString`, so inserting unencoded HTML is always explicit. Never build the markup from user input without encoding it:
+
+```csharp
+HtmxSwapService.AddSwappableContent("panel", (MarkupString)"<strong>Saved</strong>");
+
+// Raw content is emitted as-is (it must carry its own hx-swap-oob attribute):
+HtmxSwapService.AddRawContent((MarkupString)"<div id=\"toast\" hx-swap-oob=\"true\">Saved</div>");
+```
+
+Target ids are CSS-escaped for you, so ids such as `item:1` work.
 
 #### Rendering Added Content
 

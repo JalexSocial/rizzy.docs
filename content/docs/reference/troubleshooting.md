@@ -64,13 +64,13 @@ This guide covers common problems developers might encounter when using Rizzy an
 **Diagnosis & Solutions:**
 
 *   **Middleware Order:** Ensure `app.UseAntiforgery()` is present in `Program.cs` and placed *after* `app.UseRouting()` and any authentication/authorization middleware (`app.UseAuthentication(); app.UseAuthorization();`).
-*   **Token Present in Form/Page:**
-    *   For standard form posts, ensure you have `<AntiforgeryToken />` inside your Blazor `EditForm`.
-    *   For general HTMX requests needing protection (often non‑GET), ensure the antiforgery token is available to HTMX. The easiest way with Rizzy is to:
-        *   Configure `RizzyConfig.AntiforgeryStrategy = AntiforgeryStrategy.GenerateTokensPerPage;` in `Program.cs`.
-        *   Ensure `<script src="_content/Rizzy/js/rizzy.js" type="module"></script>` is included in your main layout. This JavaScript automatically attaches the token defined in the `htmx-config` meta tag to your requests.
-    *   Verify the `htmx-config` meta tag (rendered by `<HtmxConfigHeadOutlet />`) contains the correct `antiforgery` configuration (header name, form field name, cookie name). See [HTMX Configuration]({{<ref "/docs/htmx/configuration.md">}}).
-*   **`[ValidateAntiForgeryToken]` Attribute:** Ensure the controller action or Minimal API endpoint being called has the `[ValidateAntiForgeryToken]` attribute (or uses convention-based filters if configured globally).
+*   **Token on the page:** rizzy.js reads the token from the `<meta name="htmx-config">` tag and sends it in a header (`RequestVerificationToken`) on every htmx request that isn't a GET. Check that:
+    *   Your root layout renders `<RzHeadOutlet />` (not `<HeadOutlet />`) before the htmx script. If the tag is missing, rizzy.js logs a console warning that says so. Pages with their own `<HeadContent>` are fine.
+    *   `<script src="_content/Rizzy/js/rizzy.js"></script>` is included after htmx (no `type="module"`).
+    *   The meta tag's `antiforgery` entry has a `requestToken` (it is generated per page with the default `RizzyConfig.AntiforgeryStrategy`).
+    *   The request in the Network tab carries the `RequestVerificationToken` header.
+*   **MVC registration:** `[ValidateAntiForgeryToken]` needs `AddControllersWithViews()` (or `AddMvcCore().AddViews()`). With `AddControllers()` alone the attribute's filter is not registered.
+*   **Minimal APIs:** endpoints that bind form data are validated by `UseAntiforgery()`; others need `.WithMetadata(new RequireAntiforgeryTokenAttribute())` or `IAntiforgery.ValidateRequestAsync`.
 *   **Cookie Present:** Check browser developer tools (Application → Cookies) to ensure the antiforgery cookie (usually `.AspNetCore.Antiforgery.*`) is present.
 
 ### 4. Validation Errors Are Not Displayed
@@ -86,13 +86,14 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **Correct Components Used?**
     *   Is the form wrapped in an `<EditForm Model="@YourModel">`?
     *   Is `<DataAnnotationsValidator />` placed *inside* the `EditForm`?
-    *   Is `<RzInitialValidator />` placed *inside* the `EditForm` (usually right after `DataAnnotationsValidator`)? This component is crucial for transferring `ModelState` errors to the `EditContext`.
+    *   Is `<RzModelStateProvider />` placed *inside* the `EditForm`? It copies `ModelState` errors into the `EditContext`. (`RzInitialValidator` only runs the Data Annotations validation; it does not read `ModelState`.)
     *   Are you using `<RzValidationMessageBase For="@(() => YourModel.PropertyName)" />` for field‑specific messages?
     *   Are you using `<RzValidationSummaryBase />` for a summary?
 *   **Check Response:** Inspect the HTML response in the Network tab. Does it contain the expected validation message elements (e.g., `<div class="validation-message field-validation-error" …>Your error</div>`)?
-*   **`ModelState` Propagation:** Are you using `RzController` or `IRizzyService` methods (`View<T>`, `PartialView<T>`)? These automatically pass `ModelState` down. If you are manually rendering, ensure you pass the `ModelStateDictionary` as a parameter to the view component.
+*   **`ModelState` Propagation:** `RzController`'s `View<T>`/`PartialView<T>` pass the controller's `ModelState` automatically. `IRizzyService` (minimal APIs) has no `ModelState` of its own: pass a `ModelStateDictionary` to `View`/`PartialView`.
+*   **Was the response swapped?** If you return status 422 (`Response.Htmx().ValidationFailed()`), make sure `HtmxConfig.NoSwap` does not include `"4xx"`, or route the response with `hx-status:422="..."`.
 *   **Client‑Side Validation (Optional):** If you expect *client‑side* validation messages *before* submitting, ensure:
-    *   You have included a compatible JavaScript validation library (like the `aspnet-validation.js` included with RizzyUI/Rizzy or jQuery Unobtrusive Validation).
+    *   You have included a compatible JavaScript validation library (such as the `aspnet-validation` script included with RizzyUI, or jQuery Unobtrusive Validation). The Rizzy client script does not validate.
     *   The `RzInput*Base` components are generating the necessary `data-val-*` attributes (inspect the rendered HTML). This relies on `DataAnnotationsProcessor` and having Data Annotation attributes (`[Required]`, etc.) on your model.
 
 ### 5. Full Layout Renders During HTMX Partial Updates
@@ -108,7 +109,7 @@ This guide covers common problems developers might encounter when using Rizzy an
     *   `config.DefaultLayout = typeof(HtmxLayout<YourMainLayout>);`
     (Replace `YourAppLayout` and `YourMainLayout` with your actual layout component types). These wrappers are essential for detecting HTMX requests and suppressing the full layout rendering. See [Getting Started]({{<ref "/docs/introduction/getting-started.md">}}).
 *   **Is it an HTMX Request?** Verify the request includes the `HX-Request: true` header in the Network tab. If not, HTMX isn't making the request correctly, or something is stripping the header.
-*   **Correct Rendering Method?** Are you calling `PartialView<YourComponent>()` from your controller/endpoint for partial updates? While `View<YourComponent>()` *should* also work correctly with the `HtmxLayout` wrapper, `PartialView` is generally preferred for fragments as it explicitly renders using an empty layout by default.
+*   **Request type:** `View<T>` skips the layouts only for htmx requests that target one element (`HX-Request-Type: partial`). Boosted links that swap the whole `<body>`, `hx-select` and back/forward restores send `HX-Request-Type: full` and get the full page on purpose. Give boosted links an `hx-target` (for example `hx-target:inherited="article"`), or use `PartialView<T>()` for endpoints that only ever return fragments.
 
 ### 6. Out‑of‑Band (OOB) Swaps Not Working
 
@@ -120,7 +121,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 
 *   **Check Response HTML:** Inspect the raw HTML response in the Network tab. Does it contain elements with the `hx-swap-oob="true"` (or other swap styles) attribute? These are the OOB elements.
 *   **Target IDs Exist:** Does the `id` attribute of the OOB element in the response match the `id` of an element *already present* in the main document *before* the swap happens? OOB swaps target existing elements by ID.
-*   **`<HtmxSwapContent />` Present:** Have you included the `<HtmxSwapContent />` component somewhere in your main layout (e.g., `AppLayout.razor`)? This component is responsible for rendering content added via the `IHtmxSwapService`. See [Out of Band Swapping]({{<ref "/docs/htmx/swaps.md">}}).
+*   **Rendered once:** `View<T>`/`PartialView<T>` render the queued content automatically. If you also placed `<HtmxSwapContent />` in a layout, remove it (the content would be rendered twice). See [Out of Band Swapping]({{<ref "/docs/htmx/swaps.md">}}).
 *   **Server Logic:** Ensure your server‑side code (e.g., controller action) is correctly calling `IHtmxSwapService.AddSwappableComponent`, `AddSwappableFragment`, etc., *during* the HTMX request lifecycle.
 
 ### 7. Streaming Rendering (`[StreamRendering]`) Issues with HTMX
@@ -132,33 +133,14 @@ This guide covers common problems developers might encounter when using Rizzy an
 
 **Diagnosis & Solutions:**
 
-*   **Stream extension loaded?** In HTMX 4 you no longer declare extensions via `hx‑ext`. Instead, make sure you have loaded HTMX *first*, then include the Rizzy client script which registers the streaming and nonce extensions automatically:
-
-    ```html
-    <!-- include HTMX from your preferred source -->
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4/dist/htmx.min.js"></script>
-    <!-- include the Rizzy client script which registers rizzy-streaming and rizzy-nonce -->
-    <script src="_content/Rizzy/js/rizzy.js" type="module"></script>
-    ```
-
-    To restrict which extensions are allowed in HTMX 4, set the `extensions` option via `HtmxConfig` in `Program.cs`, for example:
-
-    ```csharp
-    builder.Services.AddHtmx(config =>
-    {
-        // allow only the rizzy-streaming extension (and any others you need)
-        config.Extensions = "rizzy-streaming";
-    });
-    ```
-
-    Or add a meta tag in your layout:
-
-    ```html
-    <meta name="htmx-config" content='{"extensions":"rizzy-streaming"}'>
-    ```
-
-    Loading extensions via script ensures your streaming components work correctly without needing `hx‑ext`. See [Streaming Rendering with HTMX]({{<ref "/docs/htmx/streaming.md">}}) for details.
+*   **Rizzy script loaded?** htmx 4 has no `hx-ext`; the Rizzy client script registers `rizzy-streaming` when it loads. Load htmx first, then `<script src="_content/Rizzy/js/rizzy.js"></script>` (no `type="module"`).
+*   **Extension allow-list:** if you set `HtmxConfig.Extensions`, it must include `rizzy-streaming` (and Rizzy's other extensions: `rizzy-antiforgery, rizzy-nonce, rizzy-confirm`).
+*   **Content appears only at the end:** `PartialView<T>` sends a bare fragment, so the client waits for the whole stream. Use `View<T>` for progressive streaming. See [Streaming Rendering with HTMX]({{<ref "/docs/htmx/streaming.md">}}).
 *   **Check Console:** Look for specific errors from Blazor's streaming rendering JavaScript or the `rizzy-streaming` extension.
+
+### 8. Console warning: "no <meta name="htmx-config"> on this page"
+
+rizzy.js checks the page when it loads. This warning means htmx has no Rizzy configuration and no antiforgery token. Render `<RzHeadOutlet />` instead of `<HeadOutlet />` in your root layout, before the htmx script. A second warning reports when the server runs a different Rizzy major version than the script (for example a cached CDN copy of rizzy.js). Set `HtmxConfig.RizzyDiagnostics = false` to silence these checks.
 
 ## Still Stuck?
 

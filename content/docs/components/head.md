@@ -21,26 +21,40 @@ seo:
 
 This document outlines components created to improve the management of HTML head content and configuration in applications that integrate Htmx with Razor components.
 
-## HtmxConfigHeadOutlet
+## RzHeadOutlet
 
-The `HtmxConfigHeadOutlet` component is critical for rendering Rizzy's server-side HTMX configurations directly into your HTML document as a `<meta>` tag. This makes the configuration available to the HTMX client library automatically.
+`RzHeadOutlet` replaces Blazor's `HeadOutlet` in the `<head>` of your root layout. It renders:
 
-### Usage
+1. Blazor's `HeadOutlet`, so page titles (`RzPageTitle`, `PageTitle`) and `<HeadContent>` work as usual, and
+2. Rizzy's `<meta name="htmx-config">` tag (`HtmxConfigHeadOutlet`), which carries your [htmx configuration]({{<ref "/docs/htmx/configuration.md">}}), the antiforgery token and the Rizzy version.
 
-1. Include the `HtmxConfigHeadOutlet` component within the `<head>` tag of your application's main layout file (e.g., `AppLayout.razor`).
-2. It automatically resolves the `HtmxConfig` options from dependency injection and renders them. It also handles rendering anti-forgery tokens (if configured).
+Place it **before** the htmx script: htmx reads the meta tag once, when its script loads.
 
-```razor
+```razor {title="AppLayout.razor"}
 <head>
-    ...
-    <HtmxConfigHeadOutlet />
+    <meta charset="utf-8" />
+    <base href="/" />
+    <RzHeadOutlet />
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
+    <script src="_content/Rizzy/js/rizzy.js"></script>
 </head>
 ```
 
-When rendered, the component will output a meta tag similar to this:
+The rendered meta tag looks like this:
+
 ```html
-<meta name="htmx-config" content='{"selfRequestsOnly":true,"antiforgery":{"cookieName":"HX-XSRF-TOKEN","formFieldName":"__RequestVerificationToken","headerName":"RequestVerificationToken","requestToken":"..."}}'>
+<meta name="htmx-config" content='{"mode":"same-origin","antiforgery":{"formFieldName":"__RequestVerificationToken","headerName":"RequestVerificationToken","requestToken":"..."},"rizzyVersion":"6.0.0"}'>
 ```
+
+{{< callout context="note" title="Why not HeadContent?" icon="info-circle" >}}
+Rizzy 5 added this tag through `<HeadContent>`. Blazor shows only the most recently rendered `<HeadContent>`, so any page with its own `<HeadContent>` silently replaced Rizzy's tag, and htmx lost its configuration and antiforgery token. `RzHeadOutlet` renders the tag directly, so pages can use `<HeadContent>` freely.
+{{< /callout >}}
+
+If the tag is missing, rizzy.js logs a console warning that names `RzHeadOutlet`.
+
+### HtmxConfigHeadOutlet
+
+`HtmxConfigHeadOutlet` is the component that renders the meta tag; `RzHeadOutlet` includes it. Use it directly only if you build your own head outlet, and render it once, before the htmx script.
 
 ## RzPageTitle
 
@@ -62,7 +76,7 @@ If it detects an HTMX request, it outputs `<title>Your Page Title Here</title>` 
 
 Rizzy is fully compatible with standard Blazor head manipulation components. You should use the standard components provided by `Microsoft.AspNetCore.Components.Web` to inject other head content like meta tags and external style sheets.
 
-- **`HeadOutlet`**: Add this to the `<head>` of your layout to serve as the destination for head content changes.
+- **`HeadOutlet`**: rendered for you by `RzHeadOutlet`; don't add a second one.
 - **`HeadContent`**: Wrap your `<link>`, `<meta>`, or `<script>` tags inside this component in your individual views.
 
 ```razor
