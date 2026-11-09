@@ -41,8 +41,7 @@ Once you've identified an HTMX request, the next step is to prepare a response t
 ```csharp
 HttpContext.Response.Htmx()
     .PushUrl("/dashboard/updated")
-    .Location("/dashboard/updated")
-    .Refresh();
+    .Trigger("dashboardUpdated");
 ```
 
 Rizzy also includes an alternate syntax if you are familiar with [Htmx.net by Khalid Abuhakmeh](https://github.com/khalidabuhakmeh/Htmx.Net):
@@ -50,12 +49,11 @@ Rizzy also includes an alternate syntax if you are familiar with [Htmx.net by Kh
 ```csharp
 HttpContext.Response.Htmx(h => {
     h.PushUrl("/dashboard/updated")
-     .Location("/dashboard/updated")
-     .Refresh();
+     .Trigger("dashboardUpdated");
 });
 ```
 
-This fluent approach automatically sets the appropriate headers—like HX-Push-Url, HX-Location, and HX-Refresh—so that when the browser processes the response, it knows exactly how to update the interface without reloading the whole page.
+This fluent approach automatically sets the appropriate headers (here `HX-Push-Url` and `HX-Trigger`) so that when the browser processes the response, it knows exactly how to update the interface without reloading the whole page.
 
 ---
 
@@ -88,20 +86,19 @@ Imagine a scenario where a user submits a form and, instead of reloading the ent
 [HttpPost, ValidateAntiForgeryToken]
 public IResult SubmitForm(MyFormModel model)
 {
-    // Process the form data.
     if (!ModelState.IsValid)
     {
-        // Return a partial view with validation messages.
-        return PartialView<ValidationSummaryComponent>(new { ModelState });
+        // 422 + the form again; RzController passes ModelState, and
+        // <RzModelStateProvider /> in the form shows the errors.
+        Response.Htmx().ValidationFailed();
+        return PartialView<MyFormComponent>();
     }
-    
-    // On a successful submission, use the response helpers to instruct the client.
+
+    // Success: update the URL and tell other parts of the page about it.
     Response.Htmx()
         .PushUrl("/form/success")
-        .Location("/form/success")
-        .Refresh();
-    
-    // Return the updated component view.
+        .Trigger("formSubmitted");
+
     return PartialView<FormSuccessComponent>(new { Message = "Submission Successful!" });
 }
 ```
@@ -112,7 +109,7 @@ public IResult SubmitForm(MyFormModel model)
   When the form is submitted, the enhancements on HttpContext.Request recognize the HTMX trigger, allowing your action to process the submission accordingly.
 
 - **Response Execution:**  
-  The action uses the built-in methods on HttpContext.Response to set up instructions for the client—updating the URL and refreshing the necessary part of the page.
+  The action uses the built-in methods on HttpContext.Response to set up instructions for the client: status 422 when validation fails (htmx 4 swaps it), or a new URL and an `HX-Trigger` event on success. Note that `Refresh()` and `Redirect()` make the response empty (204), so don't combine them with a view you want to show.
 
 - **Partial Rendering:**  
   Instead of reloading the full page, the controller returns a partial view that updates only the relevant section, creating a faster, more seamless experience.

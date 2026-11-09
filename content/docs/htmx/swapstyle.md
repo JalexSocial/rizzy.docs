@@ -54,7 +54,7 @@ Modifiers enhance swap styles with additional behaviors, such as delays, scrolli
 
 ```csharp
 var result = SwapStyle.beforebegin.ShowWindow(ScrollDirection.top);
-// result value: "beforebegin show:window:top"
+// result value: "beforebegin show:top showTarget:window"
 ```
 
 #### Delaying the Swap
@@ -149,29 +149,29 @@ var result = SwapStyle.innerHTML.IgnoreTransition();
 
 #### Focusing and Scrolling to Content
 
-Allows you to specify that HTMX should scroll to the focused element when a request completes. HTMX preserves focus between requests for inputs that have a defined `id` attribute. By default, HTMX prevents auto‑scrolling to focused inputs between requests which can be unwanted behavior on longer requests when the user has already scrolled away. When `true`, the modifier will be `focus-scroll:true`, otherwise `focus-scroll:false`.
+Allows you to specify that HTMX should scroll to the focused element when a request completes. HTMX preserves focus between requests for inputs that have a defined `id` attribute. By default, HTMX prevents auto‑scrolling to focused inputs between requests which can be unwanted behavior on longer requests when the user has already scrolled away. When `true`, the modifier will be `focusScroll:true`, otherwise `focusScroll:false`.
 
 ```csharp
 var result = SwapStyle.afterend.ScrollFocus(true);
-// result value: "afterend focus-scroll:true"
+// result value: "afterend focusScroll:true"
 ```
 
 #### Preserving Focus
 
-Explicitly preserves focus between requests for inputs that have a defined `id` attribute without scrolling by adding a modifier of `focus-scroll:false`.
+Explicitly preserves focus between requests for inputs that have a defined `id` attribute without scrolling by adding a modifier of `focusScroll:false`.
 
 ```csharp
 var result = SwapStyle.innerHTML.PreserveFocus();
-// result value: "innerHTML focus-scroll:false"
+// result value: "innerHTML focusScroll:false"
 ```
 
 #### Dynamic Element Targeting
 
-Specifies a CSS selector to target for the swap operation with a scroll direction. Adds a `show` modifier with the specified CSS selector and scroll direction. For example, if the CSS selector is `.item` and the direction is `ScrollDirection.top`, the modifier `show:.item:top` is added.
+Specifies a CSS selector to target for the swap operation with a scroll direction. Adds a `show` modifier with the specified CSS selector and scroll direction. For example, if the CSS selector is `.item` and the direction is `ScrollDirection.top`, the modifiers `show:top showTarget:.item` are added (htmx 4 syntax; a selector with spaces or commas is quoted).
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOn(ScrollDirection.top, ".item");
-// result value: "innerHTML show:.item:top"
+// result value: "innerHTML show:top showTarget:.item"
 ```
 
 #### Showing Element at the Top
@@ -180,7 +180,7 @@ Specifies that the swap should show the element matching the CSS selector at the
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOnTop(".item");
-// result value: "innerHTML show:.item:top"
+// result value: "innerHTML show:top showTarget:.item"
 ```
 
 #### Showing Element at the Bottom
@@ -189,16 +189,16 @@ Specifies that the swap should show the element matching the CSS selector at the
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowOnBottom(".item");
-// result value: "innerHTML show:.item:bottom"
+// result value: "innerHTML show:bottom showTarget:.item"
 ```
 
 #### Showing Window Scroll
 
-Specifies that the swap should show in the window by smoothly scrolling to either the top or bottom of the window. Adds the modifier `show:window:<direction>`.
+Specifies that the swap should show in the window by smoothly scrolling to either the top or bottom of the window. Adds the modifiers `show:<direction> showTarget:window`.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowWindow(ScrollDirection.top);
-// result value: "innerHTML show:window:top"
+// result value: "innerHTML show:top showTarget:window"
 ```
 
 #### Showing Window at the Top
@@ -207,7 +207,7 @@ Specifies that the swap should smoothly scroll to the top of the window.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowWindowTop();
-// result value: "innerHTML show:window:top"
+// result value: "innerHTML show:top showTarget:window"
 ```
 
 #### Showing Window at the Bottom
@@ -216,7 +216,7 @@ Specifies that the swap should smoothly scroll to the bottom of the window.
 
 ```csharp
 var result = SwapStyle.innerHTML.ShowWindowBottom();
-// result value: "innerHTML show:window:bottom"
+// result value: "innerHTML show:bottom showTarget:window"
 ```
 
 #### Turning Off Scrolling After Swap
@@ -226,4 +226,15 @@ Turns off scrolling after swap by setting the modifier `show:none`, ensuring the
 ```csharp
 var result = SwapStyle.innerHTML.ShowNone();
 // result value: "innerHTML show:none"
+```
+
+## htmx 4 modifiers
+
+These modifiers are new in htmx 4:
+
+```csharp
+SwapStyle.innerHTML.Strip()                  // "innerHTML strip:true"  (swap the response's children, not its root element)
+SwapStyle.innerHTML.Target("#main .list")    // "innerHTML target:'#main .list'"
+SwapStyle.innerHTML.SwapEmpty()              // "innerHTML swapEmpty:true"  (swap even when the response is empty)
+new SwapStyleBuilder(SwapStyle.outerSync)    // "outerSync"
 ```

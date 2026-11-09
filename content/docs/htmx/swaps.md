@@ -21,7 +21,7 @@ seo:
 Out of band swaps in HTMX allow you to update content in the Document Object Model (DOM) outside the direct target of an operation. This feature enables you to make updates to multiple elements in response to a single event, facilitating more dynamic and interactive web applications by piggybacking updates across different parts of your page.
 
 {{< callout context="warning" title="HTMX 4 Changes" icon="alert-circle" >}}
-In HTMX 4 the swap order has changed: the main content swap is applied first, and then any out‑of‑band (`hx‑swap‑oob`) or `<hx-partial>` elements in the response are applied afterwards【381859254872383†L194-L204】. Plan your response HTML accordingly if you rely on out‑of‑band swaps to modify the DOM before the main swap. HTMX 4 also introduces the `<hx-partial>` element as an alternative way to perform multiple targeted swaps in a single response. Each `<hx-partial>` can specify its own `hx-target` and `hx-swap` strategy【381859254872383†L461-L475】.
+In HTMX 4 the swap order has changed: the main content swap is applied first, and then any out‑of‑band (`hx‑swap‑oob`) or `<hx-partial>` elements in the response are applied afterwards. Plan your response HTML accordingly if you rely on out‑of‑band swaps to modify the DOM before the main swap. HTMX 4 also introduces the `<hx-partial>` element as an alternative way to perform multiple targeted swaps in a single response. Each `<hx-partial>` can specify its own `hx-target` and `hx-swap` strategy.
 {{< /callout >}}
 
 {{< callout context="note" title="Note" icon="info-circle" >}}

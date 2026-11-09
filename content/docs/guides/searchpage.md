@@ -33,7 +33,7 @@ seo:
 
 ### Prerequisites
 
-*   .NET 8 SDK or later installed.
+*   .NET 10 SDK or later installed.
 *   A text editor or IDE (like Visual Studio, VS Code, Rider).
 *   Basic understanding of ASP.NET Core MVC (Controllers, Actions, Routing).
 *   Basic understanding of C# and HTML.
@@ -140,7 +140,7 @@ public class SearchController : RzController
 
 *   We have sample `AllProducts` data.
 *   `Index` returns the main `SearchView` component, passing the initial list.
-*   `SearchProducts` is marked with `[HtmxRequest]` so it only responds to HTMX. It takes the `searchTerm` from the query string (HTMX GET request).
+*   `SearchProducts` is marked with `[HtmxRequest]`, an action constraint: the action only matches htmx requests, so a normal browser request to the URL gets a 404 instead. It takes the `searchTerm` from the query string (HTMX GET request).
 *   It filters the products based on the `searchTerm`.
 *   Crucially, it returns `PartialView<SearchResults>`, passing *only* the filtered data. This sends just the HTML for the results list back to the browser.
 

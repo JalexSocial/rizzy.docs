@@ -56,30 +56,35 @@ Now instead of having to hard‑code the JSON‑encoded POCO object inside of th
 
 Here's the complete HTML with Alpine.js:
 
-```html
-  @using Rizzy
+```razor
+@using Rizzy
 
-  @code {
-    var model = new MessageViewModel {
-      Message = "Hello, Alpine.js!"
-    };
-  }
-    <div x-data="@model.SerializeAsAlpineData()">
-        <p x-text="message"></p>
-        <button @click="message = 'Message updated!'">Update Message</button>
-    </div>
+<div x-data="@model.SerializeAsAlpineData()">
+    <p x-text="Message"></p>
+    <button @@click="Message = 'Message updated!'">Update Message</button>
+</div>
+
+@code {
+    private MessageViewModel model = new() { Message = "Hello, Alpine.js!" };
+}
 ```
 
-The `SerializeAsAlpineData` method serializes your C# object into a JSON object using single quotes so it can be placed directly within the `x-data` attribute.  It accepts an optional boolean parameter to ignore null values when serializing; for example, `@model.SerializeAsAlpineData(true)` will omit any properties whose values are `null`.
+`SerializeAsAlpineData` serializes your object to standard JSON, which is also a valid JavaScript object literal for `x-data`. Property names are kept as declared (`Message`, not `message`); use `[JsonPropertyName("message")]` on the property if you prefer camelCase in your Alpine expressions. Pass `true` to omit properties whose value is `null`: `@model.SerializeAsAlpineData(true)`.
 
 ## The Rendered Result
 
+Razor attribute-encodes the JSON's double quotes, and the browser decodes them before Alpine reads the attribute:
+
 ```html
-<div x-data="{ message: 'Hello, Alpine.js!' }">
-    <p x-text="message"></p>
-    <button @click="message = 'Message updated!'">Update Message</button>
+<div x-data="{&quot;Message&quot;:&quot;Hello, Alpine.js!&quot;}">
+    <p x-text="Message"></p>
+    <button @click="Message = 'Message updated!'">Update Message</button>
 </div>
 ```
+
+{{< callout context="note" title="Safe for untrusted values" icon="info-circle" >}}
+String values are JSON-escaped, including `'`, `<`, `>`, `&` and backslashes (for example `it's` becomes `it\u0027s`), so a value supplied by a user cannot break out of the string and inject script. Rizzy 5 produced a single-quoted object instead, which a crafted value could escape (RIZZY-002).
+{{< /callout >}}
 
 ## Conclusion
 

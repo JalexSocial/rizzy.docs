@@ -22,11 +22,15 @@ seo:
 
 HTMX triggers are used to specify when an HTMX request should be initiated. Common use cases include triggering requests on events such as clicks, page load, element visibility, and custom-defined events.
 
-The `Trigger` class in the HTMX Trigger Builder library provides a fluent API to specify various triggers for HTMX requests. This API simplifies the construction of HTMX triggers by offering a range of methods to define event-based, server-sent, and custom triggers, as well as modifiers to control their behavior.
+The `Trigger` class in the HTMX Trigger Builder library provides a fluent API to specify various triggers for HTMX requests. This API simplifies the construction of HTMX triggers by offering a range of methods to define event-based and custom triggers, as well as modifiers to control their behavior. It emits htmx 4 syntax: selectors are quoted when they contain spaces or commas, and times are written with the invariant culture (`2s`, or `1500ms` when not a whole number of seconds), whatever the server's culture.
 
 ## Creating Triggers with the `Trigger` Class
 
-You can create triggers using the static methods provided by the `Trigger` class. Each method returns a `TriggerModifierBuilder` instance, allowing further configuration of the trigger.
+You can create triggers using the static methods provided by the `Trigger` class. Each method returns a `TriggerModifierBuilder` instance, allowing further configuration of the trigger. (`Trigger.Custom` returns a `TriggerBuilder`.)
+
+{{< callout context="note" title="Rizzy 6" icon="info-circle" >}}
+`Trigger.Sse(...)` and the `Queue(...)` modifier were removed: htmx 4 has no `sse:` trigger in core and no `queue` modifier. Use [`hx-sync`](https://four.htmx.org/) to control what happens to a request issued while another is in flight.
+{{< /callout >}}
 
 ### OnEvent
 
@@ -38,18 +42,6 @@ Specifies a standard event as the trigger by setting the event name. This method
 ```html
 <div hx-get="/clicked" hx-trigger=@Trigger.OnEvent("click")>Click Me</div>
 // Resulting hx-trigger: <div hx-get="/clicked" hx-trigger="click">Click Me</div>
-```
-
-### Sse
-
-Specifies a Server-Sent Event (SSE) as the trigger by setting the event name and SSE event. This method sets the SSE trigger for an AJAX request. For example, specifying "message" will trigger the request on the message event.
-
-**Parameters:**
-- `sseEventName` (string): The name of the SSE event.
-
-```html
-<div hx-get="/updates" hx-trigger=@Trigger.Sse("message")>Update Me</div>
-// Resulting hx-trigger: <div hx-get="/updates" hx-trigger="sse:message">Update Me</div>
 ```
 
 ### Load
@@ -198,14 +190,50 @@ Specifies that the event should not trigger any other HTMX requests on parent el
 // Resulting hx-trigger: <div hx-get="/click" hx-trigger="click consume">Click Me</div>
 ```
 
-### Queue
+### From: self and outside
 
-Specifies how events are queued when an event occurs while a request is in flight by adding the "queue" modifier. This method sets the event queuing option, such as "first", "last", "all", or "none".
-
-**Parameters:**
-- `option` (TriggerQueueOption, optional): The queue option.
+`FromSelf()` listens only for events whose target is the element itself (`from:self`). `FromOutside()` listens for events that happen outside the element (`from:outside`), which suits "click outside to close". Selectors passed to `From` are quoted when needed:
 
 ```html
-<div hx-get="/process" hx-trigger=@Trigger.OnEvent("click").Queue(TriggerQueueOption.All)>Queue All</div>
-// Resulting hx-trigger: <div hx-get="/process" hx-trigger="click queue:all">Queue All</div>
+<div hx-get="/menu/close" hx-trigger=@Trigger.OnEvent("click").FromOutside()>Menu</div>
+// Resulting hx-trigger: click from:outside
+
+<div hx-get="/save" hx-trigger=@Trigger.OnEvent("change").From("closest form")>...</div>
+// Resulting hx-trigger: change from:'closest form'
+```
+
+### Prevent, Stop, Halt
+
+`Prevent()` calls `preventDefault()` on the event, `Stop()` calls `stopPropagation()`, and `Halt()` does both.
+
+```html
+<form hx-post="/search" hx-trigger=@Trigger.OnEvent("submit").Prevent()>...</form>
+// Resulting hx-trigger: submit prevent
+```
+
+### Capture and Passive
+
+`Capture()` listens in the capture phase; `Passive()` registers a passive listener (useful for `scroll` and `touchmove`).
+
+```html
+<div hx-get="/more" hx-trigger=@Trigger.OnEvent("scroll").Passive()>...</div>
+// Resulting hx-trigger: scroll passive
+```
+
+### RootMargin
+
+Sets the intersection observer's root margin for `Intersect()` triggers, for example to start loading before the element is visible:
+
+```html
+<div hx-get="/next-page" hx-trigger=@Trigger.Intersect().RootMargin("0px 0px 200px 0px")>...</div>
+// Resulting hx-trigger: intersect rootMargin:'0px 0px 200px 0px'
+```
+
+## Combining triggers
+
+`Or()` starts another trigger in the same `hx-trigger` value:
+
+```html
+<div hx-get="/news" hx-trigger=@Trigger.Load().Or().OnEvent("refresh").From("body")>...</div>
+// Resulting hx-trigger: load, refresh from:body
 ```

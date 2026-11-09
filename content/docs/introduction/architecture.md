@@ -73,11 +73,11 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 8.  **Response Generation:**
     *   The renderer generates the HTML fragment for the requested component (`TComponent`).
     *   **HTMX Response Headers:** The controller/endpoint uses `HttpContext.Response.Htmx()` (or `[HtmxResponseAttribute]`) to set specific HTMX response headers (e.g., `HX-Trigger`, `HX-Retarget`, `HX-Reswap`).
-    *   **OOB Swaps:** If the `HtmxSwapService` was used during the request, its content (`HtmxSwappable` components) is added to the response, marked for out‑of‑band swapping (`hx-swap-oob`). In HTMX 4 the main content swap occurs first and these out‑of‑band or `<hx-partial>` swaps are applied afterwards【381859254872383†L194-L204】.
+    *   **OOB Swaps:** If the `HtmxSwapService` was used during the request, its content (`HtmxSwappable` components) is added to the response, marked for out‑of‑band swapping (`hx-swap-oob`). In HTMX 4 the main content swap occurs first and these out‑of‑band or `<hx-partial>` swaps are applied afterwards.
 9.  **Partial HTML Response:** The server sends back the HTML fragment *and* the HTMX response headers.
 10. **Browser (HTMX Handling):**
     *   HTMX receives the response.
-    *   It processes any out‑of‑band instructions. In HTMX 4 the swap order is main swap first, then OOB/`<hx-partial>` swaps【381859254872383†L194-L204】.  Plan your OOB markup accordingly.
+    *   It processes any out‑of‑band instructions. In HTMX 4 the swap order is main swap first, then OOB/`<hx-partial>` swaps.  Plan your OOB markup accordingly.
     *   It swaps the main HTML fragment into the DOM element specified by the original `hx-target` (or modified by `HX-Retarget`), using the specified swap style (or modified by `HX-Reswap`).
     *   It processes other response headers (e.g., triggers client‑side events via `HX-Trigger`, redirects via `HX-Redirect`/`HX-Location`, updates browser history via `HX-Push-Url`/`HX-Replace-Url`).
 
@@ -89,7 +89,7 @@ Understanding the request lifecycle is key to understanding Rizzy. There are two
 *   **Blazor SSR (`HtmlRenderer`):** The engine that takes the Blazor component tree and renders it to static HTML on the server.
     *   **`HtmxApp<T>` / `HtmxLayout<T>`:** Manage the application's root layout and intelligently switch between full and minimal rendering based on HTMX request headers.
     *   **`HtmxRequest` / `HtmxResponse`:** Classes and extensions providing strongly‑typed access to read HTMX request headers and write HTMX response headers.
-*   **`HtmxSwapService` / `HtmxSwappable`:** Facilitate server‑driven out‑of‑band swaps. See the note above about HTMX 4's swap ordering【381859254872383†L194-L204】.
+*   **`HtmxSwapService` / `HtmxSwappable`:** Facilitate server‑driven out‑of‑band swaps. See the note above about HTMX 4's swap ordering.
 *   **Rizzy Form Components (`RzInput*Base`, etc.):** Extend Blazor inputs to integrate with `EditContext` and potentially generate `data-val-*` attributes.
     *   **`DataAnnotationsProcessor` / `[SupplyParameterFromForm]`:** Bridge MVC validation and model binding concepts with Blazor components (Note: `[SupplyParameterFromForm]` currently relies on internal reflection).
 *   **Rizzy Middleware:** Optional pipeline component for handling cross‑cutting concerns like nonce headers.
