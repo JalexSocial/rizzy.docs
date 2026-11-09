@@ -37,7 +37,7 @@ The `HtmxApp<TLayout>` component acts as the root component specified in Rizzy c
 To integrate `HtmxApp` into an application, it is configured during the Rizzy setup process as follows:
 
 ```csharp
-builder.AddRizzy(config =>
+builder.Services.AddRizzy(config =>
 {
     config.RootComponent = typeof(HtmxApp<AppLayout>);
     config.DefaultLayout = typeof(HtmxLayout<MainLayout>);
@@ -54,13 +54,29 @@ Here, `AppLayout` represents the root layout component of the application, which
 
 ### Functionality
 
-`HtmxLayout<TLayout>` checks if the current request is an HTMX request (by inspecting HX-Request header). If it's a standard request, it renders the specified layout `TLayout`. If it's an HTMX request, it renders an empty layout instead, preventing the full application shell from being included in the partial response.
+`HtmxLayout<TLayout>` decides per request whether to render `TLayout`:
 
-### Implementation Details
+| Request | Layout |
+|---|---|
+| Normal browser request | `TLayout` (the full page) |
+| htmx request that targets one element (`HX-Request-Type: partial`) | No layout: just the component, ready to be swapped into the target |
+| Boosted navigation that swaps the body, `hx-select`, or back/forward history restore (`HX-Request-Type: full`) | `TLayout` (htmx 4 needs the full page for these) |
 
-`HtmxLayout` includes two internal classes, `EmptyLayout` and `MinimalLayout`, to support its conditional rendering functionality. Based on whether the request is an HTMX request and if the component is the root component, it chooses the appropriate rendering approach.
+Every response varies on the htmx request headers (`Vary`), so caches keep full pages and fragments apart.
 
-- **For HTMX Requests:** It applies a minimal or no layout to quickly load dynamic content.
-- **For Full Page Requests:** It renders the complete layout as specified by the generic type `T`.
+When `HtmxLayout` is used through `HtmxApp<T>` (the root component) and a fragment is requested, it wraps the fragment in a minimal `<html><body>` document. This lets the Rizzy client tell where the initial HTML of a [streaming]({{<ref "/docs/htmx/streaming.md">}}) response ends.
 
-This behavior ensures efficient content loading and rendering, supporting the application's responsiveness and performance.
+### History (back and forward)
+
+htmx 4 keeps no history cache: on back/forward it re-fetches the page with `HX-History-Restore-Request: true`, and Rizzy answers with the full layout. By default htmx replaces the whole `<body>`. To restore only part of the page (and keep, for example, a sidebar that polls the server), mark that element with `hx-history-elt`:
+
+```razor {title="MainLayout.razor"}
+<div class="page">
+    <NavMenu />
+    <article hx-history-elt>
+        @Body
+    </article>
+</div>
+```
+
+To make back/forward reload the page instead, set `HtmxConfig.History = HtmxHistoryMode.Reload`.

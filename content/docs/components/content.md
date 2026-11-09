@@ -31,14 +31,14 @@ It is not typical that you will need to invoke the `RzView` component directly i
 
 ### Key Features
 - Dynamically renders Razor components as full pages or partial fragments.
-- Automatically handles ASP.NET Core `ModelState` cascading to enable form validation.
+- Cascades the `ModelState` it is given (controllers pass their own automatically) so `<RzModelStateProvider />` can show validation errors.
 - Automatically injects out-of-band (OOB) swap content via the `HtmxSwapContent` component.
 
 ### Page Mode (`RzViewMode.Page`)
 When rendering as a full page, `RzView` applies the configured root component (e.g., your `AppLayout`) and automatically resolves the appropriate inner layout.
 - If the component being rendered has a `@layout` attribute, that layout will be applied to the page. 
 - If it doesn't, then the default layout specified in the Rizzy configuration (`RizzyConfig.DefaultLayout`) will be applied. See [Getting Started](/docs/introduction/getting-started/#configuration).
-- Automatically includes `<HtmxConfigHeadOutlet>` to render the HTMX configuration meta tag into the document head.
+- The root layout renders the htmx configuration meta tag through `<RzHeadOutlet />` (see [Head]({{<ref "/docs/components/head.md">}})).
 
 ### Partial Mode (`RzViewMode.Partial`)
 When rendering as a partial view (often via HTMX AJAX requests), `RzView` bypasses the configured root component entirely.
@@ -47,4 +47,4 @@ When rendering as a partial view (often via HTMX AJAX requests), `RzView` bypass
 
 ## Special Notes
 
-Both `IRizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use `RzView` with the corresponding mode to render your Blazor components. They handle setting up the render context, evaluating parameters via the fluent builder, and passing the `ModelState`.
+Both `IRizzyService` and `RzController` provide methods like `View<T>` and `PartialView<T>` which internally use `RzView` with the corresponding mode to render your Blazor components. They handle setting up the render context and evaluating parameters via the fluent builder. `RzController` passes the controller's `ModelState` by default; with `IRizzyService` (minimal APIs), pass a `ModelStateDictionary` yourself when you have one.

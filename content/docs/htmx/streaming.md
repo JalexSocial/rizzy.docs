@@ -9,7 +9,7 @@ menu:
   docs:
     parent: "htmx" # Assuming parent is the HTMX section
     identifier: "streaming-a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2" # Unique identifier
-  weight: 450 # Position within the HTMX section
+    weight: 450 # Position within the HTMX section
 toc: true
 seo:
   title: "Using Blazor Streaming Rendering and HTMX with Rizzy"
@@ -32,43 +32,36 @@ If HTMX performs a swap (`hx-swap`) on an element that *contains* a streaming Bl
 
 ## The Solution: Rizzy Streaming
 
-The `rizzy-streaming` HTMX extension provides **document‑wide coordination** between Blazor's streaming rendering updates and HTMX's swapping mechanism. By including this extension, Rizzy helps ensure that streaming updates are correctly applied even when content is dynamically loaded or replaced via HTMX swaps.
+The `rizzy-streaming` extension cooperates with htmx core instead of replacing its response handling:
 
-It helps manage the lifecycle and potential conflicts, allowing you to leverage the benefits of both technologies simultaneously.
+1. It reads the response until the initial HTML is complete and hands htmx an ordinary response with just that HTML. htmx then runs its normal pipeline: the swap, `HX-*` response headers, `hx-status`, error events and `hx-sync` queueing.
+2. The rest of the stream is read in the background. htmx waits for it before it fires `HX-Trigger` events, removes the request indicator and starts the next queued request, so triggers fire once, after the last update.
+3. Each `<blazor-ssr>` update block is applied after the main swap. Blazor's `<blazor-ssr-end>` element patches the streamed component content in place; the extension defines it if Blazor's own script is not loaded.
+
+If the connection breaks partway through, the error is logged to the console and `htmx:error` is raised on the requesting element.
+
+The extension raises `htmx:rizzy:stream:open`, `htmx:rizzy:stream:block` and `htmx:rizzy:stream:close` on the requesting element.
 
 ## How to Enable Rizzy Streaming
 
-In HTMX 4 the `hx-ext` attribute has been **removed**.  Extensions are activated by simply including their script files.  The Rizzy client script registers both the `rizzy-streaming` and `rizzy-nonce` extensions automatically.  Ensure that HTMX is loaded first, then include the Rizzy script in your layout.
+Nothing to enable: the Rizzy client script registers `rizzy-streaming` (along with Rizzy's other extensions) when it loads. htmx 4 has no `hx-ext` attribute. Load htmx first, then Rizzy:
 
 ```html {title="AppLayout.razor"}
 <head>
-    <!-- Load HTMX (version 4) -->
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.0/dist/htmx.js"></script>
-    <!-- Load the Rizzy client script (registers rizzy-nonce and rizzy-streaming) -->
-    <script src="/_content/Rizzy/js/rizzy.js" type="module"></script>
+    <RzHeadOutlet />
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
+    <script src="_content/Rizzy/js/rizzy.js"></script>
 </head>
-<body>
-    @Body
-
-    <!-- The HtmxSwapContent component renders out‑of‑band swap content -->
-    <HtmxSwapContent />
-
-    <!-- other scripts -->
-</body>
-</html>
 ```
 
-When the Rizzy script loads it calls `htmx.registerExtension("rizzy-streaming", …)` internally.  HTMX 4 will automatically recognize the extension and apply it to HTMX requests without the need for `hx-ext`.  If you wish to **restrict** which extensions are permitted to run, you can set the `extensions` field of your `HtmxConfig` (rendered via `<HtmxConfigHeadOutlet />`) to include `"rizzy-streaming"`:
+If you restrict extensions with `HtmxConfig.Extensions`, keep all of Rizzy's extensions in the list:
 
 ```csharp {title="Program.cs"}
 builder.Services.AddHtmx(config =>
 {
-    // Allow only the rizzy-streaming extension (comma‑separate multiple values)
-    config.Extensions = "rizzy-streaming";
+    config.Extensions = "rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm";
 });
 ```
-
-This approach ensures that the streaming extension is available while still allowing you to control which extensions run in your application.
 
 ## Using Streaming Components
 
@@ -119,8 +112,9 @@ public class DashboardController : RzController
     [HttpGet]
     public IResult LoadWeatherWidget()
     {
-        // Return the StreamingWeather component as a partial view
-        return PartialView<StreamingWeather>();
+        // View<T> renders just the component for an htmx request that targets an element,
+        // and streams it progressively (see "View or PartialView" below).
+        return View<StreamingWeather>();
     }
 }
 ```
@@ -145,11 +139,20 @@ public class DashboardController : RzController
 
 1.  User clicks the "Load Weather" button.
 2.  HTMX makes a GET request to `/Dashboard/LoadWeatherWidget`.
-3.  The `LoadWeatherWidget` action returns the `StreamingWeather` component rendered as a partial view.
+3.  The `LoadWeatherWidget` action returns the `StreamingWeather` component. Because the request targets an element, no layout is rendered.
 4.  HTMX receives the initial HTML containing the "Loading..." message and swaps it into `#weather-widget-container`.
 5.  The `StreamingWeather` component's `OnInitializedAsync` continues running (`Task.Delay(1500)`).
 6.  Once the delay finishes and `forecasts` is populated, Blazor sends streaming updates to render the final table.
 7.  The `rizzy-streaming` extension coordinates these updates with HTMX, ensuring the weather table correctly replaces the "Loading..." message within the HTMX-managed container.
+
+## View or PartialView
+
+Both stream, but only `View<T>` streams **progressively** for htmx requests:
+
+- **`View<T>`** wraps the htmx fragment in a minimal `<html><body>` document, so the client can tell where the initial HTML ends. The placeholder is swapped in immediately and replaced when the data arrives.
+- **`PartialView<T>`** sends a bare fragment. The client cannot tell where the initial HTML ends, so it waits for the whole stream and swaps the finished content once. The result is correct, but the user sees nothing until the data is ready.
+
+Use `View<T>` for components with `[StreamRendering]`.
 
 ## Considerations
 

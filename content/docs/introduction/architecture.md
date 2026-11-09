@@ -9,7 +9,7 @@ menu:
   docs:
     parent: "" 
     identifier: "architecture-overview-page"
-  weight: 30 # Adjust weight as needed
+    weight: 30 # Adjust weight as needed
 toc: true
 seo:
   title: "Rizzy Architecture Overview"

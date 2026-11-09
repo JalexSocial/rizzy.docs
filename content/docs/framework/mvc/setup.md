@@ -141,9 +141,13 @@ In this example, the header, content, and footer fragments are rendered sequenti
 
 ## Handling Form Data
 
-Rizzy simplifies the process of handling form data by automatically cascading the ModelState to your views and partial views. This ensures that any validation errors from your controller are available within your Razor Components.
+`RzController` passes the controller's `ModelState` to every view and partial view (unless you pass a different `ModelStateDictionary`), so model-binding and validation errors from your action are available to your Razor components.
 
-A key component in this process is `<RzInitialValidator>`. When placed inside an `EditForm`, it checks whether ModelState errors exist. If errors are present, it transfers them to the form. Otherwise, it automatically invokes the form's `Validate` method so that your component begins with accurate validation.
+To show them, place `<RzModelStateProvider />` inside the `EditForm`. It copies the `ModelState` errors into the form's `EditContext`, so `RzValidationMessageBase` and `RzValidationSummaryBase` display them next to each field. See [Validation]({{<ref "/docs/forms/validation.md">}}) for the full flow, including answering with status 422.
+
+{{< callout context="note" title="Antiforgery in MVC" icon="info-circle" >}}
+Protect posting actions with `[ValidateAntiForgeryToken]`, and register MVC with `AddControllersWithViews()`: `AddControllers()` alone does not register the filter that attribute needs. rizzy.js sends the token in a header on every htmx request that isn't a GET.
+{{< /callout >}}
 
 There are two approaches to working with form data in your components:
 
@@ -158,7 +162,8 @@ public IResult SubmitForm(Person person)
 {
     if (!ModelState.IsValid)
     {
-        // Pass the model explicitly to the partial view.
+        // Status 422; htmx 4 swaps it. ModelState is passed along automatically.
+        Response.Htmx().ValidationFailed();
         return PartialView<FormComponent>(FormComponent.Params(model: person));
     }
     // Process valid data...
@@ -173,7 +178,7 @@ public IResult SubmitForm(Person person)
 @attribute [RizzyParameterize]
 
 <EditForm Model="@Model">
-    <RzInitialValidator />
+    <RzModelStateProvider />
     <!-- Form inputs go here -->
 </EditForm>
 
@@ -188,7 +193,7 @@ public IResult SubmitForm(Person person)
 Alternatively, you can allow the form to supply the model data directly to your component by using `[SupplyParameterFromForm]`. In this scenario, you do not need to pass the model from your controller.
 
 {{< callout context="note" title="Note on [SupplyParameterFromForm] Integration" icon="info-circle" >}}
-Rizzy aims to make integrating Blazor components into MVC as smooth as possible. To enable the convenient `[SupplyParameterFromForm]` attribute for binding data directly from forms in this context, Rizzy carefully uses **reflection** to connect with certain internal ASP.NET Core services (like `HttpContextFormDataProvider`).
+Rizzy aims to make integrating Blazor components into MVC as smooth as possible. To enable the convenient `[SupplyParameterFromForm]` attribute for binding data directly from forms in this context, Rizzy uses **reflection** to connect with internal ASP.NET Core services (like `HttpContextFormDataProvider`). It runs when any Rizzy view executes (controllers and minimal APIs alike), reads the form asynchronously, and fails with a clear error message if a future ASP.NET Core version changes those internals.
 
 This technique bridges a gap where public APIs are not currently available, avoiding the need to replicate complex framework logic within Rizzy itself. While this integration is designed to be robust, it's important to understand that it interfaces with non-public parts of the .NET framework. As such, significant changes in future .NET versions *could* impact this specific feature, potentially requiring adjustments in Rizzy to maintain compatibility. We are committed to monitoring this and ensuring Rizzy works smoothly across .NET updates.
 {{< /callout >}}
@@ -207,22 +212,24 @@ public IResult SubmitForm()
 
 ```razor
 @* FormComponent.razor using form binding *@
-<EditForm>
-    <RzInitialValidator />
+<EditForm Model="Person" FormName="person">
+    <RzModelStateProvider />
     <!-- Form inputs go here -->
 </EditForm>
 
 @code {
-    [SupplyParameterFromForm]
+    [SupplyParameterFromForm(FormName = "person")]
     public Person? Person { get; set; }
+
+    protected override void OnInitialized() => Person ??= new();
 }
 ```
 
-Both approaches ensure that your form data is available in your Razor Component, with `<RzInitialValidator>` handling ModelState errors by transferring them to the EditForm if they exist, or by automatically validating the form if no errors are present.
+Both approaches make your form data available in your Razor component, with `<RzModelStateProvider>` showing any `ModelState` errors. Add `<RzInitialValidator />` as well if the form should run its Data Annotations validation as soon as it renders.
 
 ## Conclusion
 
-By upgrading your MVC controllers to inherit from `RzController` or `RzControllerWithViews`, you unlock the ability to integrate Razor Components into your application seamlessly. Rizzy automatically cascades ModelState to your views, supports both full and partial view rendering, and even allows you to combine multiple render fragments into a single composite view.
+By upgrading your MVC controllers to inherit from `RzController` or `RzControllerWithViews`, you unlock the ability to integrate Razor Components into your application seamlessly. Rizzy passes your controller's ModelState to your views, supports both full and partial view rendering, and even allows you to combine multiple render fragments into a single composite view.
 
 Whether you choose to pass your model explicitly using `[Parameter]` or bind it directly from the form with `[SupplyParameterFromForm]`, Rizzy adapts to your workflow. With these capabilities at your fingertips, you can build rich, interactive web applications that blend the best of both MVC and modern component-based architectures.
 

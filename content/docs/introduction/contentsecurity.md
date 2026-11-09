@@ -64,7 +64,7 @@ Below is a simplified example of using the nonce values in a Blazor component. N
     <!-- Link to stylesheets with nonce attributes -->
     <link nonce="@NonceProvider?.GetNonce()" rel="stylesheet" href="/css/app.css" />
 
-    <HeadOutlet />
+    <RzHeadOutlet />
 
     <!-- Link to scripts with nonce attributes -->
     <script defer nonce="@NonceProvider?.GetNonce()" src="https://cdn.jsdelivr.net/npm/@@alpinejs/csp@3.x.x/dist/cdn.min.js"></script>
@@ -80,23 +80,67 @@ Below is a simplified example of using the nonce values in a Blazor component. N
 }
 ```
 
-## Usage with HTMX to Automatically Update HTMX Configuration with Nonce Values
+## Scripts in htmx responses
 
-Configure HTMX to use the IRizzyNonceProvider implementation to correctly configure nonce values in the HTMX configuration.  
+Every Rizzy response is rendered with its own nonce, and Rizzy sends it to htmx requests in the `HX-Nonce` response header. A `<script nonce="...">` that your component renders into an htmx fragment therefore carries the **response's** nonce, while the browser only trusts the nonce the **page** was loaded with.
 
-{{< callout context="caution" title="Warning" icon="utline/alert-triangle" >}}
-These configuration options will set the inlineScriptNonce and inlineStyleNonce settings in the HTMX head configuration. inlineScriptNonce will cause nonce values to be injected into any received content from an htmx request and will negate the use of Content Security Policies.  Please use with extreme caution.
-{{< /callout >}}
+The `rizzy-nonce` extension (part of rizzy.js) bridges the two without weakening the policy:
 
+- Scripts and styles rendered by the server with the response nonce are given the page nonce, so they run.
+- Markup without a nonce stays without one, so an injected `<script>` is still blocked by the browser.
+- A copy of the page nonce found in a response is removed: the server never knows the page nonce, so its presence means it was stolen and echoed back.
 
-```razor
-builder.Services.AddHtmx(config =>
-    {
-        config.GenerateScriptNonce = true;  // Allow HTMX inlineScriptNonce to automatically use the current nonce (dangerous)
-        config.GenerateStyleNonce = true;   // Allow HTMX inlineStyleNonce to automatically use the current nonce
-    })
+The response is never parsed or re-serialized, so fragments such as table rows swap exactly as they would without Rizzy. On pages without a nonce the extension does nothing.
+
+rizzy.js reads the page nonce from the `nonce` property of a `<script nonce>` element, so give the htmx and Rizzy script tags the page nonce.
+
+### A complete setup
+
+```csharp {title="Program.cs"}
+// Send a nonce-based policy with every response. Register it before the endpoints run.
+app.Use(async (context, next) =>
+{
+    var nonce = context.RequestServices.GetRequiredService<IRizzyNonceProvider>().GetNonce();
+    context.Response.Headers.ContentSecurityPolicy =
+        $"script-src 'nonce-{nonce}'; object-src 'none'; base-uri 'self'";
+    await next();
+});
 ```
 
+```razor {title="AppLayout.razor"}
+@inherits LayoutComponentBase
+@inject Rizzy.Htmx.IRizzyNonceProvider NonceProvider
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <RzHeadOutlet />
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn"
+            crossorigin="anonymous" nonce="@NonceProvider.GetNonce()"></script>
+    <script src="_content/Rizzy/js/rizzy.js" nonce="@NonceProvider.GetNonce()"></script>
+</head>
+<body>
+    @Body
+</body>
+</html>
+```
+
+A component can then render a script into an htmx fragment:
+
+```razor
+@inject Rizzy.Htmx.IRizzyNonceProvider NonceProvider
+
+<div id="chart"></div>
+<script nonce="@NonceProvider.GetNonce()">
+    drawChart(document.getElementById("chart"));
+</script>
+```
+
+Inline event handlers (`onclick="..."`) and `hx-on:*` attributes are inline script too; a strict `script-src` blocks them. Move that code into nonced scripts or files. The Rizzy demo app (`src/RizzyDemo`) runs with this policy and includes a page that shows a server-rendered script running while an injected one is blocked.
+
+{{< callout context="caution" title="Leave GenerateScriptNonce off" icon="alert-triangle" >}}
+`HtmxConfig.GenerateScriptNonce = true` sets htmx's `inlineScriptNonce`, which makes htmx stamp the page nonce on **every** script it inserts, including injected ones. That defeats the policy, and `rizzy-nonce` makes it unnecessary. (Rizzy 6 removed `GenerateStyleNonce`: htmx 4 has no style nonce setting.)
+{{< /callout >}}
 
 ## Summary
 
