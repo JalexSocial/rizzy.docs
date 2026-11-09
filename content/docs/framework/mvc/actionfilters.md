@@ -26,7 +26,7 @@ HTMX Request Filters ensure that certain actions or controllers respond exclusiv
 
 ### [HtmxRequest]
 
-`HtmxRequest` is an action filter attribute that will conditionally execute actions based on HTMX request headers. It optionally checks for requests targeting a specific element by it's Hx-Target Id.
+`[HtmxRequest]` is an action constraint: the action only matches htmx requests, so a normal browser request to the same URL gets a 404 (or reaches another action without the constraint). Set `Target` to also require a specific target element; it is compared with the target's **id**, without `#` (`HX-Target: div#specific-target` matches `Target = "specific-target"`).
 
 #### Example
 
@@ -41,9 +41,9 @@ public class SampleController : RzController
         return Ok(new { message = "HTMX response" });
     }
 
-    // Responds only to HTMX requests targeting '#specific-target'
+    // Responds only to HTMX requests whose target element has id="specific-target"
     [HttpGet("specific-data")]
-    [HtmxRequest(Target = "#specific-target")]
+    [HtmxRequest(Target = "specific-target")]
     public IActionResult GetSpecificData()
     {
         return Ok(new { message = "Response for a specific HTMX target" });
@@ -57,7 +57,7 @@ HTMX Response Filters modify the HTTP response to direct client-side HTMX behavi
 
 ### [HtmxResponse]
 
-`HtmxResponse` filter applies HTMX-specific response headers for client-side actions like redirection or refreshing part of the page based on server-side outcomes.
+`HtmxResponse` filter applies HTMX-specific response headers for client-side actions like redirection or refreshing part of the page based on server-side outcomes. The headers are applied only to htmx requests; for a normal browser request the attribute does nothing, so the same action can serve both.
 
 #### Available Properties
 
@@ -81,7 +81,6 @@ Below is a list of all available attributes you can set on `[HtmxResponse]` alon
 
 - **Retarget:** Changes the target element for the content update to a different element specified by a CSS selector. This allows server-side logic to dynamically target different parts of the page for updates.
 
-- **StopPolling:** When set to `true`, sends a status code that instructs HTMX to stop polling. This is useful for stopping client-side polling based on server-side conditions.
 
 - **Reselect:** Chooses a specific part of the response for swapping, using a CSS selector. This allows you to refine exactly what part of the server response should be used to update the client side.
 

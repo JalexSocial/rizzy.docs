@@ -17,23 +17,33 @@ seo:
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
-The `HtmxRequest` class provides properties to determine characteristics of a request triggered by HTMX within an ASP.NET application. This class helps in identifying whether a request is made via HTMX, if it is boosted, part of a history restore, or contains specific HTMX-related headers such as the current URL, target, trigger name, trigger id, and prompt responses.
+The `HtmxRequest` class reads the htmx 4 request headers: whether a request was made by htmx, whether it is boosted or a history restore, what kind of response it expects, and which elements are involved.
 
-| Property         | Type              | Description                                                                                         |
-|------------------|-------------------|-----------------------------------------------------------------------------------------------------|
-| `Method`         | `string`          | Gets the HTTP method of the current request.                                                      |
-| `Path`           | `PathString`      | Gets the request path.                                                                              |
-| `IsHtmx`         | `bool`            | Gets whether or not the current request is an Htmx triggered request.                               |
-| `IsBoosted`      | `bool`            | Gets whether or not the current request is initiated via an element using `hx-boost`.                 |
-| `IsHistoryRestore` | `bool`          | Gets whether or not the current request is an Htmx history restore request.                         |
-| `CurrentURL`     | `Uri?`            | Gets the current URL of the browser.                                                                |
-| `Target`         | `string?`         | Gets the `id` of the target element if it exists.                                                 |
-| `TriggerName`    | `string?`         | Gets the `name` of the triggered element if it exists.                                             |
-| `Trigger`        | `string?`         | Gets the `id` of the triggered element if it exists.                                               |
-| `Prompt`         | `string?`         | Gets the user response to an `hx-prompt`, if any.                                                   |
+| Property         | Type              | Description |
+|------------------|-------------------|-------------|
+| `Method`         | `string`          | The HTTP method of the current request. |
+| `Path`           | `PathString`      | The request path. |
+| `IsHtmx`         | `bool`            | Whether the request was made by htmx (`HX-Request`). |
+| `IsBoosted`      | `bool`            | Whether the request came from an element using `hx-boost`. |
+| `IsHistoryRestore` | `bool`          | Whether htmx is restoring a page on back/forward (`HX-History-Restore-Request`). |
+| `CurrentURL`     | `Uri?`            | The browser's current URL (`HX-Current-URL`). |
+| `RequestType`    | `string?`         | The raw `HX-Request-Type` header: `partial` or `full`. |
+| `Type`           | `HtmxRequestType` | The parsed request type: `None`, `Partial`, `Full` or `Unknown`. |
+| `IsPartial`      | `bool`            | Whether the response should be a fragment: an htmx request that targets part of the page and is not a history restore. |
+| `IsFullPage`     | `bool`            | The inverse of `IsPartial`: a full page is expected. |
+| `Target`         | `string?`         | The raw `HX-Target` header, in htmx 4's `tag#id` form (for example `div#results`). |
+| `TargetId`       | `string?`         | The id part of `Target` (URI-decoded), or `null` when the target has no id (`HX-Target: div`). |
+| `Source`         | `string?`         | The raw `HX-Source` header for the element that triggered the request, in `tag#id` form. |
+| `SourceId`       | `string?`         | The id part of `Source`, or `null` when the element has no id. |
+
+`HtmxLayout` uses `IsPartial` to decide whether to render your layout; see [Layouts]({{<ref "/docs/components/layout.md">}}).
+
+{{< callout context="note" title="Rizzy 6" icon="info-circle" >}}
+htmx 4 no longer sends `HX-Trigger`, `HX-Trigger-Name` or `HX-Prompt`, so Rizzy 6 removed `Trigger`, `TriggerName` and `Prompt`. Use `Source`/`SourceId` for the element that issued the request.
+{{< /callout >}}
 
 {{< callout context="note" title="Note" icon="info-circle" >}}
-The HtmxRequest class was constructed based on HTMX usage of Request headers.  You can find more information about HTMX request headers on the official [Htmx documentation site](https://htmx.org/reference/#request_headers).
+The HtmxRequest class was constructed based on HTMX usage of Request headers.  You can find more information about HTMX request headers on the official [htmx 4 documentation site](https://four.htmx.org/).
 {{< /callout >}}
 
 ## Working With HtmxRequest
@@ -44,7 +54,7 @@ The HtmxRequest class was constructed based on HTMX usage of Request headers.  Y
 var request = new HtmxRequest(httpContext);
 ```
 
-The `HtmxResponse` object is accessible from the Response controller property:
+The `HtmxRequest` object is accessible from the `Request` property of a controller (or any `HttpRequest`):
 
 ```csharp
 var request = Request.Htmx();
@@ -90,42 +100,40 @@ Gets the current URL from the browser as triggered by the HTMX request.
 Uri? currentUrl = Request.Htmx().CurrentURL;
 ```
 
-## Target
+## IsPartial and Type
 
-Retrieves the `id` of the target element from the HTMX request if it exists.
+Tells you what kind of response htmx expects. Most code doesn't need this, because `View<T>` already renders a fragment or a full page accordingly.
 
 **Example**
 
 ```csharp
-string? targetId = Request.Htmx().Target;
+var htmx = Request.Htmx();
+if (htmx.IsPartial)
+{
+    // htmx targets one element: return just the fragment
+}
+else if (htmx.Type == HtmxRequestType.Full)
+{
+    // boosted body swap, hx-select or history restore: return the full page
+}
 ```
 
-## TriggerName
+## Target and TargetId
 
-Obtains the `name` of the element that triggered the HTMX request if available.
+`Target` is the raw `HX-Target` header (`tag#id` in htmx 4); `TargetId` is the id, or `null` if the target element has no id.
 
 **Example**
 
 ```csharp
-string? triggerName = Request.Htmx().TriggerName;
+string? targetId = Request.Htmx().TargetId;   // "results" for HX-Target: div#results
 ```
 
-## Trigger
+## Source and SourceId
 
-Gets the `id` of the element that initiated the HTMX request if present.
-
-**Example**
-
-```csharp
-string? triggerId = Request.Htmx().Trigger;
-```
-
-## Prompt
-
-Retrieves the user response to an `hx-prompt` from the HTMX request, if any.
+The element that triggered the request.
 
 **Example**
 
 ```csharp
-string? promptResponse = Request.Htmx().Prompt;
+string? sourceId = Request.Htmx().SourceId;   // "save" for HX-Source: button#save
 ```

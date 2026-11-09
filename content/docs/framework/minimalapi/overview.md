@@ -14,7 +14,7 @@ seo:
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
-Minimal APIs in .NET 8 offer a streamlined approach for building HTTP APIs and web applications with less boilerplate code. They are designed to make the development process faster and more efficient, allowing developers to focus on the business logic rather than the underlying infrastructure. Minimal APIs are ideal for small to medium-sized projects and microservices, providing a simple yet powerful way to handle requests and responses.
+Minimal APIs in ASP.NET Core offer a streamlined approach for building HTTP APIs and web applications with less boilerplate code. They are designed to make the development process faster and more efficient, allowing developers to focus on the business logic rather than the underlying infrastructure. Minimal APIs are ideal for small to medium-sized projects and microservices, providing a simple yet powerful way to handle requests and responses.
 
 Rizzy works with Minimal APIs by providing the ability to render both views and partial views. When Rizzy is added to your project on startup it adds a scoped service of type IRizzyService.
 
@@ -41,6 +41,31 @@ Rizzy works with Minimal APIs by providing the ability to render both views and 
 - **PartialView\<TComponent\>(Dictionary<string, object?> data)**: Renders a partial view using a specified Razor component with explicitly provided data in dictionary form. Intended for component inclusion in other views.
   - `TComponent`: The type of Razor component to render as a partial view.
   - `data`: A dictionary containing the data to pass to the component.
+
+Every `View` and `PartialView` overload also takes an optional `ModelStateDictionary? modelState`. Minimal APIs have no `ModelState` of their own, so pass one when the view's form should show server-side errors through `<RzModelStateProvider />`.
+
+#### Forms in minimal APIs
+
+- `[SupplyParameterFromForm]` properties in the rendered component are bound from the posted form, the same as with MVC controllers.
+- Endpoints that bind form data are protected by `app.UseAntiforgery()`; rizzy.js sends the token in a header on htmx requests. Endpoints that read the form without binding parameters need `.WithMetadata(new RequireAntiforgeryTokenAttribute())` (or `IAntiforgery.ValidateRequestAsync`).
+- `HttpContext.Response.Htmx()` works in endpoints too, for example `ValidationFailed()` for a 422 response:
+
+```csharp
+app.MapPost("/signup", (HttpContext http, IRizzyService rizzy, [FromForm] SignupModel model) =>
+{
+    var errors = new ModelStateDictionary();
+    if (model.Username == "admin")
+        errors.AddModelError("Model.Username", "That name is taken.");
+
+    if (!errors.IsValid)
+    {
+        http.Response.Htmx().ValidationFailed();
+        return rizzy.PartialView<SignupForm>(modelState: errors);
+    }
+
+    return rizzy.PartialView<SignupComplete>();
+});
+```
 
 *Note: Rizzy also features a source generator (`[RizzyParameterize]`) that adds a `.Params()` method to components, returning a strongly-typed dictionary which you can directly pass into these methods.*
 

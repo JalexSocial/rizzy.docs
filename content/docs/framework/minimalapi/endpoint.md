@@ -42,4 +42,4 @@ app.MapGet("/love-htmx",
 
 ### Conclusion
 
-After configuring the endpoint, run your application. When a client sends a request to `/love-htmx`, the server uses Rizzy to render the partial view with the message "I ❤️ ASP.NET Core". This demonstrates a basic but powerful integration of Rizzy with Minimal APIs in .NET 8 for rendering dynamic views.
+After configuring the endpoint, run your application. When a client sends a request to `/love-htmx`, the server uses Rizzy to render the partial view with the message "I ❤️ ASP.NET Core". This demonstrates a basic but powerful integration of Rizzy with Minimal APIs for rendering dynamic views.
