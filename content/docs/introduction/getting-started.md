@@ -99,10 +99,12 @@ What this does:
 
 ## Create the root layout
 
-The root layout must render **`<RzHeadOutlet />`** in its `<head>`, **before** the htmx script.
+The root layout renders **`<RzHeadOutlet />`** and then **`<RzScripts />`** in its `<head>`.
 `RzHeadOutlet` renders Blazor's `HeadOutlet` (page titles and `<HeadContent>`) plus Rizzy's
-`<meta name="htmx-config">` tag, which carries your htmx settings and the antiforgery token. htmx reads
-that tag once, when its script loads.
+`<meta name="htmx-config">` tag, which carries your htmx settings and the antiforgery token.
+`RzScripts` then loads htmx (the tested version, with a subresource integrity hash), the Rizzy script
+and any [extensions]({{<ref "/docs/htmx/extensions.md">}}) you enable. htmx reads the meta tag once,
+when its script loads, so the outlet comes first.
 
 ```razor {title="AppLayout.razor"}
 @inherits LayoutComponentBase
@@ -113,10 +115,7 @@ that tag once, when its script loads.
     <meta charset="utf-8" />
     <base href="/" />
     <RzHeadOutlet />
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js"
-            integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn"
-            crossorigin="anonymous"></script>
-    <script src="_content/Rizzy/js/rizzy.js"></script>
+    <RzScripts />
 </head>
 <body>
     @Body
@@ -130,9 +129,9 @@ that tag once, when its script loads.
 <main>@Body</main>
 ```
 
-The Rizzy script is a classic script: don't add `type="module"`. It registers Rizzy's htmx
-extensions (antiforgery, CSP nonces, streaming rendering, confirm dialogs) when it loads; no `hx-ext`
-attributes are needed.
+The Rizzy script registers Rizzy's own htmx extensions (antiforgery, CSP nonces, streaming
+rendering, confirm dialogs) when it loads; no `hx-ext` attributes are needed. To load the scripts
+yourself instead, see `HtmxConfig.Scripts` on the [Extensions]({{<ref "/docs/htmx/extensions.md">}}) page.
 
 ## Write components
 
@@ -151,6 +150,9 @@ attributes are needed.
     [Parameter] public string? Name { get; set; }
 }
 ```
+
+Plain `hx-*` attributes work, and so does the [typed `Hx` builder]({{<ref "/docs/htmx/attributes.md">}}):
+`<button @attributes="@(Hx.Post("/greet").Target("#greeting"))">Greet</button>`.
 
 Run the app and click the button. htmx posts to `/greet` (rizzy.js adds the antiforgery token), and
 `PartialView<Greeting>` returns just the fragment, which htmx swaps into `#greeting`.

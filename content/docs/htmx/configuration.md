@@ -69,9 +69,10 @@ builder.Services.AddHtmx(config =>
     // Example: restrict cross‑origin requests (similar to SelfRequestsOnly)
     config.Mode = "same-origin";
 
-    // Example: restrict which extensions may run. Keep Rizzy's own extensions in the list,
-    // or antiforgery tokens, CSP nonces, streaming and confirm dialogs stop working.
-    config.Extensions = "rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm";
+    // Example: enable htmx extensions; <RzScripts /> loads them and Rizzy keeps the
+    // htmx.config.extensions allow-list in step (see the Extensions page)
+    config.UseExtensions(HtmxExtension.Preload);
+    config.RestrictExtensions = true;
 });
 ```
 
@@ -83,8 +84,7 @@ The configuration reaches the browser as a `<meta name="htmx-config" ...>` tag r
 <head>
     ...
     <RzHeadOutlet />
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
-    <script src="_content/Rizzy/js/rizzy.js"></script>
+    <RzScripts />
 </head>
 ```
 
@@ -112,12 +112,16 @@ The table below lists the key configuration properties available in `HtmxConfig`
 | **MorphScanLimit**      | `unset`       | `10`             | Sibling scan limit used during morph operations. |
 | **MorphSkip**           | `unset`       | `null`           | CSS selector for elements whose contents should not be morphed. |
 | **MorphSkipChildren**   | `unset`       | `null`           | CSS selector for elements whose children should not be morphed. |
-| **Extensions**          | `unset`       | `null`           | Comma‑separated list of allowed extension names. When set, include Rizzy's extensions: `"rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm"`. |
-| **Prefix**              | `unset`       | `null`           | Custom attribute prefix.  HTMX 4 no longer supports `data-hx-` implicitly; set this to `"data-hx-"` if you wish to continue using the `data-hx-` prefix. |
+| **Extensions**          | `unset`       | `null`           | Comma‑separated allow-list of extension names. Prefer `UseExtensions(...)` and `RestrictExtensions` (below); when you set this yourself, Rizzy adds its own extensions and every enabled one to it. See [Extensions]({{<ref "/docs/htmx/extensions.md">}}). |
+| **Prefix**              | `unset`       | `"data-hx-"`     | An alternative attribute prefix. htmx 4 always accepts `hx-` and also accepts this prefix, so `data-hx-` attributes work out of the box. |
 | **LogAll**              | `unset`       | `false`          | Enables logging of all HTMX lifecycle events to the browser console. Useful for debugging. |
 | **AllowEmptySwapAfterOOB** | `unset`    | `false`          | When `true`, an empty main response is still swapped after out-of-band content was processed. |
 | **MetaCharacter**       | `unset`       | `:`              | A character htmx uses instead of `:` in attribute and event names (for example `-` to write `hx-on-click`), for templating systems that do not allow colons. |
 | **GenerateScriptNonce** | `false`       | N/A              | Rizzy‑specific: If `true`, sets htmx's `inlineScriptNonce` to the page nonce. htmx then stamps that nonce on **every** script it inserts, including injected ones, which defeats a CSP. Leave it off and let Rizzy's `rizzy-nonce` extension handle scripts (see [Content Security Policy]({{<ref "/docs/introduction/contentsecurity.md">}})). |
+| **UseExtensions(...)**  | none          | N/A              | Rizzy‑specific: enables htmx extensions (`HtmxExtension.Sse`, `Preload`, ...). `<RzScripts />` loads them; their registered names join the allow-list whenever one is in use. |
+| **RestrictExtensions**  | `false`       | N/A              | Rizzy‑specific: when `true`, the allow-list contains only Rizzy's own extensions, the enabled ones and any listed in `Extensions`. |
+| **Scripts**             | jsDelivr, minified, SRI | N/A    | Rizzy‑specific: where `<RzScripts />` loads htmx and its extensions from (`HtmxScriptOptions`). The Rizzy script URL is `RizzyConfig.ClientScriptUrl`. |
+| **Set(key, value)**     | none          | N/A              | Rizzy‑specific: writes any other `htmx.config` key, typically an extension's settings (`Set("sse", new { reconnect = true })`). Keys a property already writes are rejected. |
 | **RizzyDiagnostics**    | enabled       | N/A              | Rizzy‑specific: set to `false` to silence the console warnings rizzy.js logs for a misconfigured page (missing or invalid meta tag, or a server/client version mismatch). |
 
 Properties that existed in HTMX 2 such as `DefaultSwapDelay`, `IncludeIndicatorStyles`, `HistoryCacheSize`, `SelfRequestsOnly`, `DisableSelector`, and `WithCredentials` have either been renamed or removed in HTMX 4.  For example, you no longer use `hx-disable` to skip HTMX processing—use the `hx-ignore` attribute instead.  Similarly, the `hx-ext` attribute has been removed; extensions are enabled by including their scripts and, if desired, whitelisting them via the `Extensions` property shown above.

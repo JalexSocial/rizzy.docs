@@ -35,6 +35,9 @@ The `HtmxRequest` class reads the htmx 4 request headers: whether a request was 
 | `TargetId`       | `string?`         | The id part of `Target` (URI-decoded), or `null` when the target has no id (`HX-Target: div`). |
 | `Source`         | `string?`         | The raw `HX-Source` header for the element that triggered the request, in `tag#id` form. |
 | `SourceId`       | `string?`         | The id part of `Source`, or `null` when the element has no id. |
+| `Prompt`         | `string?`         | The answer to `hx-prompt` (`HX-Prompt`, URI-decoded). Needs the hx-prompt [extension]({{<ref "/docs/htmx/extensions.md">}}). |
+| `PTag`           | `string?`         | The element's polling tag (`HX-PTag`). Needs the hx-ptag extension; answer 304 when nothing changed. |
+| `LastPartId`     | `string?`         | The last part id before a reconnect (`HX-Last-Part-ID`). Needs the hx-multipart extension. |
 
 `HtmxLayout` uses `IsPartial` to decide whether to render your layout; see [Layouts]({{<ref "/docs/components/layout.md">}}).
 

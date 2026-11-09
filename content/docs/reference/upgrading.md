@@ -22,16 +22,14 @@ and the [changelog](https://github.com/JalexSocial/Rizzy/blob/main/CHANGELOG.md)
 1. **Update the packages.** Reference `Rizzy` 6.x; it brings the matching `Rizzy.Htmx`. If you use the
    npm package, install `@jalexsocial/rizzy` 6.x and `htmx.org` 4.0.1 or later (`htmx.org` is now a
    peer dependency).
-2. **Replace `<HeadOutlet />` with `<RzHeadOutlet />`** in your root layout, and load htmx 4 and then
-   Rizzy after it, without `type="module"`:
+2. **Replace `<HeadOutlet />` with `<RzHeadOutlet />`** in your root layout, and replace your htmx and
+   Rizzy script tags with `<RzScripts />` right after it (it loads htmx 4 with SRI, rizzy.js and any
+   [extensions]({{<ref "/docs/htmx/extensions.md">}}) you enable):
 
    ```razor {title="AppLayout.razor"}
    <head>
        <RzHeadOutlet />
-       <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js"
-               integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn"
-               crossorigin="anonymous"></script>
-       <script src="_content/Rizzy/js/rizzy.js"></script>
+       <RzScripts />
    </head>
    ```
 
@@ -55,7 +53,7 @@ and the [changelog](https://github.com/JalexSocial/Rizzy/blob/main/CHANGELOG.md)
 | htmx 2 | htmx 4 |
 |---|---|
 | Attributes inherited implicitly | Add `:inherited` (`hx-boost:inherited`, `hx-target:inherited`, …) or set `HtmxConfig.ImplicitInheritance = true` |
-| `hx-ext="..."` | Removed: extensions register when their script loads. If you set `HtmxConfig.Extensions`, include `rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm` |
+| `hx-ext="..."` | Removed: extensions register when their script loads. Enable them with `HtmxConfig.UseExtensions(...)`; `<RzScripts />` loads them and Rizzy keeps the allow-list in step |
 | `hx-disable` to skip processing | `hx-ignore` |
 | History cache in localStorage | No cache: back/forward re-fetch the page. Mark the element to restore with `hx-history-elt`, or set `HtmxConfig.History = HtmxHistoryMode.Reload` |
 | 4xx/5xx responses not swapped | Swapped by default. Use it for validation (status 422) and `app.UseHtmxErrorHandling()` for server errors, or set `HtmxConfig.NoSwap = [204, 304, "4xx", "5xx"]` |

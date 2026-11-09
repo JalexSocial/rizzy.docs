@@ -92,7 +92,7 @@ The `rizzy-nonce` extension (part of rizzy.js) bridges the two without weakening
 
 The response is never parsed or re-serialized, so fragments such as table rows swap exactly as they would without Rizzy. On pages without a nonce the extension does nothing.
 
-rizzy.js reads the page nonce from the `nonce` property of a `<script nonce>` element, so give the htmx and Rizzy script tags the page nonce.
+rizzy.js reads the page nonce from the `nonce` property of a `<script nonce>` element. `<RzScripts />` puts the page nonce on every script it renders; if you write the script tags yourself, give them the nonce.
 
 ### A complete setup
 
@@ -109,15 +109,12 @@ app.Use(async (context, next) =>
 
 ```razor {title="AppLayout.razor"}
 @inherits LayoutComponentBase
-@inject Rizzy.Htmx.IRizzyNonceProvider NonceProvider
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <RzHeadOutlet />
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn"
-            crossorigin="anonymous" nonce="@NonceProvider.GetNonce()"></script>
-    <script src="_content/Rizzy/js/rizzy.js" nonce="@NonceProvider.GetNonce()"></script>
+    <RzScripts />   @* htmx, rizzy.js and enabled extensions, each with the page nonce *@
 </head>
 <body>
     @Body

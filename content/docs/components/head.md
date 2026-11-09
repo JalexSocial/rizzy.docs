@@ -28,15 +28,14 @@ This document outlines components created to improve the management of HTML head
 1. Blazor's `HeadOutlet`, so page titles (`RzPageTitle`, `PageTitle`) and `<HeadContent>` work as usual, and
 2. Rizzy's `<meta name="htmx-config">` tag (`HtmxConfigHeadOutlet`), which carries your [htmx configuration]({{<ref "/docs/htmx/configuration.md">}}), the antiforgery token and the Rizzy version.
 
-Place it **before** the htmx script: htmx reads the meta tag once, when its script loads.
+Place it **before** the htmx script, which htmx needs because it reads the meta tag once, when its script loads. `<RzScripts />` right after it loads htmx, rizzy.js and any enabled [extensions]({{<ref "/docs/htmx/extensions.md">}}) in the right order.
 
 ```razor {title="AppLayout.razor"}
 <head>
     <meta charset="utf-8" />
     <base href="/" />
     <RzHeadOutlet />
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
-    <script src="_content/Rizzy/js/rizzy.js"></script>
+    <RzScripts />
 </head>
 ```
 
