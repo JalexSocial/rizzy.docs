@@ -37,6 +37,8 @@ When `HtmxConfig.MetaCharacter` is set, htmx dispatches event names with `:` rep
 
 ## htmx core
 
+
+<!-- BEGIN GENERATED: core-events -->
 | Constant | Event |
 |---|---|
 | `HtmxEvents.Abort` | `htmx:abort` |
@@ -71,6 +73,8 @@ When `HtmxConfig.MetaCharacter` is set, htmx dispatches event names with `:` rep
 | `HtmxEvents.FinallySwap` | `htmx:finally:swap` |
 | `HtmxEvents.ResponseError` | `htmx:response:error` |
 | `HtmxEvents.Scope` | `htmx:scope` |
+<!-- END GENERATED: core-events -->
+
 
 `htmx:process:<type>` is dispatched for each `<hx-*>` template element in a response: `HtmxEvents.Process("partial")` gives `htmx:process:partial`.
 
@@ -78,6 +82,7 @@ When `HtmxConfig.MetaCharacter` is set, htmx dispatches event names with `:` rep
 
 These are dispatched only when the extension is enabled (see [Extensions]({{<ref "/docs/htmx/extensions.md">}})).
 
+<!-- BEGIN GENERATED: extension-events -->
 ### hx-csp
 
 | Constant | Event |
@@ -153,9 +158,13 @@ These are dispatched only when the extension is enabled (see [Extensions]({{<ref
 | `HtmxEvents.Ws.BeforeMessageOutgoing` | `htmx:ws:before:message:outgoing` |
 | `HtmxEvents.Ws.Close` | `htmx:ws:close` |
 | `HtmxEvents.Ws.Error` | `htmx:ws:error` |
+<!-- END GENERATED: extension-events -->
+
 
 ## Rizzy
 
+
+<!-- BEGIN GENERATED: rizzy-events -->
 | Constant | Event |
 |---|---|
 | `HtmxEvents.Rizzy.StreamOpen` | `htmx:rizzy:stream:open` |
@@ -164,3 +173,5 @@ These are dispatched only when the extension is enabled (see [Extensions]({{<ref
 | `HtmxEvents.Rizzy.ConfigWarn` | `htmx:rizzy:config:warn` |
 | `HtmxEvents.Rizzy.ConfirmDialog` | `rz:confirm-dialog` |
 | `HtmxEvents.Rizzy.ServerError` | `rz:server-error` |
+<!-- END GENERATED: rizzy-events -->
+

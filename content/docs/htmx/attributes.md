@@ -77,6 +77,8 @@ on a loop variable, a small helper method keeps the markup readable:
 
 ## Core attributes
 
+
+<!-- BEGIN GENERATED: core-attributes -->
 | Method | Description |
 |---|---|
 | `Get(string url)` | `hx-get`: issues a GET request to `url`. |
@@ -127,6 +129,8 @@ on a loop variable, a small helper method keeps the markup readable:
 | `MorphSkipChildren()` | `hx-morph-skip-children`: morph swaps leave this element's children unchanged. |
 | `On(string eventName, string script)` | `hx-on:<event>`: runs `script` when `eventName` fires (for example `On(HtmxEvents.AfterSwap, "...")`). This is inline script: a nonce-based Content Security Policy blocks it unless the page allows it. |
 | `On(params (string Trigger, string Script)[] handlers)` | `hx-on` with several handlers in one attribute, each with a full trigger specification (`("click once", "...")`). Inline script, like `On`. |
+<!-- END GENERATED: core-attributes -->
+
 
 `HxSyncStrategy` values: `Drop`, `Abort`, `Replace`, `QueueFirst` (htmx's default), `QueueLast`, `QueueAll`.
 
@@ -136,6 +140,8 @@ on a loop variable, a small helper method keeps the markup readable:
 
 These need the extension enabled with `HtmxConfig.UseExtensions(...)` (see [Extensions]({{<ref "/docs/htmx/extensions.md">}})). Without it, htmx ignores them.
 
+
+<!-- BEGIN GENERATED: extension-attributes -->
 | Method | Description |
 |---|---|
 | `SseConnect(string url)` | `hx-sse:connect` (Sse): opens a Server-Sent Events connection. |
@@ -156,6 +162,8 @@ These need the extension enabled with `HtmxConfig.UseExtensions(...)` (see [Exte
 | `BrowserIndicator(bool show = true)` | `hx-browser-indicator` (BrowserIndicator): show the browser's loading indicator. |
 | `History(bool cache)` | `hx-history="false"` (HistoryCache): keep this page out of the history cache (for example pages with sensitive data). |
 | `Nonce(string nonce)` | `hx-nonce` (Csp): the page nonce, required on every htmx element by the hx-csp extension. |
+<!-- END GENERATED: extension-attributes -->
+
 
 `HxHeadStrategy` values: `Merge`, `Append`, `ReEval` (`re-eval`).
 
