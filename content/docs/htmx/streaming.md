@@ -49,19 +49,11 @@ Nothing to enable: the Rizzy client script registers `rizzy-streaming` (along wi
 ```html {title="AppLayout.razor"}
 <head>
     <RzHeadOutlet />
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.1/dist/htmx.min.js" integrity="sha384-Qp9rdC8H7EqOoX+nR0P3RPG2Noji+qdwJlGpfzwQJsfOpp3sGwIdSP9xO3+UlEhn" crossorigin="anonymous"></script>
-    <script src="_content/Rizzy/js/rizzy.js"></script>
+    <RzScripts />
 </head>
 ```
 
-If you restrict extensions with `HtmxConfig.Extensions`, keep all of Rizzy's extensions in the list:
-
-```csharp {title="Program.cs"}
-builder.Services.AddHtmx(config =>
-{
-    config.Extensions = "rizzy-antiforgery, rizzy-nonce, rizzy-streaming, rizzy-confirm";
-});
-```
+If you restrict extensions, Rizzy keeps its own (including `rizzy-streaming`) in the allow-list; see [Extensions]({{<ref "/docs/htmx/extensions.md">}}). Streaming also works together with the Preload extension, which serves clicks from a response fetched on `mousedown`.
 
 ## Using Streaming Components
 

@@ -26,6 +26,19 @@ Rizzy combines the strengths of Razor Components with the seamless integration o
 
 - **Efficient Development:** Leverage the benefits of Razor Components for efficient and structured UI development, resulting in more maintainable and scalable applications.
 
+## Generated API tables
+
+The method and event tables on the Typed Attributes (`content/docs/htmx/attributes.md`) and Events
+(`content/docs/htmx/events.md`) pages are generated from the Rizzy source, between
+`<!-- BEGIN GENERATED -->` / `<!-- END GENERATED -->` markers. Don't edit them by hand: with the Rizzy
+repository checked out next to this one, run
+
+```bash
+python scripts/generate_api_tables.py
+```
+
+after `HxAttributes.cs` or `HtmxEvents.cs` changes (`--check` reports stale tables without writing).
+
 ## How to Contribute
 
 We welcome contributions to the Rizzy project. If you'd like to get involved, please check out the following resources:

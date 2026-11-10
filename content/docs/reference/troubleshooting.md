@@ -66,7 +66,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **Middleware Order:** Ensure `app.UseAntiforgery()` is present in `Program.cs` and placed *after* `app.UseRouting()` and any authentication/authorization middleware (`app.UseAuthentication(); app.UseAuthorization();`).
 *   **Token on the page:** rizzy.js reads the token from the `<meta name="htmx-config">` tag and sends it in a header (`RequestVerificationToken`) on every htmx request that isn't a GET. Check that:
     *   Your root layout renders `<RzHeadOutlet />` (not `<HeadOutlet />`) before the htmx script. If the tag is missing, rizzy.js logs a console warning that says so. Pages with their own `<HeadContent>` are fine.
-    *   `<script src="_content/Rizzy/js/rizzy.js"></script>` is included after htmx (no `type="module"`).
+    *   `<RzScripts />` (or your own htmx and `_content/Rizzy/js/rizzy.js` script tags, htmx first, no `type="module"`) is in the root layout.
     *   The meta tag's `antiforgery` entry has a `requestToken` (it is generated per page with the default `RizzyConfig.AntiforgeryStrategy`).
     *   The request in the Network tab carries the `RequestVerificationToken` header.
 *   **MVC registration:** `[ValidateAntiForgeryToken]` needs `AddControllersWithViews()` (or `AddMvcCore().AddViews()`). With `AddControllers()` alone the attribute's filter is not registered.
@@ -138,7 +138,11 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **Content appears only at the end:** `PartialView<T>` sends a bare fragment, so the client waits for the whole stream. Use `View<T>` for progressive streaming. See [Streaming Rendering with HTMX]({{<ref "/docs/htmx/streaming.md">}}).
 *   **Check Console:** Look for specific errors from Blazor's streaming rendering JavaScript or the `rizzy-streaming` extension.
 
-### 8. Console warning: "no <meta name="htmx-config"> on this page"
+### 8. An htmx extension does nothing
+
+htmx skips an extension silently when its script did not load or when `htmx.config.extensions` does not name it (by its registered name: `sse`, not `hx-sse`). Enable extensions with `HtmxConfig.UseExtensions(...)` and render `<RzScripts />`; rizzy.js then warns on the console about a rejected extension or one that never registered. See [Extensions]({{<ref "/docs/htmx/extensions.md">}}).
+
+### 9. Console warning: "no <meta name="htmx-config"> on this page"
 
 rizzy.js checks the page when it loads. This warning means htmx has no Rizzy configuration and no antiforgery token. Render `<RzHeadOutlet />` instead of `<HeadOutlet />` in your root layout, before the htmx script. A second warning reports when the server runs a different Rizzy major version than the script (for example a cached CDN copy of rizzy.js). Set `HtmxConfig.RizzyDiagnostics = false` to silence these checks.
 

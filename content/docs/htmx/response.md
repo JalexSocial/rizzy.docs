@@ -43,6 +43,8 @@ The `HtmxResponse` class enables developers to manage client‑side behavior thr
 | `Reswap(SwapStyle swapStyle, string? modifier = null)` | `HtmxResponse` | Specifies how the response will be swapped using a `SwapStyle` and an optional modifier string. If `SwapStyle.Default` is provided, the modifier string is used directly. |
 | `Reswap(SwapStyleBuilder swapStyle)` | `HtmxResponse` | Specifies how the response will be swapped by building a swap style from a `SwapStyleBuilder` instance. |
 | `Retarget(string selector)` | `HtmxResponse` | Updates the target element for the content update by specifying a CSS selector. |
+| `PTag(string tag)` | `HtmxResponse` | Sends a new polling tag (`HX-PTag`) for the hx-ptag [extension]({{<ref "/docs/htmx/extensions.md">}}). |
+| `Download(string url)` | `HtmxResponse` | Tells the hx-download extension to fetch `url` as a file download (`HX-Download`). |
 | `ValidationFailed(string? retargetSelector = null, SwapStyle reswap = SwapStyle.Default)` | `HtmxResponse` | Marks the response as a validation failure (status 422, which htmx 4 swaps), optionally retargeting it or changing the swap style. See [Validation]({{<ref "/docs/forms/validation.md">}}). |
 | `Reselect(string selector)` | `HtmxResponse` | Chooses which part of the response is used to be swapped in by specifying a CSS selector. |
 | `Trigger(string eventName)` | `HtmxResponse` | Triggers a client‑side event (`HX-Trigger`) on the element that issued the request. |
