@@ -72,6 +72,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **MVC registration:** `[ValidateAntiForgeryToken]` needs `AddControllersWithViews()` (or `AddMvcCore().AddViews()`). With `AddControllers()` alone the attribute's filter is not registered.
 *   **Minimal APIs:** endpoints that bind form data are validated by `UseAntiforgery()`; others need `.WithMetadata(new RequireAntiforgeryTokenAttribute())` or `IAntiforgery.ValidateRequestAsync`.
 *   **Cookie Present:** Check browser developer tools (Application → Cookies) to ensure the antiforgery cookie (usually `.AspNetCore.Antiforgery.*`) is present.
+*   **Cross-site posts on .NET 11:** Rizzy rejects a cross-site post (`Sec-Fetch-Site: cross-site` or `same-site`) with 400 before supplying it to `[SupplyParameterFromForm]`. If another origin must post to the endpoint, allow it with a CORS policy that has `AllowCredentials()`, or opt the endpoint out with `.DisableAntiforgery()` / `[IgnoreAntiforgeryToken]`.
 
 ### 4. Validation Errors Are Not Displayed
 

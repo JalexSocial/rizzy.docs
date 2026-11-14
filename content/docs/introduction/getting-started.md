@@ -24,7 +24,9 @@ without a page reload. Upgrading an existing Rizzy 5 app? See [Upgrading to Rizz
 
 ## Requirements
 
-- **.NET 10** or newer.
+- **.NET 10** or **.NET 11**. The packages include a build for each. On .NET 11, Rizzy also protects
+  posted forms without antiforgery tokens, runs async validators, and supports `CacheView` (see
+  [.NET 11](#net-11) below).
 - **htmx 4.0.1** or newer, loaded by your layout (from a CDN or your own static files).
 
 ## Installation
@@ -181,3 +183,18 @@ misconfigured (for example a root layout without `<RzHeadOutlet />`). See
 
 The `src/RizzyDemo` app in the [Rizzy repository](https://github.com/JalexSocial/Rizzy) shows all of
 these together, including streaming rendering, 422 validation and a nonce-based CSP.
+
+## .NET 11
+
+Rizzy works the same on .NET 10 and .NET 11. On .NET 11 you also get:
+
+- **Form posts protected without tokens.** When Rizzy supplies a posted form to
+  `[SupplyParameterFromForm]`, it checks the request with ASP.NET Core 11's automatic CSRF
+  protection, which uses the browser's `Sec-Fetch-Site` and `Origin` headers. Same-origin posts
+  (every htmx request) pass without a token, and cross-site posts get 400 Bad Request. The
+  antiforgery token setup above keeps working and is still the default.
+- **Async validation.** `RzInitialValidator` runs async validators (`AsyncValidationAttribute`,
+  `IAsyncValidatableObject`), for checks such as "is this username taken?".
+- **`CacheView`.** ASP.NET Core 11's `<CacheView>` caches the HTML of part of a Rizzy view.
+  Use `VaryByHeader="HX-Request"` so full pages and htmx partials are cached separately. Inside a
+  `CacheView`, set the page title with `<RzPageTitle Text="..." />`.
