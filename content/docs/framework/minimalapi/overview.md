@@ -48,6 +48,7 @@ Every `View` and `PartialView` overload also takes an optional `ModelStateDictio
 
 - `[SupplyParameterFromForm]` properties in the rendered component are bound from the posted form, the same as with MVC controllers.
 - Endpoints that bind form data are protected by `app.UseAntiforgery()`; rizzy.js sends the token in a header on htmx requests. Endpoints that read the form without binding parameters need `.WithMetadata(new RequireAntiforgeryTokenAttribute())` (or `IAntiforgery.ValidateRequestAsync`).
+- On .NET 11, Rizzy checks posts itself before supplying them to `[SupplyParameterFromForm]`, using ASP.NET Core 11's automatic CSRF protection: same-origin posts pass without a token, cross-site posts get 400 Bad Request. `.DisableAntiforgery()` opts an endpoint out. This check runs when the view renders, after your endpoint code, so endpoint code that changes data from the form still needs the protections above.
 - `HttpContext.Response.Htmx()` works in endpoints too, for example `ValidationFailed()` for a 422 response:
 
 ```csharp

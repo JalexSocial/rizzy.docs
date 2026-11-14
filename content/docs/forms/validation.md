@@ -25,7 +25,7 @@ Rizzy aims to provide a familiar validation experience, similar to traditional A
 -   **`RzValidationMessageBase`**: Displays validation messages for a *specific* field, similar to `asp-validation-for`.
 -   **`RzValidationSummaryBase`**: Displays a summary of *all* validation messages for the form, similar to `asp-validation-summary`.
 -   **`RzModelStateProvider`**: Place it inside the `EditForm` to show **server-side** errors. It copies the errors from the cascaded `ModelStateDictionary` into the `EditContext`, so each error appears next to its field. Keys from MVC model binding (`Person.Name`, `Person.Address.City`) are mapped to the right field. `RzController` passes the controller's `ModelState` automatically; with `IRizzyService` (minimal APIs), pass one to `View`/`PartialView`.
--   **`RzInitialValidator`**: Optional. Runs the form's Data Annotations validation when the form renders, so the form shows its current validity immediately (for example when re-rendering a posted model).
+-   **`RzInitialValidator`**: Optional. Runs the form's Data Annotations validation when the form renders, so the form shows its current validity immediately (for example when re-rendering a posted model). On .NET 11 it also runs async validators (`AsyncValidationAttribute`, `IAsyncValidatableObject`).
 
 ## Complex Validation Example
 

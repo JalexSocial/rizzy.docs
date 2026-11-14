@@ -71,6 +71,14 @@ Use the `RzPageTitle` component within Razor pages or components to specify the 
 
 If it detects an HTMX request, it outputs `<title>Your Page Title Here</title>` directly, which HTMX natively processes to update the document title without a full reload. On standard requests, it falls back to Blazor's standard `PageTitle` component.
 
+For a plain-text title, use the `Text` parameter instead of child content:
+
+```razor
+<RzPageTitle Text="@($"Order {order.Number}")" />
+```
+
+On .NET 11, use `Text` inside a `<CacheView>`: `RzPageTitle` re-renders on every request, so the title is set even when the surrounding markup comes from the cache. Child content can't be used there, and ASP.NET Core throws an exception that says so.
+
 ## Standard Blazor Head Components
 
 Rizzy is fully compatible with standard Blazor head manipulation components. You should use the standard components provided by `Microsoft.AspNetCore.Components.Web` to inject other head content like meta tags and external style sheets.
