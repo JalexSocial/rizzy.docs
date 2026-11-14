@@ -33,7 +33,8 @@ You can add the `Rizzy.Htmx` NuGet package using either Visual Studio or the .NE
 1. Open your project in Visual Studio.
 2. Right‑click on the **Dependencies** node in the Solution Explorer.
 3. Select **Manage NuGet Packages**.
-4. In the **NuGet Package Manager**, search for `Rizzy.Htmx`.
+4. In the **NuGet Package Manager**, tick **Include prerelease** (while Rizzy 6 is in preview) and
+   search for `Rizzy.Htmx`.
 5. Click **Install**.
 
 ### **Using the .NET CLI**
@@ -41,8 +42,11 @@ You can add the `Rizzy.Htmx` NuGet package using either Visual Studio or the .NE
 If you prefer using the command line, navigate to your project directory and run the following command:
 
 ```bash
-dotnet add package Rizzy.Htmx
+dotnet add package Rizzy.Htmx --prerelease
 ```
+
+While Rizzy 6 is in preview, `--prerelease` is needed; without it you get Rizzy.Htmx 5.x, which
+doesn't support htmx 4.
 
 ## Customizing HTMX Configuration
 

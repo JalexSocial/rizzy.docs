@@ -30,8 +30,13 @@ without a page reload. Upgrading an existing Rizzy 5 app? See [Upgrading to Rizz
 ## Installation
 
 ```sh
-dotnet add package Rizzy
+dotnet add package Rizzy --prerelease
 ```
+
+{{< callout context="note" title="Rizzy 6 is in preview" icon="info-circle" >}}
+Until 6.0.0 is released, include `--prerelease` (in Visual Studio, tick **Include prerelease**).
+Without it you get Rizzy 5.x, which doesn't support htmx 4.
+{{< /callout >}}
 
 The `Rizzy` package brings the matching `Rizzy.Htmx` package and the Rizzy client script
 (`_content/Rizzy/js/rizzy.js`). The three are always released together with the same version.
