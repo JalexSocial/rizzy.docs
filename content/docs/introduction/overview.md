@@ -3,7 +3,7 @@ title: "Overview"
 description: ""
 summary: ""
 date: 2024-02-05T12:06:30-05:00
-lastmod: 2024-02-05T12:06:30-05:00
+lastmod: 2026-11-17T12:00:00-05:00
 draft: false
 menu:
   docs:
@@ -76,6 +76,17 @@ While Rizzy focuses on server-rendered components enhanced with HTMX, you might 
 Alpine.js allows you to handle tasks such as complex event handling, local state management within a component fragment, and DOM manipulation directly within your HTML markup, complementing the server-driven updates from HTMX. Rizzy even includes helpers like `SerializeAsAlpineData` to simplify passing server-side model data into Alpine components. (*See Extensions section for more details*).
 
 RizzyUI (optional) provides a full starter suite of Tailwind-based UI components, built with Alpine.js, that provide client-side interactivity without needing to write the components yourself or implement them in Blazor.
+
+The quickest way to try Rizzy and RizzyUI together is the RizzyUI project template:
+
+```sh
+dotnet new install RizzyUI.Templates
+dotnet new rizzyui -o MyApp
+```
+
+It creates a Rizzy 6 app with a sidebar layout, light and dark mode, a searchable table, a validated
+htmx form and Tailwind CSS. See [RizzyUI 1.0.0 Preview 1]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.1.md">}})
+and the [RizzyUI documentation](https://rizzyui.jalex.io/docs/getting-started).
 
 ---
 

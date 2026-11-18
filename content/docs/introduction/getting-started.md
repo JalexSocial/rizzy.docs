@@ -4,7 +4,7 @@ title: "Getting Started"
 description: "Install Rizzy 6, register it, create the root layout and render your first htmx-driven component."
 summary: ""
 date: 2024-02-05T12:07:02-05:00
-lastmod: 2026-11-08T12:00:00-05:00
+lastmod: 2026-11-17T12:00:00-05:00
 draft: false
 menu:
   docs:
@@ -21,6 +21,13 @@ seo:
 
 This guide sets up Rizzy in an ASP.NET Core app and renders a Razor component that htmx updates
 without a page reload. Upgrading an existing Rizzy 5 app? See [Upgrading to Rizzy 6]({{<ref "/docs/reference/upgrading.md">}}).
+
+{{< callout context="note" title="Want a ready-made app with UI components?" icon="rocket" >}}
+`dotnet new install RizzyUI.Templates`, then `dotnet new rizzyui -o MyApp`, creates a Rizzy 6 app
+with RizzyUI components, a sidebar layout, a validated htmx form and Tailwind CSS already set up.
+See [RizzyUI 1.0.0 Preview 1]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.1.md">}}). This
+guide shows what such an app is built from.
+{{< /callout >}}
 
 ## Requirements
 
@@ -180,6 +187,8 @@ misconfigured (for example a root layout without `<RzHeadOutlet />`). See
 3. Send extra fragments in one response: [Out of Band Swapping]({{<ref "/docs/htmx/swaps.md">}}).
 4. Control htmx from the server: [Response]({{<ref "/docs/htmx/response.md">}}).
 5. Lock down scripts: [Content Security Policy]({{<ref "/docs/introduction/contentsecurity.md">}}).
+6. Add UI components: [RizzyUI](https://rizzyui.jalex.io/docs/getting-started), or start a new app
+   from its template with `dotnet new rizzyui`.
 
 The `src/RizzyDemo` app in the [Rizzy repository](https://github.com/JalexSocial/Rizzy) shows all of
 these together, including streaming rendering, 422 validation and a nonce-based CSP.
