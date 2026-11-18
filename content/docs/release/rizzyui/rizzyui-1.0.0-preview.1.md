@@ -60,8 +60,7 @@ Rizzy 5.
 ## Breaking changes
 
 - **Rizzy 6 and htmx 4 are required.** Upgrade Rizzy first ([Upgrading to Rizzy 6]({{<ref "/docs/reference/upgrading.md">}})),
-  then follow RizzyUI's
-  [migration guide](https://github.com/JalexSocial/RizzyUI/blob/main/docs/migration/rizzy5-to-rizzy6.md).
+  then RizzyUI ([Upgrading RizzyUI]({{<ref "/docs/reference/upgrading-rizzyui.md">}})).
 - **htmx is no longer an npm dependency** of `@jalexsocial/rizzyui`. Load it with Rizzy's
   `<RzScripts />` or install `htmx.org` 4 yourself.
 - **`antiforgerySnippet.js` does nothing.** Rizzy 6 attaches the antiforgery token itself; remove the

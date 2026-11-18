@@ -4,9 +4,36 @@ body {
     min-height: 100vh;
 }
 
+// The frosted background is on a pseudo-element: a backdrop-filter on .navbar itself makes it the
+// containing block for the fixed offcanvas menus inside it, so the closed (off-screen) mobile menu
+// widened every page by its own width and phones could pan the page sideways.
 .navbar {
+    position: relative;
+    isolation: isolate;
+}
+
+.navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background: #ffffff99;
     backdrop-filter: blur(24px);
+}
+
+// Wrapped by assets/js/custom.js: the wrapper takes the table's spacing and scrolls horizontally.
+.docs-table {
+    margin: 3rem 0;
+
+    > table {
+        margin: 0;
+    }
+}
+
+// Long identifiers in prose and headings (for example `RzInputDateTime` or a namespace) wrap
+// instead of pushing the page wider than a phone screen.
+.docs-content {
+    overflow-wrap: break-word;
 }
 
 .docs-content ul, .docs-content ol {
