@@ -85,7 +85,7 @@ dotnet new rizzyui -o MyApp
 ```
 
 It creates a Rizzy 6 app with a sidebar layout, light and dark mode, a searchable table, a validated
-htmx form and Tailwind CSS. See [RizzyUI 1.0.0 Preview 1]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.1.md">}})
+htmx form and Tailwind CSS. See [RizzyUI 1.0.0 Preview 2]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.2.md">}})
 and the [RizzyUI documentation](https://rizzyui.jalex.io/docs/getting-started).
 
 ---

@@ -2,11 +2,9 @@
 title: "RizzyUI 1.0.0 Preview 2"
 description: "Accessibility, CSP and payload improvements, with the breaking changes planned before 1.0."
 summary: ""
-# DRAFT until 1.0.0-preview.2 is published to NuGet and npm: set draft to false and update the
-# dates and the GitHub release link when the release is cut.
-date: 2026-11-18T12:00:00-05:00
-lastmod: 2026-11-18T12:00:00-05:00
-draft: true
+date: 2026-11-18T19:00:00-05:00
+lastmod: 2026-11-18T19:00:00-05:00
+draft: false
 weight: 9
 toc: true
 seo:
@@ -55,4 +53,6 @@ npm install @jalexsocial/rizzyui@next
 - **`RzDataTable`** documents its contract: a headless table engine for markup you write, and you
   decide which data reaches the browser.
 
-The [changelog](https://github.com/JalexSocial/RizzyUI/blob/main/CHANGELOG.md) lists every change.
+The [full changelog](https://github.com/JalexSocial/RizzyUI/blob/main/CHANGELOG.md) and the
+[GitHub release](https://github.com/JalexSocial/RizzyUI/releases/tag/v1.0.0-preview.2) list every
+change.

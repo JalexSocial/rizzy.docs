@@ -25,7 +25,7 @@ without a page reload. Upgrading an existing Rizzy 5 app? See [Upgrading to Rizz
 {{< callout context="note" title="Want a ready-made app with UI components?" icon="rocket" >}}
 `dotnet new install RizzyUI.Templates`, then `dotnet new rizzyui -o MyApp`, creates a Rizzy 6 app
 with RizzyUI components, a sidebar layout, a validated htmx form and Tailwind CSS already set up.
-See [RizzyUI 1.0.0 Preview 1]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.1.md">}}). This
+See [RizzyUI 1.0.0 Preview 2]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.2.md">}}). This
 guide shows what such an app is built from.
 {{< /callout >}}
 

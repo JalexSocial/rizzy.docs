@@ -3,7 +3,7 @@ title: "Upgrading RizzyUI"
 description: "Move a RizzyUI app from Rizzy 5 and htmx 2 to RizzyUI 1.0 on Rizzy 6 and htmx 4."
 summary: "The setup and component changes needed to upgrade RizzyUI to 1.0 on Rizzy 6 and htmx 4."
 date: 2026-11-18T12:00:00-05:00
-lastmod: 2026-11-18T12:00:00-05:00
+lastmod: 2026-11-18T19:00:00-05:00
 draft: false
 weight: 910
 toc: true
@@ -23,6 +23,7 @@ and the [changelog](https://github.com/JalexSocial/RizzyUI/blob/main/CHANGELOG.m
 
 | RizzyUI | Rizzy | htmx | .NET |
 |---|---|---|---|
+| 1.0.0-preview.2 | 6.0.0-preview.3 | 4.0.1+ | 10 (apps on 11 work) |
 | 1.0.0-preview.1 | 6.0.0-preview.3 | 4.0.1+ | 10 (apps on 11 work) |
 | 0.9.x and earlier | 5.3.x | 2.x | 10 |
 
@@ -94,10 +95,10 @@ Behavior you may notice: dialogs and sheets close on Escape and return focus to 
 `CloseOnEscape="false"` to keep the old behavior); forms and `hx-*` buttons inside dialogs use htmx;
 labels no longer render resource keys.
 
-## Coming in the next preview
+## Changes in 1.0.0-preview.2
 
-These changes are on `main` and will ship in the next preview (1.0.0-preview.2). Apps already on
-preview.1 may need to adjust:
+Apps already on preview.1 may need to adjust for these changes in 1.0.0-preview.2
+([release notes]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.2.md">}})):
 
 | Change | What to do |
 |---|---|
@@ -112,7 +113,7 @@ preview.1 may need to adjust:
 | Generated ids such as dialog titles are `{Id}-title` | Nothing, unless CSS or scripts matched the old ids; `RzIdScope` gives deterministic ids |
 
 The full list, including fixes and additions such as `x-indeterminate`, is in the changelog under
-"Unreleased".
+"1.0.0-preview.2".
 
 ## Troubleshooting
 
