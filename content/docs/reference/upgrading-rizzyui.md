@@ -23,6 +23,7 @@ and the [changelog](https://github.com/JalexSocial/RizzyUI/blob/main/CHANGELOG.m
 
 | RizzyUI | Rizzy | htmx | .NET |
 |---|---|---|---|
+| 1.0.0-preview.3 | 6.0.0-preview.3 | 4.0.1+ | 10 (apps on 11 work) |
 | 1.0.0-preview.2 | 6.0.0-preview.3 | 4.0.1+ | 10 (apps on 11 work) |
 | 1.0.0-preview.1 | 6.0.0-preview.3 | 4.0.1+ | 10 (apps on 11 work) |
 | 0.9.x and earlier | 5.3.x | 2.x | 10 |
@@ -94,6 +95,26 @@ to reference `Rizzy` yourself.
 Behavior you may notice: dialogs and sheets close on Escape and return focus to their trigger (set
 `CloseOnEscape="false"` to keep the old behavior); forms and `hx-*` buttons inside dialogs use htmx;
 labels no longer render resource keys.
+
+## Changes in 1.0.0-preview.3
+
+Apps already on preview.2 may need to adjust for these changes in 1.0.0-preview.3
+([release notes]({{<ref "/docs/release/rizzyui/rizzyui-1.0.0-preview.3.md">}})):
+
+| Change | What to do |
+|---|---|
+| Code-behind `Props` keep their C# names (`InitialCount` was converted to `initialCount`) | Use the C# names in modules (`this.$props.InitialCount`), or keep camelCase for the app with `config.CodeBehindPropsSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)` in `AddRizzyUI` |
+| `RzAlpineComponent` renders no scripts; props are in `data-rz-props` | Nothing, unless your code read the props script directly: use `this.$props` or `Rizzy.props(el)` |
+| `Name` on `RzAlpineComponent` is optional | Remove it unless other markup refers to the component by name |
+| A component passed in `For` without `[RzAlpineCodeBehind]` throws | Add `@attribute [RzAlpineCodeBehind]` to it |
+| `await Alpine.nextTick()` in `init()` to reach a child component | Optional: move that code to `ready()`, which runs after child components have started |
+| `RzProgress`: `CurrentValue`, `MinValue`, `MaxValue` | Rename to `Value`, `Min`, `Max` (`Value` is `double?`; `null` is indeterminate) |
+| `RzProgress`: `Label`, `LabelPosition`, default `AriaLabel` "Progress Bar" | Use a visible label with `aria-labelledby` (or `AriaLabel`), `ValueText` for `aria-valuetext`, and `ProgressLabel` for text on the bar |
+| `RzProgress` theme slots `OuterBar`, `InnerBar` and the label slots | Style instances with `class`, or override the `RzProgress`, `ProgressIndicator` and `ProgressLabel` theme descriptors |
+| `AsChild` with plain markup joined conflicting attribute values (`id="rzX1 mine"`) | Check `AsChild` children with an `id` or other attributes the component also sets: the child's value now wins |
+
+For long-lived pages and caching, add `app.MapStaticAssets()` (and `.WithStaticAssets()` on
+controllers): code-behind modules then load from fingerprinted URLs.
 
 ## Changes in 1.0.0-preview.2
 
