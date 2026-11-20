@@ -2,8 +2,8 @@
 title: "RizzyUI 1.0.0 Preview 3"
 description: "Alpine code-behind reworked and tested, a shadcn-style RzProgress, and CSP fixes."
 summary: ""
-date: 2026-11-19T19:00:00-05:00
-lastmod: 2026-11-19T19:00:00-05:00
+date: 2026-11-20T19:00:00-05:00
+lastmod: 2026-11-20T19:00:00-05:00
 draft: false
 weight: 8
 toc: true
