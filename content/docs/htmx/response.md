@@ -56,8 +56,8 @@ The `HtmxResponse` class enables developers to manage client‑side behavior thr
 The HtmxResponse class was constructed based on HTMX usage of response headers. You can find more information about HTMX response headers on the official [htmx 4 documentation site](https://four.htmx.org/).
 {{< /callout >}}
 
-{{< callout context="caution" title="htmx requests only" icon="alert-triangle" >}}
-Every method that sets an `HX-*` header, and `EmptyBody()`, throws an `InvalidOperationException` when the current request is not an htmx request, because a browser would ignore the header. Check `Request.IsHtmx()` first in actions that serve both kinds of request. Only `StatusCode` and `IsLocalUrl` work for any request.
+{{< callout context="note" title="Normal requests" icon="info-circle" >}}
+Every method that sets an `HX-*` header, and `EmptyBody()`, does nothing when the current request is not an htmx request (a browser would ignore the header) and logs that at Debug level. An action that serves both a direct page load and htmx (a bookmarked URL and boosted navigation) needs no `Request.IsHtmx()` guard around each header. `ValidationFailed()` sets its 422 status on any request; `StatusCode` and `IsLocalUrl` work for any request too. Before 6.0.0-preview.4 these methods threw `InvalidOperationException`.
 {{< /callout >}}
 
 ## Working With HtmxResponse

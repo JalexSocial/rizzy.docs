@@ -134,6 +134,12 @@ on a loop variable, a small helper method keeps the markup readable:
 
 `HxSyncStrategy` values: `Drop`, `Abort`, `Replace`, `QueueFirst` (htmx's default), `QueueLast`, `QueueAll`.
 
+{{< callout context="note" title="Boosting a whole page" icon="info-circle" >}}
+To boost every link and form, put `hx-boost:inherited="true"` on `<body>` (`Hx.Boost().Inherited()`). A plain `hx-boost="true"` on `<body>` boosts nothing in htmx 4, which inherits an attribute only when it says so.
+
+A boosted navigation swaps the `<body>`; attributes of `<html>` such as `lang`, `dir` or a theme class stay as they were. Give links that change them (a language switch, for example) `hx-boost="false"` for a full page load, or answer with `HX-Refresh` (`Response.Htmx().Refresh()`), so screen readers use the right language.
+{{< /callout >}}
+
 `HxConfirm` props, read by a custom confirm dialog (`rz:confirm-dialog`): `Title`, `Text`, `ShowConfirmButton`, `ShowDenyButton`, `ShowCancelButton`, `ConfirmButtonText`, `DenyButtonText`, `DismissButtonText`. Without a custom dialog, the browser's `confirm()` shows the title and text.
 
 ## Extension attributes

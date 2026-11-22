@@ -76,7 +76,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();   // serves _content/Rizzy/js/rizzy.js
+app.UseStaticFiles();   // serves /_content/Rizzy/js/rizzy.js
 app.UseRouting();
 // app.UseAuthentication(); app.UseAuthorization(); if you use them
 app.UseAntiforgery();
