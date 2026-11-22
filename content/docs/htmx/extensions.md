@@ -110,7 +110,10 @@ builder.Services.AddHtmx(o => o.Scripts = new HtmxScriptOptions { BaseUrl = "/li
 ```
 
 The Rizzy script itself is configured on `RizzyConfig`: `ClientScriptUrl` (default
-`_content/Rizzy/js/rizzy.js`).
+`/_content/Rizzy/js/rizzy.js`). A root-relative URL gets the app's path base, so the script loads on
+nested URLs such as `/account/sign-in` and under a virtual directory; absolute and relative URLs are
+used as given. Before 6.0.0-preview.4 the default was relative and broke on nested URLs without
+`<base href="/">`.
 
 ## Third-party and your own extensions
 

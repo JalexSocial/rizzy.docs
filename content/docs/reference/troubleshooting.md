@@ -66,7 +66,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 *   **Middleware Order:** Ensure `app.UseAntiforgery()` is present in `Program.cs` and placed *after* `app.UseRouting()` and any authentication/authorization middleware (`app.UseAuthentication(); app.UseAuthorization();`).
 *   **Token on the page:** rizzy.js reads the token from the `<meta name="htmx-config">` tag and sends it in a header (`RequestVerificationToken`) on every htmx request that isn't a GET. Check that:
     *   Your root layout renders `<RzHeadOutlet />` (not `<HeadOutlet />`) before the htmx script. If the tag is missing, rizzy.js logs a console warning that says so. Pages with their own `<HeadContent>` are fine.
-    *   `<RzScripts />` (or your own htmx and `_content/Rizzy/js/rizzy.js` script tags, htmx first, no `type="module"`) is in the root layout.
+    *   `<RzScripts />` (or your own htmx and `/_content/Rizzy/js/rizzy.js` script tags, htmx first, no `type="module"`) is in the root layout.
     *   The meta tag's `antiforgery` entry has a `requestToken` (it is generated per page with the default `RizzyConfig.AntiforgeryStrategy`).
     *   The request in the Network tab carries the `RequestVerificationToken` header.
 *   **MVC registration:** `[ValidateAntiForgeryToken]` needs `AddControllersWithViews()` (or `AddMvcCore().AddViews()`). With `AddControllers()` alone the attribute's filter is not registered.
@@ -134,7 +134,7 @@ This guide covers common problems developers might encounter when using Rizzy an
 
 **Diagnosis & Solutions:**
 
-*   **Rizzy script loaded?** htmx 4 has no `hx-ext`; the Rizzy client script registers `rizzy-streaming` when it loads. Load htmx first, then `<script src="_content/Rizzy/js/rizzy.js"></script>` (no `type="module"`).
+*   **Rizzy script loaded?** htmx 4 has no `hx-ext`; the Rizzy client script registers `rizzy-streaming` when it loads. Load htmx first, then `<script src="/_content/Rizzy/js/rizzy.js"></script>` (no `type="module"`).
 *   **Extension allow-list:** if you set `HtmxConfig.Extensions`, it must include `rizzy-streaming` (and Rizzy's other extensions: `rizzy-antiforgery, rizzy-nonce, rizzy-confirm`).
 *   **Content appears only at the end:** `PartialView<T>` sends a bare fragment, so the client waits for the whole stream. Use `View<T>` for progressive streaming. See [Streaming Rendering with HTMX]({{<ref "/docs/htmx/streaming.md">}}).
 *   **Check Console:** Look for specific errors from Blazor's streaming rendering JavaScript or the `rizzy-streaming` extension.
